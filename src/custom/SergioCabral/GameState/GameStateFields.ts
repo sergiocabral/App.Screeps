@@ -5,7 +5,17 @@ import { GameLevel } from "./GameLevel";
  */
 export interface GameStateFields {
   /**
+   * Tick do meu jogo.
+   */
+  tick: number;
+
+  /**
    * Nível do jogo.
    */
   level: GameLevel;
+
+  /**
+   * Etapa do nível.
+   */
+  levelStep: number;
 }

@@ -1,9 +1,9 @@
-import { IScreepsLoop } from "custom/ILoop";
-import { Memory } from "../../../test/unit/mock";
-import { Logger } from "../Common/Log/Logger";
-import { LogLevel } from "../Common/Log/LogLevel";
+import { ConsoleLogger } from "../Common/Log/ConsoleLogger";
 import { GameState } from "./GameState/GameState";
-import { NameGenerator } from "./NameGenerator";
+import { IScreepsLoop } from "custom/ILoop";
+import { LevelActionFactory } from "./Action/LevelActionFactory";
+import { LogLevel } from "../Common/Log/LogLevel";
+import { Logger } from "../Common/Log/Logger";
 
 /**
  * Classe principal para `sergiocabral`
@@ -13,7 +13,7 @@ export class Main implements IScreepsLoop {
    * Construtor.
    */
   public constructor() {
-    this.gameState = new GameState(Memory);
+    Logger.minimumLevel = ConsoleLogger.minimumLevel = LogLevel.Debug;
     Logger.post("Constructor. Tick {gameTick}", { gameTick: Game.time }, LogLevel.Verbose);
   }
 
@@ -21,16 +21,18 @@ export class Main implements IScreepsLoop {
    * Método de loop chamado pelo Screeps.
    */
   public loop(): void {
+    GameState.default = new GameState(Memory as any);
+    GameState.default.tick++;
+
     Logger.post(
-      "Loop. Tick {gameTick}. Name: {name}",
-      { gameTick: Game.time, name: NameGenerator.spawn },
+      "Loop. Global Tick {globalTick}. My Tick {myTick}.",
+      { globalTick: Game.time, myTick: GameState.default.tick },
       LogLevel.Verbose
     );
-  }
 
-  /**
-   * Estado do jogo.
-   * @private
-   */
-  private gameState: GameState;
+    const action = LevelActionFactory.get(GameState.default.level);
+    action.loop();
+
+    GameState.default.save();
+  }
 }
