@@ -1,5 +1,6 @@
 import { IScreepsLoop } from "custom/ILoop";
 import { Logger } from "../Common/Log/Logger";
+import { NameGenerator } from "./NameGenerator";
 
 /**
  * Classe principal para `sergiocabral`
@@ -16,6 +17,6 @@ export class Main implements IScreepsLoop {
    * Método de loop chamado pelo Screeps.
    */
   public loop(): void {
-    Logger.post("Loop. Tick {gameTick}", { gameTick: Game.time });
+    Logger.post("Loop. Tick {gameTick}. Name: {name}", { gameTick: Game.time, name: NameGenerator.spawn });
   }
 }

@@ -4,7 +4,7 @@ import { PrimitiveType } from "./Type/PrimitiveType";
 /**
  * Utilitários para manipulação e geração de string.
  */
-export class Text {
+export abstract class Text {
   /**
    * Substitui variáveis na string por seus respectivos valores.
    * @param text Texto original
