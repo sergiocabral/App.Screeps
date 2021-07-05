@@ -1,4 +1,5 @@
 import { IScreepsLoop } from "custom/ILoop";
+import { Logger } from "../Common/Log/Logger";
 
 /**
  * Classe principal para `sergiocabral`
@@ -8,13 +9,13 @@ export class Main implements IScreepsLoop {
    * Construtor.
    */
   public constructor() {
-    console.log(`Constructor. Tick ${Game.time}`);
+    Logger.post("Constructor. Tick {gameTick}", { gameTick: Game.time });
   }
 
   /**
    * Método de loop chamado pelo Screeps.
    */
   public loop(): void {
-    console.log(`Loop. Tick ${Game.time}`);
+    Logger.post("Loop. Tick {gameTick}", { gameTick: Game.time });
   }
 }

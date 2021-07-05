@@ -1,4 +1,5 @@
-import { Main as CustomMain } from "./sergiocabral/Main";
+import "./Common/Helper/Prototype/String";
+import { Main as CustomMain } from "./SergioCabral/Main";
 import { IScreepsLoop } from "./ILoop";
 
 /**
