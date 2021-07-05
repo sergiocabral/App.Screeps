@@ -5,7 +5,7 @@ import { IScreepsLoop } from "./ILoop";
 /**
  * Classe principal
  */
-export class Main {
+export abstract class Main {
   /**
    * Instância principal (valor)
    */
