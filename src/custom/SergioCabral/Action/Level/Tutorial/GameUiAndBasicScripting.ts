@@ -106,11 +106,24 @@ export class GameUiAndBasicScripting extends Tutorial {
     const creepFreeCapacity = creep.store.getFreeCapacity();
     if (creepFreeCapacity > 0) {
       const sources = creep.room.find(FIND_SOURCES);
+      const creepUsedCapacity = creep.store.getUsedCapacity();
       const code = creep.harvest(sources[0]);
       if (code === OK) {
+        const creepFreeCapacityAfterWork = creep.store.getFreeCapacity();
+        if (creepUsedCapacity === 0) {
+          Logger.post(
+            "Creep '{creepName}' started to harvest energy. FreeCapacity: {freeCapacity}. Code: {code}",
+            {
+              creepName,
+              freeCapacity: creepFreeCapacityAfterWork,
+              code: Constants.format(code)
+            },
+            LogLevel.Information
+          );
+        }
         Logger.post("Creep '{creepName}' harvested the energy. FreeCapacity: {freeCapacity}. Code: {code}", {
           creepName,
-          freeCapacity: creepFreeCapacity,
+          freeCapacity: creepFreeCapacityAfterWork,
           code: Constants.format(code)
         });
       } else if (code === ERR_NOT_IN_RANGE) {
@@ -163,10 +176,10 @@ export class GameUiAndBasicScripting extends Tutorial {
    * @private
    */
   private sendCreepsToHarvestAndTransferToTheSpawn(creepsNames: string[], spawnName: string): boolean {
-    let result = true;
+    let finished = false;
     for (const creepName of creepsNames) {
-      result = result && this.sendCreepToHarvestAndTransferToTheSpawn(creepName, spawnName);
+      finished = finished || this.sendCreepToHarvestAndTransferToTheSpawn(creepName, spawnName);
     }
-    return result;
+    return finished;
   }
 }

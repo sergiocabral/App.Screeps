@@ -22,11 +22,10 @@ export abstract class Tutorial extends LevelAction {
       if (this.runStep(humanStepNumber)) state.levelStep++;
 
       if (state.levelStep !== currentLevelStep) {
-        Logger.post(
-          "Change step from {stepFrom} to {stepTo}.",
-          { stepFrom: humanStepNumber, stepTo: humanStepNumber + 1 },
-          LogLevel.Information
-        );
+        Logger.post("Change step from {stepFrom} to {stepTo}.", {
+          stepFrom: humanStepNumber,
+          stepTo: humanStepNumber + 1
+        });
       }
     } else {
       if ((Memory as any as Json).run === undefined) {
