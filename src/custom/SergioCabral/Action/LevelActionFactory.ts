@@ -1,7 +1,7 @@
 import { GameError } from "../../Common/Error/GameError";
 import { GameLevel } from "../GameState/GameLevel";
+import { GameUiAndBasicScripting } from "./Level/Tutorial/GameUiAndBasicScripting";
 import { LevelAction } from "./LevelAction";
-import { Started } from "./Level/Started";
 
 /**
  * Determina a ação do jogo com base no nível.
@@ -14,7 +14,7 @@ export abstract class LevelActionFactory {
   public static get(level: GameLevel): LevelAction {
     switch (level) {
       case GameLevel.Started:
-        return new Started();
+        return new GameUiAndBasicScripting();
       default:
         throw new GameError("Invalid level");
     }

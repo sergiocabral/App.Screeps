@@ -1,13 +1,12 @@
-import { Constants } from "../../../Screeps/Constants";
-import { Json } from "../../../Common/Helper/Type/Json";
-import { LevelAction } from "../LevelAction";
-import { LogLevel } from "../../../Common/Log/LogLevel";
-import { Logger } from "../../../Common/Log/Logger";
+import { Constants } from "../../../../Screeps/Constants";
+import { LogLevel } from "../../../../Common/Log/LogLevel";
+import { Logger } from "../../../../Common/Log/Logger";
+import { Tutorial } from "./Tutorial";
 
 /**
  * Ação inicial do jogo.
  */
-export class Started extends LevelAction {
+export class GameUiAndBasicScripting extends Tutorial {
   /**
    * Nome do spawn Spawn1
    * @private
@@ -27,43 +26,11 @@ export class Started extends LevelAction {
   private nameOfHarvester2 = "Harvester2";
 
   /**
-   * Método de loop chamado pelo Screeps.
+   * Execução dos passos do tutorial. Retorna true quando conclui o passo.
+   * @param step Número do passo.
+   * @protected
    */
-  public loop(): void {
-    super.loop();
-
-    const state = this.state;
-
-    const currentLevelStep = state.levelStep;
-    const oddStep = state.levelStep % 2 !== 0;
-    const humanStepNumber = Math.floor(currentLevelStep / 2) + 1;
-    if (oddStep) {
-      if (this.runStep(humanStepNumber)) state.levelStep++;
-
-      if (state.levelStep !== currentLevelStep) {
-        Logger.post(
-          "Change step from {stepFrom} to {stepTo}.",
-          { stepFrom: humanStepNumber, stepTo: humanStepNumber + 1 },
-          LogLevel.Information
-        );
-      }
-    } else {
-      if ((Memory as any as Json).run === undefined) {
-        Logger.post(
-          "Type `Memory.run = true` to run the current step {step}.",
-          { step: humanStepNumber },
-          LogLevel.Information
-        );
-        (Memory as any as Json).run = false;
-      } else if ((Memory as any as Json).run) {
-        Logger.post("Running current step {step}.", { step: humanStepNumber }, LogLevel.Information);
-        delete (Memory as any as Json).run;
-        state.levelStep++;
-      }
-    }
-  }
-
-  private runStep(step: number): boolean {
+  protected runStep(step: number): boolean {
     switch (step) {
       case 1:
         return this.createCreep(this.nameOfHarvester1, this.nameOfSpawn1);
@@ -82,6 +49,12 @@ export class Started extends LevelAction {
     return false;
   }
 
+  /**
+   * Cria um Screep
+   * @param creepName
+   * @param spawnName
+   * @private
+   */
   private createCreep(creepName: string, spawnName: string): boolean {
     const game = this.game;
     const code = game.spawns[spawnName].spawnCreep([WORK, CARRY, MOVE], creepName);
@@ -93,6 +66,11 @@ export class Started extends LevelAction {
     return true;
   }
 
+  /**
+   * Move o Screep para colher na fonte.
+   * @param creepName
+   * @private
+   */
   private sendCreepToHarvest(creepName: string): boolean {
     const game = this.game;
     const creep = game.creeps[creepName];
@@ -115,6 +93,12 @@ export class Started extends LevelAction {
     return harvested;
   }
 
+  /**
+   * Faz o Screep colher na fonte e recarregar o Spawn
+   * @param creepName
+   * @param spawnName
+   * @private
+   */
   private sendCreepToHarvestAndTransferToTheSpawn(creepName: string, spawnName: string): boolean {
     const game = this.game;
     const creep = game.creeps[creepName];
@@ -172,6 +156,12 @@ export class Started extends LevelAction {
     return false;
   }
 
+  /**
+   * Fica em loop recolhendo na fonte e carregando o Spawn até completar.
+   * @param creepsNames
+   * @param spawnName
+   * @private
+   */
   private sendCreepsToHarvestAndTransferToTheSpawn(creepsNames: string[], spawnName: string): boolean {
     let result = true;
     for (const creepName of creepsNames) {
