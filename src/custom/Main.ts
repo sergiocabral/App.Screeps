@@ -1,6 +1,6 @@
 import "./Common/Helper/Prototype/String";
 import { Main as CustomMain } from "./SergioCabral/Main";
-import { IScreepsLoop } from "./ILoop";
+import { IScreepsLoop } from "./Screeps/ILoop";
 
 /**
  * Classe principal

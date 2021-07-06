@@ -1,8 +1,8 @@
-import { PrimitiveType } from "./PrimitiveType";
+import { JsonType } from "./JsonType";
 
 /**
  * Representação de uma estrutura JSON.
  */
 export interface Json {
-  [x: string]: PrimitiveType | Date | Json | (PrimitiveType | Date | Json)[];
+  [x: string]: JsonType | Json | (JsonType | Json)[];
 }

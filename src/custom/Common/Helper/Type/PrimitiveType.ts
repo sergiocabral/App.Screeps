@@ -1,4 +1,4 @@
 /**
- * Representação de uma estrutura JSON.
+ * Tipos primitios do JavaScript.
  */
-export type PrimitiveType = string | number | boolean;
+export type PrimitiveType = string | number | boolean | undefined;

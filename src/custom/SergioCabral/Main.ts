@@ -1,6 +1,6 @@
 import { ConsoleLogger } from "../Common/Log/ConsoleLogger";
 import { GameState } from "./GameState/GameState";
-import { IScreepsLoop } from "custom/ILoop";
+import { IScreepsLoop } from "custom/Screeps/ILoop";
 import { LevelActionFactory } from "./Action/LevelActionFactory";
 import { LogLevel } from "../Common/Log/LogLevel";
 import { Logger } from "../Common/Log/Logger";
