@@ -15,38 +15,45 @@ export abstract class Tutorial extends LevelAction {
 
     const state = this.state;
 
-    const currentLevelStep = state.levelStep;
-    const oddStep = state.levelStep % 2 !== 0;
-    const humanStepNumber = Math.floor(currentLevelStep / 2) + 1;
-    if (oddStep) {
-      if (this.runStep(humanStepNumber)) state.levelStep++;
+    const stepLevel = state.levelStep;
+    const runStep = stepLevel % 2 !== 0;
+    const stepOder = Math.floor(stepLevel / 2) + 1;
+    const stepIndex = stepOder - 1;
+    const hasSteps = stepIndex < this.steps.length;
 
-      if (state.levelStep !== currentLevelStep) {
-        Logger.post("Change step from {stepFrom} to {stepTo}.", {
-          stepFrom: humanStepNumber,
-          stepTo: humanStepNumber + 1
-        });
+    if (runStep) {
+      if (hasSteps) {
+        if (this.steps[stepIndex]()) state.levelStep++;
+
+        if (state.levelStep !== stepLevel) {
+          Logger.post("Change step from {stepFrom} to {stepTo}.", { stepFrom: stepOder, stepTo: stepOder + 1 });
+        }
       }
     } else {
-      if ((Memory as any as Json).run === undefined) {
-        Logger.post(
-          "Type `Memory.run = true` to run the current step {step}.",
-          { step: humanStepNumber },
-          LogLevel.Information
-        );
-        (Memory as any as Json).run = false;
-      } else if ((Memory as any as Json).run) {
-        Logger.post("Running current step {step}.", { step: humanStepNumber }, LogLevel.Information);
-        delete (Memory as any as Json).run;
-        state.levelStep++;
+      const notifyUser = (Memory as any as Json).run === undefined;
+      const userAcceptedRun = (Memory as any as Json).run;
+      const waitForUserAction = () => ((Memory as any as Json).run = false);
+      const resetUserAction = () => delete (Memory as any as Json).run;
+      const goToTheNextStep = () => ++state.levelStep && resetUserAction();
+
+      if (hasSteps) {
+        if (notifyUser) {
+          Logger.post("Type `Memory.run = true` to run the step {step}.", { step: stepOder }, LogLevel.Information);
+          waitForUserAction();
+        } else if (userAcceptedRun) {
+          Logger.post("Running step {step}.", { step: stepOder }, LogLevel.Information);
+          goToTheNextStep();
+        }
+      } else {
+        Logger.post("There are no more steps.", undefined, LogLevel.Information);
+        goToTheNextStep();
       }
     }
   }
 
   /**
-   * Execução dos passos do tutorial. Retorna true quando conclui o passo.
-   * @param step Número do passo.
+   * Etapas de execução.
    * @protected
    */
-  protected abstract runStep(step: number): boolean;
+  protected abstract steps: (() => boolean)[];
 }

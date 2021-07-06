@@ -4,9 +4,22 @@ import { Logger } from "../../../../Common/Log/Logger";
 import { Tutorial } from "./Tutorial";
 
 /**
- * Ação inicial do jogo.
+ * Tutorial: Game UI and basic scripting.
  */
 export class GameUiAndBasicScripting extends Tutorial {
+  /**
+   * Etapas de execução.
+   * @protected
+   */
+  protected steps: (() => boolean)[] = [
+    (): boolean => this.createCreep(this.nameOfHarvester1, this.nameOfSpawn1),
+    (): boolean => this.sendCreepToHarvest(this.nameOfHarvester1),
+    (): boolean => this.sendCreepToHarvestAndTransferToTheSpawn(this.nameOfHarvester1, this.nameOfSpawn1),
+    (): boolean => this.createCreep(this.nameOfHarvester2, this.nameOfSpawn1),
+    (): boolean =>
+      this.sendCreepsToHarvestAndTransferToTheSpawn([this.nameOfHarvester1, this.nameOfHarvester2], this.nameOfSpawn1)
+  ];
+
   /**
    * Nome do spawn Spawn1
    * @private
@@ -26,30 +39,6 @@ export class GameUiAndBasicScripting extends Tutorial {
   private nameOfHarvester2 = "Harvester2";
 
   /**
-   * Execução dos passos do tutorial. Retorna true quando conclui o passo.
-   * @param step Número do passo.
-   * @protected
-   */
-  protected runStep(step: number): boolean {
-    switch (step) {
-      case 1:
-        return this.createCreep(this.nameOfHarvester1, this.nameOfSpawn1);
-      case 2:
-        return this.sendCreepToHarvest(this.nameOfHarvester1);
-      case 3:
-        return this.sendCreepToHarvestAndTransferToTheSpawn(this.nameOfHarvester1, this.nameOfSpawn1);
-      case 4:
-        return this.createCreep(this.nameOfHarvester2, this.nameOfSpawn1);
-      case 5:
-        return this.sendCreepsToHarvestAndTransferToTheSpawn(
-          [this.nameOfHarvester1, this.nameOfHarvester2],
-          this.nameOfSpawn1
-        );
-    }
-    return false;
-  }
-
-  /**
    * Cria um Screep
    * @param creepName
    * @param spawnName
@@ -58,12 +47,13 @@ export class GameUiAndBasicScripting extends Tutorial {
   private createCreep(creepName: string, spawnName: string): boolean {
     const game = this.game;
     const code = game.spawns[spawnName].spawnCreep([WORK, CARRY, MOVE], creepName);
+    const created = code === OK;
     Logger.post(
       "The spawn '{spawnName}' created the creep '{creepName}'. Code: {code}",
       { spawnName, creepName, code: Constants.format(code) },
       LogLevel.Information
     );
-    return true;
+    return created;
   }
 
   /**
