@@ -67,8 +67,13 @@ export class GameState implements GameStateFields {
     } else {
       this.memory[this.key] = data;
     }
-    Logger.post("Game state saved: {json}", { json: JSON.stringify(this.memory, null, 2) }, LogLevel.Verbose);
+    Logger.post("Game state saved: {json}", { json: JSON.stringify(this.memory) }, LogLevel.Verbose);
   }
+
+  /**
+   * Nível de exibição de log.
+   */
+  public logLevel: LogLevel = LogLevel.Information;
 
   /**
    * Tick do meu jogo.

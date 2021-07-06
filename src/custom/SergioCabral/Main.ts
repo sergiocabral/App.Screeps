@@ -10,29 +10,32 @@ import { Logger } from "../Common/Log/Logger";
  */
 export class Main implements IScreepsLoop {
   /**
-   * Construtor.
+   * Sinaliza que já em execução.
+   * @private
    */
-  public constructor() {
-    Logger.minimumLevel = ConsoleLogger.minimumLevel = LogLevel.Debug;
-    Logger.post("Constructor. Tick {gameTick}", { gameTick: Game.time }, LogLevel.Verbose);
-  }
+  private alreadyRunning = false;
 
   /**
    * Método de loop chamado pelo Screeps.
    */
   public loop(): void {
-    GameState.default = new GameState(Memory as any);
-    GameState.default.tick++;
+    const state = (GameState.default = new GameState(Memory as any));
+
+    Logger.minimumLevel = ConsoleLogger.minimumLevel = state.logLevel;
+
+    state.tick++;
 
     Logger.post(
-      "Loop. Global Tick {globalTick}. My Tick {myTick}.",
-      { globalTick: Game.time, myTick: GameState.default.tick },
+      "Loop. Global Tick {globalTick}. My Tick {myTick}. Instance re/created: {created}",
+      { globalTick: Game.time, myTick: state.tick, created: !this.alreadyRunning },
       LogLevel.Verbose
     );
 
-    const action = LevelActionFactory.get(GameState.default.level);
+    this.alreadyRunning = true;
+
+    const action = LevelActionFactory.get(state.level);
     action.loop();
 
-    GameState.default.save();
+    state.save();
   }
 }
