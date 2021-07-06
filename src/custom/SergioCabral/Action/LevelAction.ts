@@ -6,7 +6,7 @@ import { Logger } from "../../Common/Log/Logger";
 /**
  * Classe base para ações de nível.
  */
-export abstract class LevelAction implements IScreepsLoop {
+export class LevelAction implements IScreepsLoop {
   /**
    * Gerenciamento do estado do jogo em memória
    * @protected
