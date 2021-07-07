@@ -56,4 +56,13 @@ export abstract class Tutorial extends LevelAction {
    * @protected
    */
   protected abstract steps: (() => boolean)[];
+
+  /**
+   * Sinaliza que não é possível prosseguir com o tutorial.
+   * @protected
+   */
+  protected itIsNecessaryToProceedManually(): boolean {
+    Logger.post("It is necessary to proceed manually.", undefined, LogLevel.Information);
+    return true;
+  }
 }
