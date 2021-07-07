@@ -41,19 +41,19 @@ export abstract class LevelActionFactory {
     const action = actionConstructor ? new actionConstructor() : null;
 
     if (!action) {
+      const tutorialOptions = Object.keys(this.tutorialConstructor)
+        .map(tutorialKey => `${tutorialKey} (${this.tutorialConstructor[tutorialKey].name})`)
+        .join(", ");
       if (tutorialMemoryValue === undefined) {
-        const possibleValues = Object.keys(this.tutorialConstructor)
-          .map(tutorialKey => `${tutorialKey} (${this.tutorialConstructor[tutorialKey].name})`)
-          .join(", ");
         Logger.post(
-          "Set tutorial number in `Memory.{tutorialMemoryKey}` variable. Possible values: {possibleValues}",
-          { tutorialMemoryKey, possibleValues },
+          "Set tutorial number in `Memory.{tutorialMemoryKey}` variable. Possible values: {tutorialOptions}",
+          { tutorialMemoryKey, tutorialOptions },
           LogLevel.Information
         );
       } else if (tutorialMemoryValue) {
         Logger.post(
-          "The current value for tutorial is invalid: {tutorialMemoryValue}",
-          { tutorialMemoryValue },
+          "The current value '{tutorialMemoryValue}' for tutorial is invalid. Possible values: {tutorialOptions}",
+          { tutorialMemoryValue, tutorialOptions },
           LogLevel.Warning
         );
       }
