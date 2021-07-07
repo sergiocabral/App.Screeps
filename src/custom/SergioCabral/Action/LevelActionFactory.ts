@@ -2,6 +2,7 @@ import { GameError } from "../../Common/Error/GameError";
 import { GameLevel } from "../GameState/GameLevel";
 import { GameUiAndBasicScripting } from "./Level/Tutorial/GameUiAndBasicScripting";
 import { Json } from "../../Common/Helper/Type/Json";
+import { KeyValue } from "../../Common/Helper/Type/KeyValue";
 import { LevelAction } from "./LevelAction";
 import { LogLevel } from "../../Common/Log/LogLevel";
 import { Logger } from "../../Common/Log/Logger";
@@ -33,33 +34,32 @@ export abstract class LevelActionFactory {
    * @private
    */
   private static getTutorial(): LevelAction | null {
-    let action: LevelAction | null = null;
     const tutorialMemoryKey = "tutorial";
     const tutorialMemoryValue = (Memory as any as Json)[tutorialMemoryKey];
     const tutorialMemoryNumber = Number(tutorialMemoryValue);
-    switch (Math.abs(tutorialMemoryNumber)) {
-      case 1:
-        action = new GameUiAndBasicScripting();
-        break;
-      case 2:
-        action = new UpgradingController();
-        break;
-      default:
-        if (tutorialMemoryValue === undefined) {
-          Logger.post(
-            "Set tutorial number in `Memory.{tutorialMemoryKey}` variable.",
-            { tutorialMemoryKey },
-            LogLevel.Information
-          );
-        } else if (tutorialMemoryValue) {
-          Logger.post(
-            "The current value for tutorial is invalid: {tutorialMemoryValue}",
-            { tutorialMemoryValue },
-            LogLevel.Warning
-          );
-        }
-        (Memory as any as Json)[tutorialMemoryKey] = false;
+    const actionConstructor = this.tutorialConstructor[Math.abs(tutorialMemoryNumber).toString()];
+    const action = actionConstructor ? new actionConstructor() : null;
+
+    if (!action) {
+      if (tutorialMemoryValue === undefined) {
+        const possibleValues = Object.keys(this.tutorialConstructor)
+          .map(tutorialKey => `${tutorialKey} (${this.tutorialConstructor[tutorialKey].name})`)
+          .join(", ");
+        Logger.post(
+          "Set tutorial number in `Memory.{tutorialMemoryKey}` variable. Possible values: {possibleValues}",
+          { tutorialMemoryKey, possibleValues },
+          LogLevel.Information
+        );
+      } else if (tutorialMemoryValue) {
+        Logger.post(
+          "The current value for tutorial is invalid: {tutorialMemoryValue}",
+          { tutorialMemoryValue },
+          LogLevel.Warning
+        );
+      }
+      (Memory as any as Json)[tutorialMemoryKey] = false;
     }
+
     if (action && tutorialMemoryNumber >= 0) {
       Logger.post(
         "Tutorial selected is: {tutorialSelected}",
@@ -68,6 +68,16 @@ export abstract class LevelActionFactory {
       );
       (Memory as any as Json)[tutorialMemoryKey] = -tutorialMemoryNumber;
     }
+
     return action;
   }
+
+  /**
+   * Construtores de Action para um tutorial
+   * @private
+   */
+  private static tutorialConstructor: KeyValue<typeof LevelAction> = {
+    "1": GameUiAndBasicScripting,
+    "2": UpgradingController
+  };
 }
