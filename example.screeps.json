@@ -1,0 +1,9 @@
+{
+  "email": "username",
+  "password": "password",
+  "hostname": "127.0.0.1",
+  "protocol": "https",
+  "port": 443,
+  "path": "/",
+  "branch": "main"
+}

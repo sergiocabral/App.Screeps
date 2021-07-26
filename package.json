@@ -1,0 +1,22 @@
+{
+  "name": "app.screeps",
+  "version": "1.0.0",
+  "description": "Implementation of Screeps game by sergiocabral.com",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "push": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergiocabral/App.Screeps.git"
+  },
+  "author": "sergiocabral.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sergiocabral/App.Screeps/issues"
+  },
+  "homepage": "https://github.com/sergiocabral/App.Screeps#readme",
+  "dependencies": {},
+  "devDependencies": {}
+}
