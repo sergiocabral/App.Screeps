@@ -1,13 +1,13 @@
 # Screeps com TypeScript
 
 Este repositório serve de base simplificada para
-codificar em **TypeScript** para o Screeps.
+codificar em **TypeScript** para o Screeps com a
+possibilidade de importar bibliotecas **NPM**.
 
 ### Scripts NPM
 
-- `npm run build`: Compila o TypeScript para o diretório de saída.
-- `npm run push`: Envia o código-fonte para o Screeps.
-- `npm run build+push`: Compila e envia o código para o Screeps.
+- `npm run build+push`: Compila o TypeScript para o diretório de saída e envia o código-fonte para o Screeps.
+- `npm run watch`: Mesmo que **build+push**, mas a cada atualização do arquivo o processo é refeito automaticamente.
 
 ### Autenticação no Screeps
 
@@ -23,27 +23,24 @@ das propriedades.
 O código-fonte no diretório `./src` é compilado
 para o diretório `./output`.
 
-Foi definido no arquivo `tsconfig.json` como resultado
-da compilação o _ES2015_. Ele é compatível com
-o Screeps e faz com que o código JavaScript gerado
-no diretório `output` fique semelhante ao código-fonte
-original em TypeScript. Embora o estilo de ligação
-entre módulos seja o `commonjs` porque o Screeps não
-aceita `import`. 
-
 ### Bibliotecas externas
 
-Não é possível adicionar bibliotecas externas
+É possível adicionar bibliotecas externas
 através do comando `npm instal <biblioteca>`.
-O motivo é que a biblioteca não será embutida
-no código JavaScript gerado após a compilação,
-logo não estará acessível no Screeps.
+
+### Compilação
+
+A compilação unifica todos os arquivos TypeScript
+de entrada num único arquivo JavaScript de saída.
+Estará incluído neste arquivo de saída as bibliotecas
+NPM utilizadas. 
 
 ### Organização dos arquivos
 
-Atenção! O Screeps não suporta subdiretórios. Por esse
-motivo qualquer subdiretório contido em `./src` será
-ignorado.
+Embora o Screeps não suporte subdiretórios, é
+possível organizar o código-fonte TypeScript em
+subdiretório visto que ele será unificado num
+único arquivo JavaScript de saída.
 
 ---
 Autor: [sergiocabral.com](https://sergiocabral.com)
