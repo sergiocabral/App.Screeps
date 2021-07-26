@@ -1,11 +1,13 @@
-# Screeps com JavaScript
+# Screeps com TypeScript
 
 Este repositório serve de base simplificada para
-codificar em **JavaScript** para o Screeps.
+codificar em **TypeScript** para o Screeps.
 
 ### Scripts NPM
 
+- `npm run build`: Compila o TypeScript para o diretório de saída.
 - `npm run push`: Envia o código-fonte para o Screeps.
+- `npm run build+push`: Compila e envia o código para o Screeps.
 
 ### Autenticação no Screeps
 
@@ -18,21 +20,24 @@ das propriedades.
 
 ### Publicação no Screeps
 
-Somente os arquivos do diretório `./src` são enviados.
-Nenhuma modificação no conteúdo dos arquivos é feita.
-Embora os arquivos sejam enviados sem a extensão `.js`,
-conforme esperado pelo Screeps.
+O código-fonte no diretório `./src` é compilado
+para o diretório `./output`.
 
-Atenção! O Screeps não suporta subdiretórios. Por esse
-motivo qualquer subdiretório contido em `./src` será
-ignorado.
+Foi definido no arquivo `tsconfig.json` como resultado
+da compilação o _ES2015_. Ele é compatível com
+o Screeps e faz com que o código JavaScript gerado
+no diretório `output` fique semelhante ao código-fonte
+original em TypeScript. Embora o estilo de ligação
+entre módulos seja o `commonjs` porque o Screeps não
+aceita `import`. 
 
 ### Bibliotecas externas
 
 Não é possível adicionar bibliotecas externas
 através do comando `npm instal <biblioteca>`.
-O motivo é que a biblioteca não estará embutida
-no código JavaScript que será enviado ao Screeps.
+O motivo é que a biblioteca não será embutida
+no código JavaScript gerado após a compilação,
+logo não estará acessível no Screeps.
 
 ### Organização dos arquivos
 

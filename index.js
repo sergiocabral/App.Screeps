@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 const screepsConfigurationFile = './screeps.json';
-const sourceCodeDirectory = './src';
+const sourceCodeDirectory = './output';
 
 const config = JSON.parse(fs.readFileSync(screepsConfigurationFile).toString());
 
