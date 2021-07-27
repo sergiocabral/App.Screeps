@@ -8,6 +8,7 @@ possibilidade de importar bibliotecas **NPM**.
 
 - `npm run build+push`: Compila o TypeScript para o diretório de saída e envia o código-fonte para o Screeps.
 - `npm run watch`: Mesmo que **build+push**, mas a cada atualização do arquivo o processo é refeito automaticamente.
+- `npm run test`: Executa os testes automatizados.
 
 ### Autenticação no Screeps
 
@@ -41,6 +42,17 @@ Embora o Screeps não suporte subdiretórios, é
 possível organizar o código-fonte TypeScript em
 subdiretório visto que ele será unificado num
 único arquivo JavaScript de saída.
+
+### Testes automatizados
+
+A biblioteca para testes automatizados instalada
+é o _Jest_. 
+
+Foi reservado para a escrita de testes o diretório
+`./test`. Como sugestão de organização pode-se criar
+a mesma estrutura de arquivos e diretórios presentes
+em `./src`, mas finalizando cada arquivo de teste com
+`*.test.ts`.
 
 ---
 Autor: [sergiocabral.com](https://sergiocabral.com)
