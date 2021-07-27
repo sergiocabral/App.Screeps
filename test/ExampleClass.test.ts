@@ -1,4 +1,4 @@
-import { ExampleClass } from "../src/ExampleClass";
+import { ExampleClass } from '../src/ExampleClass';
 
 describe('Teste da classe ExampleClass', () => {
   test('Exemplificando teste unitário', () => {
@@ -10,4 +10,4 @@ describe('Teste da classe ExampleClass', () => {
     // Assert, Then
     expect(randomValue1).not.toBe(randomValue2);
   });
-})
+});
