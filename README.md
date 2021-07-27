@@ -1,74 +1,69 @@
-# Screeps com TypeScript
+# 🎮 Jogando Screeps! 
 
-Este repositório serve de base simplificada para
-codificar em **TypeScript** para o Screeps com a
-possibilidade de importar bibliotecas **NPM**.
+Galera, este repositório reúne as minhas aventuras
+pelo jogo Screeps. 😎 Talvez tenha alguma coisa legal
+pra você por aqui.
 
-### Scripts NPM
+### Screeps 🤣 Mas que coisa é essa?!
 
-- `npm run build+push`: Compila o TypeScript para o diretório de saída e envia o código-fonte para o Screeps.
-- `npm run watch`: Mesmo que **build+push**, mas a cada atualização do arquivo o processo é refeito automaticamente.
-- `npm run test`: Executa os testes automatizados.
-- `npm run format`: Ajusta a formatação dos arquivos de código-fonte.
-- `npm run lint`: Valida a sintaxe dos arquivos de código-fonte.
-- `npm run format+lint`: Ajusta a formatação e valida a sintaxe.
+Screeps é um jogo sandbox MMO RTS de código aberto para
+entusiastas de programação. A mecânica central é focada
+na programação de inteligência artificial (IA) para os
+avatares do jogo. **Entenda por 'programação' escrever
+código-fonte em JavaScript. Essa é a única forma de
+operar o jogo: 🤖 programando.**
 
-### Autenticação no Screeps
+[![Screeps = Scripting Creeps](https://screeps.com/images/video.png)](https://www.youtube.com/watch?v=ZboTgOajnGg)
 
-As informações de autenticação no Screeps deve ficar
-armazenadas no arquivo `screeps.json`.
+Alguns links:
+- [Site oficial](https://screeps.com/)
+- [Documentação](https://docs.screeps.com/)
+- [Guia de referência para o desenvolvedor poder jogar](https://docs.screeps.com/api/)
 
-Você pode escrever este arquivo com base no arquivo
-`example.screeps.json`, apenas modificando os valores
-das propriedades.
+## Junte-se a nossa comunidade no Brasil
 
-### Publicação no Screeps
+Muito do que se acha por aí está em inglês.
+Se quiser algo em português...
+- 📖 [Documentação escrita pelo André Branco](https://link.gohorse.dev/?screeps-docs)
+- 🦾[Comunidade Go Horse](https://link.gohorse.dev/?discord)
 
-O código-fonte no diretório `./src` é compilado
-para o diretório `./output`.
+![Go Horse](./assets/gohorse-banner.png)
 
-### Bibliotecas externas
+### Starter kits 🎨
 
-É possível adicionar bibliotecas externas
-através do comando `npm instal <biblioteca>`.
+**Para começar a jogar Screeps** talvez ache legal
+ver os branches abaixo.
 
-### Compilação
+Cada um deles tem um projeto inicial NPM que
+vai permitir que você comece a escrever códigos
+para enviar ao Screeps. 😻
 
-A compilação unifica todos os arquivos TypeScript
-de entrada num único arquivo JavaScript de saída.
-Estará incluído neste arquivo de saída as bibliotecas
-NPM utilizadas. 
+- [example-javascript](https://github.com/sergiocabral/App.Screeps/tree/example-javascript)
+    - Escrever e enviar códigos em JavaScript puro assim
+      como escreveria na interface do jogo.
+- [example-typescript](https://github.com/sergiocabral/App.Screeps/tree/example-typescript)
+    - Similar ao branch anterior, mas com códigos em
+      TypeScript.
+- [example-typescript-npm](https://github.com/sergiocabral/App.Screeps/tree/example-typescript-npm)
+    - Usando TypeScript com a possibilidade de usar
+      bibliotecas externas NPM. Aqui o código-fonte
+      será unificado num único arquivo para envio ao
+      Screeps.
+- [example-typescript-npm-jest](https://github.com/sergiocabral/App.Screeps/tree/example-typescript-npm-jest)
+    - Similar ao branch anterior, mas possui o Jest
+      configurado para poder escrever e executar testes
+      automatizados.
+- [example-typescript-npm-jest-eslint](https://github.com/sergiocabral/App.Screeps/tree/example-typescript-npm-jest-eslint)
+    - Similar ao branch anterior, mas já possui
+      configurado ferramentas (Prettier e ESLint) para
+      validar e formatar automaticamente o código-fonte.
 
-### Organização dos arquivos
+### Repositório original
 
-Embora o Screeps não suporte subdiretórios, é
-possível organizar o código-fonte TypeScript em
-subdiretório visto que ele será unificado num
-único arquivo JavaScript de saída.
+Este repositório é um _fork_ do [screeps-typescript-starter](https://github.com/screepers/screeps-typescript-starter).
+Mas pra ser sincero eu joguei tudo fora. 😅 E fiz os branches
+acima como uma forma mais simples de começar.
 
-### Testes automatizados
-
-A biblioteca para testes automatizados instalada
-é o _Jest_. 
-
-Foi reservado para a escrita de testes o diretório
-`./test`. Como sugestão de organização pode-se criar
-a mesma estrutura de arquivos e diretórios presentes
-em `./src`, mas finalizando cada arquivo de teste com
-`*.test.ts`.
-
-### Formatação e linter
-
-As bibliotecas utilizadas para formatar e avaliar o
-código-fonte são, respectivamente, o _Prettier_ e o
-_ESLint_.
-
-Quando executada, a formatação do código é aplicada
-no arquivo `./index.js` e no conteúdo dos diretórios
-`./src`, `./test` e `./output`.
-
-O linter é aplicado apenas no conteúdo do diretório
-`./src`.
-
----
-Autor: [sergiocabral.com](https://sergiocabral.com)
+De todo o modo, foi mantido uma ligação com o repositório
+original através do branch [original-repository](https://github.com/sergiocabral/App.Screeps/tree/original-repository).
+Então, dá uma olhada 👀 lá no projeto deles também.
