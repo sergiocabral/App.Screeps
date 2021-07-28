@@ -7,7 +7,7 @@
     "build+push": "rollup -c rollup.config.js",
     "watch": "rollup -cw rollup.config.js",
     "test": "jest --passWithNoTests",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"output/**/*.js\" index.js",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"output/**/*.js\"",
     "lint": "eslint \"src/**/*.ts\"",
     "format+lint": "npm run format && npm run lint"
   },
