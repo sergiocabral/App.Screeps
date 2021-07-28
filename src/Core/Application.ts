@@ -1,5 +1,8 @@
 import { Configure } from './Configure';
-import { InvalidExecutionError, Logger, LogLevel } from '@sergiocabral/helper';
+import { InvalidExecutionError } from '@sergiocabral/helper';
+import { GameMode } from '../Screeps/GameMode';
+import { FactoryGame } from '../Screeps/FactoryGame';
+import { IGame } from '../Screeps/IGame';
 
 /**
  * Classe principal da aplicação.
@@ -14,28 +17,37 @@ export class Application {
 
   /**
    * Inicia a aplicação.
+   * @param gameMode Modo operacional do jogo.
    */
-  public static start(): void {
+  public static start(gameMode: GameMode): void {
     if (this.uniqueInstance !== null) {
       throw new InvalidExecutionError(
         'This class can only be instantiated once.'
       );
     }
-    this.uniqueInstance = new Application();
+    this.uniqueInstance = new Application(gameMode);
     this.uniqueInstance.run();
   }
 
   /**
    * Construtor.
+   * @param gameMode Modo operacional do jogo.
    */
-  constructor() {
+  constructor(gameMode: GameMode) {
     Configure.log();
+    this.game = FactoryGame.create(gameMode);
   }
+
+  /**
+   * Lógica de funcionamento o jogo.
+   * @private
+   */
+  private game: IGame;
 
   /**
    * Executa a aplicação.
    */
   public run(): void {
-    Logger.post('Application running.', null, LogLevel.Verbose);
+    this.game.loop();
   }
 }

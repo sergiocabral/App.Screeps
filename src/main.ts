@@ -1,3 +1,3 @@
 import { Application } from './Core/Application';
 
-Application.start();
+Application.start('Basic');
