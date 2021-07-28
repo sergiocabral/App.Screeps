@@ -3,11 +3,12 @@ import { InvalidExecutionError } from '@sergiocabral/helper';
 import { GameMode } from '../Screeps/GameMode';
 import { FactoryGame } from '../Screeps/FactoryGame';
 import { IGame } from '../Screeps/IGame';
+import { IScreepsEnvironment } from './IScreepsEnvironment';
 
 /**
  * Classe principal da aplicação.
  */
-export class Application {
+export class Application implements IScreepsEnvironment {
   /**
    * Única instância desta classe.
    * Padrão de projeto Singleton.
@@ -35,19 +36,26 @@ export class Application {
    */
   constructor(gameMode: GameMode) {
     Configure.log();
-    this.game = FactoryGame.create(gameMode);
+    this.gameModeLogic = FactoryGame.create(gameMode);
   }
 
   /**
    * Lógica de funcionamento o jogo.
    * @private
    */
-  private game: IGame;
+  private gameModeLogic: IGame;
 
   /**
    * Executa a aplicação.
    */
   public run(): void {
-    this.game.loop();
+    this.gameModeLogic.loop(this);
+  }
+
+  /**
+   * Classe principal de operação.
+   */
+  public get game(): Game {
+    return Game;
   }
 }
