@@ -4,6 +4,7 @@ import { GameMode } from '../Screeps/GameMode';
 import { FactoryGame } from '../Screeps/FactoryGame';
 import { IGame } from '../Screeps/IGame';
 import { IScreepsEnvironment } from './IScreepsEnvironment';
+import { Query } from "../Screeps/Query";
 
 /**
  * Classe principal da aplicação.
@@ -37,6 +38,7 @@ export class Application implements IScreepsEnvironment {
   constructor(gameMode: GameMode) {
     Configure.log();
     this.gameModeLogic = FactoryGame.create(gameMode);
+    this.query = new Query(this.game);
   }
 
   /**
@@ -53,9 +55,14 @@ export class Application implements IScreepsEnvironment {
   }
 
   /**
-   * Classe principal de operação.
+   * Classe principal de operação do Screeps.
    */
   public get game(): Game {
     return Game;
   }
+
+  /**
+   * Consulta informações do jogo.
+   */
+  readonly query: Query;
 }

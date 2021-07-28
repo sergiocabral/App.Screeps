@@ -1,9 +1,11 @@
+import { Query } from '../Screeps/Query';
+
 /**
- * Objetos presentes no ambiente do Screeps.
+ * Propriedades que lidam diretamente com o ambiente do Screeps.
  */
 export interface IScreepsEnvironment {
   /**
-   * Classe principal de operação.
+   * Consulta informações do jogo.
    */
-  get game(): Game;
+  readonly query: Query;
 }
