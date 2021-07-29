@@ -4,7 +4,7 @@ import { GameMode } from '../Screeps/GameMode';
 import { FactoryGame } from '../Screeps/FactoryGame';
 import { IGame } from '../Screeps/IGame';
 import { IScreepsEnvironment } from './IScreepsEnvironment';
-import { Query } from "../Screeps/Query";
+import { Query } from '../Screeps/Query';
 
 /**
  * Classe principal da aplicação.

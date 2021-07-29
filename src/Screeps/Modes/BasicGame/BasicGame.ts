@@ -5,6 +5,7 @@ import {
   ShouldNeverHappenError
 } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../../Core/IScreepsEnvironment';
+import { NameGenerator } from '../../../Common/NameGenerator';
 
 /**
  * LJogo no funcionamento básico.
@@ -65,6 +66,6 @@ export class BasicGame implements IGame {
     const uniqueSpawn = spawns[uniqueSpawnsName];
     if (uniqueSpawn === undefined) throw new ShouldNeverHappenError();
 
-    uniqueSpawn.spawnCreep([WORK, CARRY, MOVE], 'Ops!');
+    uniqueSpawn.spawnCreep([WORK, CARRY, MOVE], NameGenerator.firstAndLastName);
   }
 }

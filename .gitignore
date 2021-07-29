@@ -1,6 +1,9 @@
 # Bibliotecas do NodeJS
 node_modules
 
+# Ignorar versionamento fixo dos pacotes.
+package-lock.json
+
 # Diretório usado para armazenar arquivo gerados automaticamente.
 # Possui o código transpilado para JavaScript que será enviado para o Screeps.
 output
