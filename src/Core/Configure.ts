@@ -1,5 +1,5 @@
 import { InvalidExecutionError, Logger } from '@sergiocabral/helper';
-import { LogWriterToScreeps } from '../Common/Log/LogWriterToScreeps';
+import { LogWriterToScreeps } from '@sergiocabral/screeps';
 
 /**
  * Realiza a configuração inicial do programa.

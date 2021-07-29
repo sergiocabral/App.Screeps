@@ -5,7 +5,7 @@ import {
   ShouldNeverHappenError
 } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../../Core/IScreepsEnvironment';
-import { NameGenerator } from '../../../Common/NameGenerator';
+import { NameGenerator } from '@sergiocabral/screeps';
 
 /**
  * LJogo no funcionamento básico.
