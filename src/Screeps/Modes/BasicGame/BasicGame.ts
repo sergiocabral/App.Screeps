@@ -57,13 +57,6 @@ export class BasicGame implements IGame {
    * @private
    */
   private tryCreateCreep(): void {
-    const creeps = this.screepsEnvironment.query.getCreeps();
-    const creepsNames = Object.keys(creeps);
-
-    if (creepsNames.length > 0) return;
-
-    Logger.post('Creating creep.', null, LogLevel.Debug);
-
     const spawns = this.screepsEnvironment.query.getSpawns();
     const spawnsNames = Object.keys(spawns);
 
@@ -75,12 +68,21 @@ export class BasicGame implements IGame {
       );
     }
 
-    const uniqueSpawnsName = spawnsNames[0];
-    if (uniqueSpawnsName === undefined) throw new ShouldNeverHappenError();
+    const spawnName = spawnsNames[0];
+    if (spawnName === undefined) throw new ShouldNeverHappenError();
 
-    const uniqueSpawn = spawns[uniqueSpawnsName];
-    if (uniqueSpawn === undefined) throw new ShouldNeverHappenError();
+    const spawn = spawns[spawnName];
+    if (spawn === undefined) throw new ShouldNeverHappenError();
 
-    uniqueSpawn.spawnCreep([WORK, CARRY, MOVE], NameGenerator.firstAndLastName);
+    const harvestBodyPart = [WORK, CARRY, MOVE];
+    const harvestBodyPartCost =
+      this.screepsEnvironment.query.calculateCost(harvestBodyPart);
+
+    if (spawn.room.energyAvailable < harvestBodyPartCost) return;
+
+    const creepName = NameGenerator.firstName;
+    spawn.spawnCreep([WORK, CARRY, MOVE], creepName);
+
+    Logger.post('Creep created: {creepName}.', { creepName }, LogLevel.Debug);
   }
 }
