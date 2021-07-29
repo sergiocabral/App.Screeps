@@ -1,6 +1,7 @@
 import { IGame } from '../../IGame';
 import {
   EmptyError,
+  KeyValue,
   Logger,
   LogLevel,
   NotImplementedError
@@ -51,6 +52,7 @@ export class BasicGame implements IGame {
     this.tryCreateCreep();
     this.tryHarvestEnergy();
     this.tryTransferEnergyToSpawn();
+    this.tryUpgradeController();
   }
 
   private getSpawn(): StructureSpawn {
@@ -81,7 +83,9 @@ export class BasicGame implements IGame {
     if (spawn.room.energyAvailable < harvestBodyPartCost) return;
 
     const creepName = NameGenerator.firstAndLastName;
-    spawn.spawnCreep([WORK, CARRY, MOVE], creepName);
+    spawn.spawnCreep([WORK, CARRY, MOVE], creepName, {
+      memory: { roleHarvest: Math.random() * 2 >= 1 }
+    });
 
     Logger.post('Creep created: {creepName}.', { creepName }, LogLevel.Debug);
   }
@@ -112,23 +116,46 @@ export class BasicGame implements IGame {
   private tryTransferEnergyToSpawn(): void {
     const spawn = this.getSpawn();
 
-    const source = spawn.room
-      .find(FIND_SOURCES)
-      .find(source => source.energyCapacity > 0);
-    if (!source) return;
-
     const creeps = this.screepsEnvironment.query
       .getCreeps()
       .filter(
         creep =>
           creep.room.name === spawn.room.name &&
-          creep.store.getFreeCapacity() === 0
+          (creep.memory as KeyValue)['roleHarvest'] &&
+          creep.store.getFreeCapacity() === 0 &&
+          !(creep.memory as KeyValue)['upgrading']
       );
 
     for (const creep of creeps) {
       if (creep.transfer(spawn, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
         creep.moveTo(spawn);
       }
+    }
+  }
+
+  private tryUpgradeController(): void {
+    const spawn = this.getSpawn();
+    const controller = spawn.room.controller;
+
+    if (!controller) return;
+
+    const creeps = this.screepsEnvironment.query
+      .getCreeps()
+      .filter(
+        creep =>
+          creep.room.name === spawn.room.name &&
+          !(creep.memory as KeyValue)['roleHarvest'] &&
+          (creep.store.getFreeCapacity() === 0 ||
+            (creep.memory as KeyValue)['upgrading'])
+      );
+
+    for (const creep of creeps) {
+      const code = creep.upgradeController(controller);
+      if (code === ERR_NOT_IN_RANGE) {
+        creep.moveTo(controller);
+      }
+      (creep.memory as KeyValue)['upgrading'] =
+        creep.store.getUsedCapacity() > 0;
     }
   }
 }
