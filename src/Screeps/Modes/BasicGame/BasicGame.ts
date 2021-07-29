@@ -50,6 +50,7 @@ export class BasicGame implements IGame {
   private do(): void {
     this.tryCreateCreep();
     this.tryHarvestEnergy();
+    this.tryTransferEnergyToSpawn();
   }
 
   private getSpawn(): StructureSpawn {
@@ -79,7 +80,7 @@ export class BasicGame implements IGame {
     const spawn = this.getSpawn();
     if (spawn.room.energyAvailable < harvestBodyPartCost) return;
 
-    const creepName = NameGenerator.firstName;
+    const creepName = NameGenerator.firstAndLastName;
     spawn.spawnCreep([WORK, CARRY, MOVE], creepName);
 
     Logger.post('Creep created: {creepName}.', { creepName }, LogLevel.Debug);
@@ -104,6 +105,29 @@ export class BasicGame implements IGame {
     for (const creep of creeps) {
       if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
         creep.moveTo(source);
+      }
+    }
+  }
+
+  private tryTransferEnergyToSpawn(): void {
+    const spawn = this.getSpawn();
+
+    const source = spawn.room
+      .find(FIND_SOURCES)
+      .find(source => source.energyCapacity > 0);
+    if (!source) return;
+
+    const creeps = this.screepsEnvironment.query
+      .getCreeps()
+      .filter(
+        creep =>
+          creep.room.name === spawn.room.name &&
+          creep.store.getFreeCapacity() === 0
+      );
+
+    for (const creep of creeps) {
+      if (creep.transfer(spawn, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+        creep.moveTo(spawn);
       }
     }
   }
