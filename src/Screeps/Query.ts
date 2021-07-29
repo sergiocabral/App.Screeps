@@ -1,7 +1,7 @@
 /**
  * Consulta informações do jogo.
  */
-import { EmptyError, KeyValue } from '@sergiocabral/helper';
+import { KeyValue, ShouldNeverHappenError } from '@sergiocabral/helper';
 
 export class Query {
   /**
@@ -13,16 +13,26 @@ export class Query {
   /**
    * Retorna a lista dos spawns existentes.
    */
-  public getSpawns(): KeyValue<StructureSpawn> {
-    return Object.keys(this.game.spawns).reduce((result, spawnName) => {
-      const spawn = this.game.spawns[spawnName];
-      if (spawn === undefined) {
-        throw new EmptyError(
-          'Spawn expected {spawnName}'.querystring({ spawnName })
-        );
-      }
-      result[spawnName] = spawn;
+  private getEntity<T>(object: KeyValue<T>): KeyValue<T> {
+    return Object.keys(object).reduce((result, name) => {
+      const entity = object[name];
+      if (entity === undefined) throw new ShouldNeverHappenError();
+      result[name] = entity;
       return result;
-    }, {} as KeyValue<StructureSpawn>);
+    }, {} as KeyValue<T>);
+  }
+
+  /**
+   * Retorna a lista dos spawns existentes.
+   */
+  public getSpawns(): KeyValue<StructureSpawn> {
+    return this.getEntity<StructureSpawn>(this.game.spawns);
+  }
+
+  /**
+   * Retorna a lista dos screeps existentes.
+   */
+  public getCreeps(): KeyValue<Creep> {
+    return this.getEntity<Creep>(this.game.creeps);
   }
 }

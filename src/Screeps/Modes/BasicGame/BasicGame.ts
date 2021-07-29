@@ -1,6 +1,8 @@
 import { IGame } from '../../IGame';
 import {
   EmptyError,
+  Logger,
+  LogLevel,
   NotImplementedError,
   ShouldNeverHappenError
 } from '@sergiocabral/helper';
@@ -47,7 +49,20 @@ export class BasicGame implements IGame {
    * @private
    */
   private do(): void {
-    //TODO: Extrair para função específica.
+    this.tryCreateCreep();
+  }
+
+  /**
+   * Tenta criar um creep.
+   * @private
+   */
+  private tryCreateCreep(): void {
+    const creeps = this.screepsEnvironment.query.getCreeps();
+    const creepsNames = Object.keys(creeps);
+
+    if (creepsNames.length > 0) return;
+
+    Logger.post('Creating creep.', null, LogLevel.Debug);
 
     const spawns = this.screepsEnvironment.query.getSpawns();
     const spawnsNames = Object.keys(spawns);
