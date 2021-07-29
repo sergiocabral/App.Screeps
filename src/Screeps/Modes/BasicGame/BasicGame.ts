@@ -3,8 +3,7 @@ import {
   EmptyError,
   Logger,
   LogLevel,
-  NotImplementedError,
-  ShouldNeverHappenError
+  NotImplementedError
 } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../../Core/IScreepsEnvironment';
 import { NameGenerator } from '@sergiocabral/screeps';
@@ -50,6 +49,22 @@ export class BasicGame implements IGame {
    */
   private do(): void {
     this.tryCreateCreep();
+    this.tryHarvestEnergy();
+  }
+
+  private getSpawn(): StructureSpawn {
+    const spawns = this.screepsEnvironment.query.getSpawns();
+    const uniqueSpawn = spawns[0];
+
+    if (spawns.length !== 1 || uniqueSpawn === undefined) {
+      throw new NotImplementedError(
+        'Expected only one spawn for now, but found {spawnCount}.'.querystring({
+          spawnCount: spawns.length
+        })
+      );
+    }
+
+    return uniqueSpawn;
   }
 
   /**
@@ -57,32 +72,39 @@ export class BasicGame implements IGame {
    * @private
    */
   private tryCreateCreep(): void {
-    const spawns = this.screepsEnvironment.query.getSpawns();
-    const spawnsNames = Object.keys(spawns);
-
-    if (spawnsNames.length !== 1) {
-      throw new NotImplementedError(
-        'Expected only one spawn for now, but found {spawnCount}.'.querystring({
-          spawnCount: spawnsNames.length
-        })
-      );
-    }
-
-    const spawnName = spawnsNames[0];
-    if (spawnName === undefined) throw new ShouldNeverHappenError();
-
-    const spawn = spawns[spawnName];
-    if (spawn === undefined) throw new ShouldNeverHappenError();
-
     const harvestBodyPart = [WORK, CARRY, MOVE];
     const harvestBodyPartCost =
       this.screepsEnvironment.query.calculateCost(harvestBodyPart);
 
+    const spawn = this.getSpawn();
     if (spawn.room.energyAvailable < harvestBodyPartCost) return;
 
     const creepName = NameGenerator.firstName;
     spawn.spawnCreep([WORK, CARRY, MOVE], creepName);
 
     Logger.post('Creep created: {creepName}.', { creepName }, LogLevel.Debug);
+  }
+
+  private tryHarvestEnergy(): void {
+    const spawn = this.getSpawn();
+
+    const source = spawn.room
+      .find(FIND_SOURCES)
+      .find(source => source.energyCapacity > 0);
+    if (!source) return;
+
+    const creeps = this.screepsEnvironment.query
+      .getCreeps()
+      .filter(
+        creep =>
+          creep.room.name === spawn.room.name &&
+          creep.store.getFreeCapacity() > 0
+      );
+
+    for (const creep of creeps) {
+      if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
+        creep.moveTo(source);
+      }
+    }
   }
 }

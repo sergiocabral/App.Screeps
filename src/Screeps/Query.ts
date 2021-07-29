@@ -13,26 +13,25 @@ export class Query {
   /**
    * Retorna a lista dos spawns existentes.
    */
-  private getEntity<T>(object: KeyValue<T>): KeyValue<T> {
-    return Object.keys(object).reduce((result, name) => {
+  private getEntity<T>(object: KeyValue<T>): T[] {
+    return Object.keys(object).map(name => {
       const entity = object[name];
       if (entity === undefined) throw new ShouldNeverHappenError();
-      result[name] = entity;
-      return result;
-    }, {} as KeyValue<T>);
+      return entity;
+    });
   }
 
   /**
    * Retorna a lista dos spawns existentes.
    */
-  public getSpawns(): KeyValue<StructureSpawn> {
+  public getSpawns(): StructureSpawn[] {
     return this.getEntity<StructureSpawn>(this.game.spawns);
   }
 
   /**
    * Retorna a lista dos screeps existentes.
    */
-  public getCreeps(): KeyValue<Creep> {
+  public getCreeps(): Creep[] {
     return this.getEntity<Creep>(this.game.creeps);
   }
 
