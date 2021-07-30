@@ -6,24 +6,24 @@ import {
   LogLevel,
   NotImplementedError
 } from '@sergiocabral/helper';
-import { IScreepsEnvironment } from '../../../Core/IScreepsEnvironment';
+import { IScreepsOperation } from '../../../Core/IScreepsOperation';
 import { NameGenerator } from '@sergiocabral/screeps';
 
 /**
- * LJogo no funcionamento básico.
+ * Jogo no funcionamento básico.
  */
 export class BasicGame implements IGame {
-  private screepsEnvironmentValue: IScreepsEnvironment | null = null;
+  private screepsOperationValue: IScreepsOperation | null = null;
 
   /**
    * Objetos presentes no ambiente do Screeps
    * @private
    */
-  private get screepsEnvironment(): IScreepsEnvironment {
-    if (this.screepsEnvironmentValue === null) {
+  private get screepsOperation(): IScreepsOperation {
+    if (this.screepsOperationValue === null) {
       throw new EmptyError('Value is not defined.');
     }
-    return this.screepsEnvironmentValue;
+    return this.screepsOperationValue;
   }
 
   /**
@@ -31,16 +31,16 @@ export class BasicGame implements IGame {
    * @param screepEnvironment
    * @private
    */
-  private initialize(screepEnvironment: IScreepsEnvironment) {
-    this.screepsEnvironmentValue = screepEnvironment;
+  private initialize(screepEnvironment: IScreepsOperation) {
+    this.screepsOperationValue = screepEnvironment;
   }
 
   /**
    * Implementada a lógica do loop do jogo.
-   * @param screepsEnvironment Propriedades que lidam diretamente com o ambiente do Screeps.
+   * @param screepsOperation Propriedades que lidam diretamente com o ambiente do Screeps.
    */
-  public loop(screepsEnvironment: IScreepsEnvironment): void {
-    this.initialize(screepsEnvironment);
+  public loop(screepsOperation: IScreepsOperation): void {
+    this.initialize(screepsOperation);
     this.do();
   }
 
@@ -56,7 +56,7 @@ export class BasicGame implements IGame {
   }
 
   private getSpawn(): StructureSpawn {
-    const spawns = this.screepsEnvironment.query.getSpawns();
+    const spawns = this.screepsOperation.query.getSpawns();
     const uniqueSpawn = spawns[0];
 
     if (spawns.length !== 1 || uniqueSpawn === undefined) {
@@ -77,7 +77,7 @@ export class BasicGame implements IGame {
   private tryCreateCreep(): void {
     const harvestBodyPart = [WORK, CARRY, MOVE];
     const harvestBodyPartCost =
-      this.screepsEnvironment.query.calculateCost(harvestBodyPart);
+      this.screepsOperation.query.calculateCost(harvestBodyPart);
 
     const spawn = this.getSpawn();
     if (spawn.room.energyAvailable < harvestBodyPartCost) return;
@@ -98,7 +98,7 @@ export class BasicGame implements IGame {
       .find(source => source.energyCapacity > 0);
     if (!source) return;
 
-    const creeps = this.screepsEnvironment.query
+    const creeps = this.screepsOperation.query
       .getCreeps()
       .filter(
         creep =>
@@ -116,7 +116,7 @@ export class BasicGame implements IGame {
   private tryTransferEnergyToSpawn(): void {
     const spawn = this.getSpawn();
 
-    const creeps = this.screepsEnvironment.query
+    const creeps = this.screepsOperation.query
       .getCreeps()
       .filter(
         creep =>
@@ -139,7 +139,7 @@ export class BasicGame implements IGame {
 
     if (!controller) return;
 
-    const creeps = this.screepsEnvironment.query
+    const creeps = this.screepsOperation.query
       .getCreeps()
       .filter(
         creep =>

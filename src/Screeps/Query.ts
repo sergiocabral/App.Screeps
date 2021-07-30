@@ -2,13 +2,14 @@
  * Consulta informações do jogo.
  */
 import { KeyValue, ShouldNeverHappenError } from '@sergiocabral/helper';
+import { IScreepsEnvironment } from '../Core/IScreepsEnvironment';
 
 export class Query {
   /**
    * Construtor.
-   * @param game
+   * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
    */
-  constructor(private game: Game) {}
+  constructor(private screepsEnvironment: IScreepsEnvironment) {}
 
   /**
    * Retorna a lista dos spawns existentes.
@@ -25,14 +26,14 @@ export class Query {
    * Retorna a lista dos spawns existentes.
    */
   public getSpawns(): StructureSpawn[] {
-    return this.getEntity<StructureSpawn>(this.game.spawns);
+    return this.getEntity<StructureSpawn>(this.screepsEnvironment.game.spawns);
   }
 
   /**
    * Retorna a lista dos screeps existentes.
    */
   public getCreeps(): Creep[] {
-    return this.getEntity<Creep>(this.game.creeps);
+    return this.getEntity<Creep>(this.screepsEnvironment.game.creeps);
   }
 
   /**

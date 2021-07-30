@@ -1,11 +1,29 @@
-import { Query } from '../Screeps/Query';
-
 /**
- * Propriedades que lidam diretamente com o ambiente do Screeps.
+ * Disponibiliza objetos do ambiente do Screeps.
  */
 export interface IScreepsEnvironment {
   /**
-   * Consulta informações do jogo.
+   * Objeto principal do jogo.
    */
-  readonly query: Query;
+  readonly game: Game;
+
+  /**
+   * Comunicação entre shards
+   */
+  readonly interShardMemory: InterShardMemory;
+
+  /**
+   * Objeto para armazenar estados entre os loops.
+   */
+  readonly memory: Memory;
+
+  /**
+   * Formas de encontrar caminhos pelo jogo.
+   */
+  readonly pathFinder: PathFinder;
+
+  /**
+   * Forma de implementar um stringify personalizado.
+   */
+  readonly rawMemory: RawMemory;
 }

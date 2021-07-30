@@ -3,13 +3,14 @@ import { InvalidExecutionError } from '@sergiocabral/helper';
 import { GameMode } from '../Screeps/GameMode';
 import { FactoryGame } from '../Screeps/FactoryGame';
 import { IGame } from '../Screeps/IGame';
-import { IScreepsEnvironment } from './IScreepsEnvironment';
+import { IScreepsOperation } from './IScreepsOperation';
 import { Query } from '../Screeps/Query';
+import { IScreepsEnvironment } from './IScreepsEnvironment';
 
 /**
  * Classe principal da aplicação.
  */
-export class Application implements IScreepsEnvironment {
+export class Application implements IScreepsOperation, IScreepsEnvironment {
   /**
    * Única instância desta classe.
    * Padrão de projeto Singleton.
@@ -35,31 +36,51 @@ export class Application implements IScreepsEnvironment {
    * Construtor.
    * @param gameMode Modo operacional do jogo.
    */
-  constructor(gameMode: GameMode) {
+  private constructor(gameMode: GameMode) {
     Configure.log();
-    this.gameModeLogic = FactoryGame.create(gameMode);
-    this.query = new Query(this.game);
+
+    this.gameExecutor = FactoryGame.create(gameMode);
+
+    this.query = new Query(this);
   }
 
   /**
    * Lógica de funcionamento o jogo.
    * @private
    */
-  private gameModeLogic: IGame;
+  private gameExecutor: IGame;
 
   /**
    * Executa a aplicação.
    */
   public run(): void {
-    this.gameModeLogic.loop(this);
+    this.gameExecutor.loop(this);
   }
 
   /**
-   * Classe principal de operação do Screeps.
+   * Objeto principal do jogo.
    */
-  public get game(): Game {
-    return Game;
-  }
+  public readonly game: Game = Game;
+
+  /**
+   * Comunicação entre shards
+   */
+  public readonly interShardMemory: InterShardMemory = InterShardMemory;
+
+  /**
+   * Objeto para armazenar estados entre os loops.
+   */
+  public readonly memory: Memory = Memory;
+
+  /**
+   * Formas de encontrar caminhos pelo jogo.
+   */
+  public readonly pathFinder: PathFinder = PathFinder;
+
+  /**
+   * Forma de implementar um stringify personalizado.
+   */
+  public readonly rawMemory: RawMemory = RawMemory;
 
   /**
    * Consulta informações do jogo.
