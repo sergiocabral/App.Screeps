@@ -63,11 +63,6 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
   public readonly game: Game = Game;
 
   /**
-   * Comunicação entre shards
-   */
-  public readonly interShardMemory: InterShardMemory = InterShardMemory;
-
-  /**
    * Objeto para armazenar estados entre os loops.
    */
   public readonly memory: Memory = Memory;

@@ -42,7 +42,6 @@ describe('Class Application', () => {
 
     const globals = {
       Game: Game,
-      InterShardMemory: InterShardMemory,
       Memory: Memory,
       PathFinder: PathFinder,
       RawMemory: RawMemory
@@ -58,7 +57,6 @@ describe('Class Application', () => {
     // Assert, Then
 
     expect(instance.game).toBe(globals.Game);
-    expect(instance.interShardMemory).toBe(globals.InterShardMemory);
     expect(instance.memory).toBe(globals.Memory);
     expect(instance.pathFinder).toBe(globals.PathFinder);
     expect(instance.rawMemory).toBe(globals.RawMemory);

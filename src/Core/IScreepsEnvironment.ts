@@ -8,11 +8,6 @@ export interface IScreepsEnvironment {
   readonly game: Game;
 
   /**
-   * Comunicação entre shards
-   */
-  readonly interShardMemory: InterShardMemory;
-
-  /**
    * Objeto para armazenar estados entre os loops.
    */
   readonly memory: Memory;

@@ -62,7 +62,6 @@ export default {
   // A set of global variables that need to be available in all test environments
   globals: {
     Game: {},
-    InterShardMemory: {},
     Memory: {},
     PathFinder: {},
     RawMemory: {}

@@ -1,6 +1,7 @@
 import { IGame } from '../../IGame';
 import {
   EmptyError,
+  HelperList,
   KeyValue,
   Logger,
   LogLevel,
@@ -93,11 +94,6 @@ export class BasicGame implements IGame {
   private tryHarvestEnergy(): void {
     const spawn = this.getSpawn();
 
-    const source = spawn.room
-      .find(FIND_SOURCES)
-      .find(source => source.energyCapacity > 0);
-    if (!source) return;
-
     const creeps = this.screepsOperation.query
       .getCreeps()
       .filter(
@@ -106,7 +102,28 @@ export class BasicGame implements IGame {
           creep.store.getFreeCapacity() > 0
       );
 
+    const allSources = spawn.room.find(FIND_SOURCES);
+    const getSource = (creep: Creep): Source | null => {
+      const sources = allSources.filter(source => source.energyCapacity > 0);
+      const sourceId = (creep.memory as KeyValue)['sourceId'] as
+        | string
+        | undefined;
+      if (sourceId) {
+        const source = sources.find(source => source.id === sourceId);
+        if (source) return source;
+      } else {
+        const source = HelperList.getRandom(sources);
+        if (source) {
+          (creep.memory as KeyValue)['sourceId'] = source.id;
+          return source;
+        }
+      }
+      return null;
+    };
+
     for (const creep of creeps) {
+      const source = getSource(creep);
+      if (!source) continue;
       if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
         creep.moveTo(source);
       }
