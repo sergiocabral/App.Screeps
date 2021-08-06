@@ -76,6 +76,9 @@ export class BasicGame implements ILoop {
    * @private
    */
   private tryCreateCreep(): void {
+    const creepsLimit = 20;
+    if (this.screepsOperation.query.getCreeps().length >= creepsLimit) return;
+
     const harvestBodyPart = [WORK, CARRY, MOVE];
     const harvestBodyPartCost =
       this.screepsOperation.query.calculateCost(harvestBodyPart);
@@ -85,7 +88,7 @@ export class BasicGame implements ILoop {
 
     const creepName = NameGenerator.firstAndLastName;
     spawn.spawnCreep([WORK, CARRY, MOVE], creepName, {
-      memory: { roleHarvest: Math.random() * 2 >= 1 }
+      memory: { roleHarvest: Math.random() * 3 <= 1 }
     });
 
     Logger.post('Creep created: {creepName}.', { creepName }, LogLevel.Debug);
