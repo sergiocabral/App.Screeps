@@ -11,7 +11,7 @@ export class Console implements ILoop {
    * @param memory Objeto que servirá de fonte de dados.
    * @param propertyName Nome da propriedade que será ouvida.
    */
-  public constructor(memory: Memory, private propertyName: string) {
+  public constructor(memory: Memory, private readonly propertyName: string) {
     this.source = memory as unknown as KeyValue<string>;
   }
 
@@ -19,7 +19,7 @@ export class Console implements ILoop {
    * Objeto que servirá de fonte de dados.
    * @private
    */
-  private source: KeyValue<string>;
+  private readonly source: KeyValue<string>;
 
   /**
    * Implementada a lógica do loop do jogo.
