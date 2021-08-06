@@ -1,4 +1,4 @@
-import { Query } from '../Screeps/Query';
+import { Query } from './Query';
 
 /**
  * Responsável por operar o Screeps.

@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { Configure } from '../../src/Core/Configure';
+import { Configure } from '../../src/Infrastructure/Core/Configure';
 import { InvalidExecutionError, KeyValue, Logger } from '@sergiocabral/helper';
 
 describe('Class Configure', () => {

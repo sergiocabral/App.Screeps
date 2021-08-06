@@ -1,3 +1,4 @@
-import { Application } from './Core/Application';
+import { Application } from './Infrastructure/Core/Application';
+import { BasicGame } from './Game/Modes/BasicGame/BasicGame';
 
-Application.start('Basic');
+Application.start(new BasicGame());

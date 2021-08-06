@@ -1,4 +1,4 @@
-import { IGame } from '../../IGame';
+import { IGame } from '../../../Infrastructure/Core/IGame';
 import {
   EmptyError,
   HelperList,
@@ -7,7 +7,7 @@ import {
   LogLevel,
   NotImplementedError
 } from '@sergiocabral/helper';
-import { IScreepsOperation } from '../../../Core/IScreepsOperation';
+import { IScreepsOperation } from '../../../Infrastructure/Screeps/IScreepsOperation';
 import { NameGenerator } from '@sergiocabral/screeps';
 
 /**

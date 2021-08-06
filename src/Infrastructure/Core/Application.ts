@@ -1,11 +1,9 @@
 import { Configure } from './Configure';
 import { InvalidExecutionError } from '@sergiocabral/helper';
-import { GameMode } from '../Screeps/GameMode';
-import { FactoryGame } from '../Screeps/FactoryGame';
-import { IGame } from '../Screeps/IGame';
-import { IScreepsOperation } from './IScreepsOperation';
+import { IGame } from './IGame';
+import { IScreepsOperation } from '../Screeps/IScreepsOperation';
 import { Query } from '../Screeps/Query';
-import { IScreepsEnvironment } from './IScreepsEnvironment';
+import { IScreepsEnvironment } from '../Screeps/IScreepsEnvironment';
 
 /**
  * Classe principal da aplicação.
@@ -20,35 +18,27 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
 
   /**
    * Inicia a aplicação.
-   * @param gameMode Modo operacional do jogo.
+   * @param gameExecutor Modo operacional do jogo.
    */
-  public static start(gameMode: GameMode): void {
+  public static start(gameExecutor: IGame): void {
     if (this.uniqueInstance !== null) {
       throw new InvalidExecutionError(
         'This class can only be instantiated once.'
       );
     }
-    this.uniqueInstance = new Application(gameMode);
+    this.uniqueInstance = new Application(gameExecutor);
     this.uniqueInstance.run();
   }
 
   /**
    * Construtor.
-   * @param gameMode Modo operacional do jogo.
+   * @param gameExecutor Modo operacional do jogo.
    */
-  private constructor(gameMode: GameMode) {
+  private constructor(private gameExecutor: IGame) {
     Configure.log();
-
-    this.gameExecutor = FactoryGame.create(gameMode);
 
     this.query = new Query(this);
   }
-
-  /**
-   * Lógica de funcionamento o jogo.
-   * @private
-   */
-  private gameExecutor: IGame;
 
   /**
    * Executa a aplicação.

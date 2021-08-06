@@ -2,7 +2,7 @@
  * Consulta informações do jogo.
  */
 import { KeyValue, ShouldNeverHappenError } from '@sergiocabral/helper';
-import { IScreepsEnvironment } from '../Core/IScreepsEnvironment';
+import { IScreepsEnvironment } from './IScreepsEnvironment';
 
 export class Query {
   /**

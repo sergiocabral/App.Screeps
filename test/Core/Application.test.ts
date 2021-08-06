@@ -1,11 +1,15 @@
 /* eslint-disable */
 
-import { Application } from '../../src/Core/Application';
+import { Application } from '../../src/Infrastructure/Core/Application';
 import { InvalidExecutionError, KeyValue } from '@sergiocabral/helper';
-import { FactoryGame } from '../../src/Screeps/FactoryGame';
-import { IScreepsEnvironment } from '../../src/Core/IScreepsEnvironment';
-import { IScreepsOperation } from '../../src/Core/IScreepsOperation';
-import { Query } from '../../src/Screeps/Query';
+import { IScreepsEnvironment } from '../../src/Infrastructure/Screeps/IScreepsEnvironment';
+import { IScreepsOperation } from '../../src/Infrastructure/Screeps/IScreepsOperation';
+import { Query } from '../../src/Infrastructure/Screeps/Query';
+import { IGame } from '../../src/Infrastructure/Core/IGame';
+
+class DummyGame implements IGame {
+  loop(): void {}
+}
 
 describe('Class Application', () => {
   const originals: KeyValue<any> = {};
@@ -14,23 +18,18 @@ describe('Class Application', () => {
     originals['Application.uniqueInstance'] = (
       Application as any
     ).uniqueInstance;
-    originals['FactoryGame.create'] = FactoryGame.create;
   });
 
   afterEach(() => {
     (Application as any).uniqueInstance =
       originals['Application.uniqueInstance'];
-    FactoryGame.create = originals['FactoryGame.create'];
   });
 
   test('Não deve permitir iniciar a aplicação mais de uma vez', () => {
     // Arrange, Given
-
-    FactoryGame.create = jest.fn().mockReturnValue({ loop: () => {} });
-
     // Act, When
 
-    const instantiate = () => Application.start('Basic');
+    const instantiate = () => Application.start(new DummyGame());
 
     // Assert, Then
 
@@ -47,11 +46,9 @@ describe('Class Application', () => {
       RawMemory: RawMemory
     };
 
-    FactoryGame.create = jest.fn().mockReturnValue({ loop: () => {} });
-
     // Act, When
 
-    Application.start('Basic');
+    Application.start(new DummyGame());
     const instance = (Application as any).uniqueInstance as IScreepsEnvironment;
 
     // Assert, Then
@@ -63,12 +60,9 @@ describe('Class Application', () => {
   });
   test('verifica a implementação de IScreepsOperation', () => {
     // Arrange, Given
-
-    FactoryGame.create = jest.fn().mockReturnValue({ loop: () => {} });
-
     // Act, When
 
-    Application.start('Basic');
+    Application.start(new DummyGame());
     const instance = (Application as any).uniqueInstance as IScreepsOperation;
 
     // Assert, Then
