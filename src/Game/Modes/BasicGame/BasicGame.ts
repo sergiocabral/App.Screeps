@@ -1,4 +1,4 @@
-import { IGame } from '../../../Infrastructure/Core/IGame';
+import { ILoop } from '../../../Infrastructure/Core/ILoop';
 import {
   EmptyError,
   HelperList,
@@ -13,7 +13,7 @@ import { NameGenerator } from '@sergiocabral/screeps';
 /**
  * Jogo no funcionamento básico.
  */
-export class BasicGame implements IGame {
+export class BasicGame implements ILoop {
   private screepsOperationValue: IScreepsOperation | null = null;
 
   /**

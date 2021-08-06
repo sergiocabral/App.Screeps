@@ -1,11 +1,11 @@
 import { IScreepsOperation } from '../Screeps/IScreepsOperation';
 
 /**
- * Representa um classe que opera o jogo.
+ * Representa uma classe que é executada pelo loop do jogo.
  */
-export interface IGame {
+export interface ILoop {
   /**
-   * Implementada a lógica do loop do jogo.
+   * Executa a cada loop do jogo.
    * @param screepsEnvironment Objetos do Screeps.
    */
   loop(screepsEnvironment: IScreepsOperation): void;

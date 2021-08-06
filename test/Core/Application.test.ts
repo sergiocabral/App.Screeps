@@ -5,9 +5,9 @@ import { InvalidExecutionError, KeyValue } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../src/Infrastructure/Screeps/IScreepsEnvironment';
 import { IScreepsOperation } from '../../src/Infrastructure/Screeps/IScreepsOperation';
 import { Query } from '../../src/Infrastructure/Screeps/Query';
-import { IGame } from '../../src/Infrastructure/Core/IGame';
+import { ILoop } from '../../src/Infrastructure/Core/ILoop';
 
-class DummyGame implements IGame {
+class DummyGame implements ILoop {
   loop(): void {}
 }
 
