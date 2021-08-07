@@ -10,6 +10,7 @@ import { ClockTime } from '../Clock/ClockTime';
 import { BeforeGameExecutionEvent } from './Message/BeforeGameExecutionEvent';
 import { AfterGameExecutionEvent } from './Message/AfterGameExecutionEvent';
 import { ReceivedConsoleCommand } from '../Console/ReceivedConsoleCommand';
+import { Scheduler } from '../Clock/Scheduler';
 
 /**
  * Classe principal da aplicação.
@@ -43,6 +44,7 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
   private constructor(private gameExecutor: ILoop) {
     Logger.defaultLogger = new LogWriterToScreeps();
     void new Console(this.memory, Definition.MemoryConsoleCommand);
+    void new Scheduler(this.memory, Definition.MemoryScheduler);
     void new ClockTime(this.memory, Definition.MemoryClockTime);
     this.query = new Query(this);
     Message.subscribe(

@@ -11,4 +11,9 @@ export class Definition {
    * Propriedade em Memory para: Registrar o tempo de execução.
    */
   public static readonly MemoryClockTime = 'time';
+
+  /**
+   * Propriedade em Memory para: Agendador de mensagens.
+   */
+  public static readonly MemoryScheduler = 'scheduler';
 }

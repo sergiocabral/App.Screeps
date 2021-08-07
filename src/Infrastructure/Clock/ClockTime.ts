@@ -1,6 +1,9 @@
 import { MemoryHandler } from '../Core/MemoryHandler';
 import { ClockTimeData } from './ClockTimeData';
-import { Logger, LogLevel } from '@sergiocabral/helper';
+import { HelperDate, Logger, LogLevel, Message } from '@sergiocabral/helper';
+import { BeforeGameExecutionEvent } from '../Core/Message/BeforeGameExecutionEvent';
+import { ScheduleMessage } from './Message/ScheduleMessage';
+import { ClockTimeEmmitLogCommand } from './Message/ClockTimeEmmitLogCommand';
 
 /**
  * Informações do momento (time) de execução.
@@ -36,7 +39,53 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
 
     this.elapsedTime = this.currentExecution - this.firstExecution;
 
-    this.emmitLog();
+    Message.subscribe(
+      BeforeGameExecutionEvent,
+      this.handleBeforeGameExecutionEvent.bind(this)
+    );
+    Message.subscribe(
+      ClockTimeEmmitLogCommand,
+      this.handleClockTimeEmmitLogCommand.bind(this)
+    );
+  }
+
+  /**
+   * Handler de mensagem BeforeGameExecutionEvent
+   * @private
+   */
+  private handleBeforeGameExecutionEvent(): void {
+    void new ScheduleMessage(
+      ClockTimeEmmitLogCommand,
+      HelperDate.addSeconds(30)
+    ).send();
+  }
+
+  /**
+   * Handler de mensagem ClockTimeEmmitLogCommand
+   * @private
+   */
+  private handleClockTimeEmmitLogCommand(): void {
+    Logger.post(
+      [
+        'Ticks {ticks}.',
+        'Uptime: {uptime}.',
+        'Average tick time: {averageTickTime}.',
+        'Data source: Memory.{propertyName}'
+      ].join(' '),
+      () => {
+        return {
+          ticks: this.ticks,
+          uptime: ClockTime.formatTime(this.elapsedTime, 'minutes'),
+          averageTickTime: ClockTime.formatTime(
+            this.averageTickTime,
+            'seconds'
+          ),
+          propertyName: this.propertyName
+        };
+      },
+      LogLevel.Verbose,
+      'ClockTime'
+    );
   }
 
   /**
@@ -65,6 +114,34 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
   public readonly elapsedTime: number;
 
   /**
+   * Tempo total decorrido do jogo: em segundos
+   */
+  public get elapsedSeconds(): number {
+    return Math.floor(this.elapsedTime / 1000);
+  }
+
+  /**
+   * Tempo total decorrido do jogo: em minutos
+   */
+  public get elapsedMinutes(): number {
+    return Math.floor(this.elapsedTime / 1000 / 60);
+  }
+
+  /**
+   * Tempo total decorrido do jogo: em horas
+   */
+  public get elapsedHours(): number {
+    return Math.floor(this.elapsedTime / 1000 / 60 / 60);
+  }
+
+  /**
+   * Tempo total decorrido do jogo: em dias
+   */
+  public get elapsedDays(): number {
+    return Math.floor(this.elapsedTime / 1000 / 60 / 60 / 24);
+  }
+
+  /**
    * Tempo médio do tick
    */
   public get averageTickTime(): number {
@@ -88,34 +165,5 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
     } else {
       return `${time.toFixed(1)} ${output}`;
     }
-  }
-
-  /**
-   * Emite um log com as informações do click.
-   * @private
-   */
-  private emmitLog(): void {
-    if (Math.floor(this.elapsedTime / 1000) % 5 !== 0) return;
-    Logger.post(
-      [
-        'Ticks {ticks}.',
-        'Uptime: {uptime}.',
-        'Average tick time: {averageTickTime}.',
-        'Data source: Memory.{propertyName}'
-      ].join(' '),
-      () => {
-        return {
-          ticks: this.ticks,
-          uptime: ClockTime.formatTime(this.elapsedTime, 'minutes'),
-          averageTickTime: ClockTime.formatTime(
-            this.averageTickTime,
-            'seconds'
-          ),
-          propertyName: this.propertyName
-        };
-      },
-      LogLevel.Verbose,
-      'ClockTime'
-    );
   }
 }
