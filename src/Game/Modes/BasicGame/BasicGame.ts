@@ -1,4 +1,3 @@
-import { ILoop } from '../../../Infrastructure/Core/ILoop';
 import {
   EmptyError,
   HelperList,
@@ -9,11 +8,22 @@ import {
 } from '@sergiocabral/helper';
 import { IScreepsOperation } from '../../../Infrastructure/Screeps/IScreepsOperation';
 import { NameGenerator } from '@sergiocabral/screeps';
+import { IGame } from '../../../Infrastructure/Core/IGame';
+import { ScheduledMessage } from '../../../Infrastructure/Schedule/Message/ScheduledMessage';
 
 /**
  * Jogo no funcionamento básico.
  */
-export class BasicGame implements ILoop {
+export class BasicGame implements IGame {
+  /**
+   * Lista dos tipos de mensagens que podem ser agendadas.
+   */
+  public scheduledMessageTypes: typeof ScheduledMessage[] = [];
+
+  /**
+   * Objetos presentes no ambiente do Screeps
+   * @private
+   */
   private screepsOperationValue: IScreepsOperation | null = null;
 
   /**

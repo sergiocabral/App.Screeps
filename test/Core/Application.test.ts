@@ -5,9 +5,11 @@ import { InvalidExecutionError, KeyValue } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../src/Infrastructure/Screeps/IScreepsEnvironment';
 import { IScreepsOperation } from '../../src/Infrastructure/Screeps/IScreepsOperation';
 import { Query } from '../../src/Infrastructure/Screeps/Query';
-import { ILoop } from '../../src/Infrastructure/Core/ILoop';
+import { IGame } from '../../src/Infrastructure/Core/IGame';
+import { ScheduledMessage } from '../../src/Infrastructure/Schedule/Message/ScheduledMessage';
 
-class DummyGame implements ILoop {
+class DummyGame implements IGame {
+  scheduledMessageTypes: typeof ScheduledMessage[] = [];
   loop(): void {}
 }
 

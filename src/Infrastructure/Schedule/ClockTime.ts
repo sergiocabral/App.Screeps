@@ -56,7 +56,7 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
   private handleBeforeGameExecutionEvent(): void {
     void new ScheduleMessage(
       ClockTimeEmmitLogCommand,
-      HelperDate.addSeconds(30)
+      HelperDate.addMinutes(1)
     ).send();
   }
 
