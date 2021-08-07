@@ -67,3 +67,42 @@ acima como uma forma mais simples de começar.
 De todo o modo, foi mantido uma ligação com o repositório
 original através do branch [original-repository](https://github.com/sergiocabral/App.Screeps/tree/original-repository).
 Então, dá uma olhada 👀 lá no projeto deles também.
+
+### Curiosidades
+
+#### Sem suporte para _setTimeout_
+
+A função `setTimeout` simplesmente não existe.
+O que faz sentido, já que o jogo é executado em
+loops atômicos.
+
+#### Sem suporte para _Promise_
+
+Nos meus testes confirmei que o ambiente de execução do
+Screeps não aceita `async`/`await`, o que inclui `Promise`.
+
+Dada a função abaixo:
+
+```javascript
+function funcPromise() {
+  return new Promise(resolve => resolve());
+}
+```
+
+No código a seguir, a 2ª chamada de `console.log` não
+acontece.
+
+```javascript
+console.log('first');
+funcPromise().then(() => {
+  console.log('second');
+});
+```
+
+Ocorre o mesmo comportamento usando `await`.
+
+```javascript
+console.log('first');
+await funcPromise();
+console.log('second');
+```

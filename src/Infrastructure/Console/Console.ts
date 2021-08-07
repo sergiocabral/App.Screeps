@@ -1,37 +1,46 @@
-import { ILoop } from '../Core/ILoop';
-import { HelperText, KeyValue } from '@sergiocabral/helper';
-import { ConsoleCommand } from './ConsoleCommand';
+import { HelperText, Message } from '@sergiocabral/helper';
+import { ReceivedConsoleCommand } from './ReceivedConsoleCommand';
+import { MemoryHandler } from '../Core/MemoryHandler';
+import { BeforeGameExecutionEvent } from '../Core/Message/BeforeGameExecutionEvent';
 
 /**
  * Configuração do console como entrada de comandos.
  */
-export class Console implements ILoop {
+export class Console extends MemoryHandler<string> {
   /**
    * Construtor.
    * @param memory Objeto que servirá de fonte de dados.
    * @param propertyName Nome da propriedade que será ouvida.
    */
-  public constructor(memory: Memory, private readonly propertyName: string) {
-    this.source = memory as unknown as KeyValue<string>;
+  public constructor(memory: Memory, propertyName: string) {
+    super(memory, propertyName, () => '');
+    this.args = HelperText.getCommandArguments(this.source);
+    this.command = this.args.shift();
+    Message.subscribe(
+      BeforeGameExecutionEvent,
+      this.handleBeforeGameExecutionEvent.bind(this)
+    );
   }
 
   /**
-   * Objeto que servirá de fonte de dados.
+   * Nome do comando atualmente recebido.
    * @private
    */
-  private readonly source: KeyValue<string>;
+  private readonly command?: string;
 
   /**
-   * Implementada a lógica do loop do jogo.
+   * Argumentos para o comando recebido.
+   * @private
    */
-  public loop(): void {
-    const commandLine = this.source[this.propertyName];
-    if (!commandLine) return;
-    const args = HelperText.getCommandArguments(commandLine);
-    const command = args.shift();
-    if (command) {
-      void new ConsoleCommand(command, args).send();
-    }
-    delete this.source[this.propertyName];
+  private readonly args: string[];
+
+  /**
+   * Handler de mensagem BeforeGameExecutionEvent
+   * @private
+   */
+  private handleBeforeGameExecutionEvent(): void {
+    if (!this.command) return;
+    void new ReceivedConsoleCommand(this.command, this.args).send();
+    this.clearMemory();
   }
 }

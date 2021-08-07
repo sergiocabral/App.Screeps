@@ -5,7 +5,11 @@ import { Query } from '../Screeps/Query';
 import { IScreepsEnvironment } from '../Screeps/IScreepsEnvironment';
 import { LogWriterToScreeps } from '@sergiocabral/screeps';
 import { Console } from '../Console/Console';
-import { ConsoleCommand } from '../Console/ConsoleCommand';
+import { Definition } from '../Definition';
+import { ClockTime } from '../Clock/ClockTime';
+import { BeforeGameExecutionEvent } from './Message/BeforeGameExecutionEvent';
+import { AfterGameExecutionEvent } from './Message/AfterGameExecutionEvent';
+import { ReceivedConsoleCommand } from '../Console/ReceivedConsoleCommand';
 
 /**
  * Classe principal da aplicação.
@@ -38,41 +42,34 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
    */
   private constructor(private gameExecutor: ILoop) {
     Logger.defaultLogger = new LogWriterToScreeps();
-    this.console = new Console(this.memory, '_');
-
+    void new Console(this.memory, Definition.MemoryConsoleCommand);
+    void new ClockTime(this.memory, Definition.MemoryClockTime);
     this.query = new Query(this);
-
-    Message.subscribe(ConsoleCommand, this.handleConsoleCommand.bind(this));
+    Message.subscribe(
+      ReceivedConsoleCommand,
+      Application.handleReceivedConsoleCommand.bind(this)
+    );
   }
 
   /**
-   * Ao receber um comando do console.
-   * @param message ConsoleCommand
+   * Mensagem: ReceivedConsoleCommand
+   * @param message
    * @private
    */
-  private handleConsoleCommand(message: ConsoleCommand): void {
-    Logger.post(
-      'Command received "{commandName}" with arguments: {commandArguments}',
-      {
-        commandName: message.command,
-        commandArguments: message.args.join(', ')
-      }
-    );
+  private static handleReceivedConsoleCommand(
+    message: ReceivedConsoleCommand
+  ): void {
+    Logger.post('Comando {command}', message);
   }
 
   /**
    * Executa a aplicação.
    */
   public run(): void {
-    this.console.loop();
+    void new BeforeGameExecutionEvent(this).send();
     this.gameExecutor.loop(this);
+    void new AfterGameExecutionEvent(this).send();
   }
-
-  /**
-   * Configuração do console como entrada de comandos.
-   * @private
-   */
-  private readonly console: Console;
 
   /**
    * Objeto principal do jogo.

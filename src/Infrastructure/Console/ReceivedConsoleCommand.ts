@@ -3,7 +3,7 @@ import { Message } from '@sergiocabral/helper';
 /**
  * Comando de console.
  */
-export class ConsoleCommand extends Message {
+export class ReceivedConsoleCommand extends Message {
   /**
    * Construtor.
    * @param command Comando.
