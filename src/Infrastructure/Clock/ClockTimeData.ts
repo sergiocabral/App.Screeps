@@ -7,10 +7,10 @@ export type ClockTimeData = {
   /**
    * Momento da primeira execução.
    */
-  firstExecution: number;
+  first: number;
 
   /**
    * Momento da última execução antes do momento atual.
    */
-  lastExecution: number;
+  last: number;
 };

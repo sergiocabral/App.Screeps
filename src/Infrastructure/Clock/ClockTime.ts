@@ -15,26 +15,24 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
     super(memory, propertyName, () => {
       return {
         ticks: 0,
-        firstExecution: 0,
-        lastExecution: 0
+        first: 0,
+        last: 0
       };
     });
 
     this.currentExecution = new Date().getTime();
 
     this.lastExecution =
-      this.source.lastExecution > 0
-        ? this.source.lastExecution
-        : this.currentExecution;
+      this.source.last > 0 ? this.source.last : this.currentExecution;
 
-    this.source.lastExecution = this.currentExecution;
+    this.source.last = this.currentExecution;
 
     this.ticks = ++this.source.ticks;
 
-    if (this.source.firstExecution <= 0) {
-      this.source.firstExecution = this.currentExecution;
+    if (this.source.first <= 0) {
+      this.source.first = this.currentExecution;
     }
-    this.firstExecution = this.source.firstExecution;
+    this.firstExecution = this.source.first;
 
     this.elapsedTime = this.currentExecution - this.firstExecution;
 
@@ -67,11 +65,29 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
   public readonly elapsedTime: number;
 
   /**
-   * Informações do tempo de execução sem interrupção.
+   * Tempo médio do tick
    */
-  public get uptime(): string {
-    const minutes = Math.round(this.elapsedTime / 1000 / 60);
-    return `${minutes} minutes`;
+  public get averageTickTime(): number {
+    const average = (this.lastExecution - this.firstExecution) / this.ticks;
+    return Number.isFinite(average) ? average : 0;
+  }
+
+  /**
+   * Formata a exibição de milissegundos.
+   * @param milliseconds Tempo decorrido.
+   * @param output Unidade .
+   */
+  private static formatTime(
+    milliseconds: number,
+    output: 'seconds' | 'minutes'
+  ): string {
+    let time = milliseconds / 1000;
+    if (output === 'minutes') {
+      time /= 60;
+      return `${Math.round(time)} ${output}`;
+    } else {
+      return `${time.toFixed(1)} ${output}`;
+    }
   }
 
   /**
@@ -79,12 +95,22 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
    * @private
    */
   private emmitLog(): void {
+    if (Math.floor(this.elapsedTime / 1000) % 5 !== 0) return;
     Logger.post(
-      'Ticks {ticks}. Uptime: {uptime}. See more in Memory.{propertyName}',
+      [
+        'Ticks {ticks}.',
+        'Uptime: {uptime}.',
+        'Average tick time: {averageTickTime}.',
+        'Data source: Memory.{propertyName}'
+      ].join(' '),
       () => {
         return {
           ticks: this.ticks,
-          uptime: this.uptime,
+          uptime: ClockTime.formatTime(this.elapsedTime, 'minutes'),
+          averageTickTime: ClockTime.formatTime(
+            this.averageTickTime,
+            'seconds'
+          ),
           propertyName: this.propertyName
         };
       },
