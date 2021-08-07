@@ -25,7 +25,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.2",
     "@rollup/plugin-node-resolve": "^13.0.4",
-    "@sergiocabral/helper": "^1.13.2",
+    "@sergiocabral/helper": "^1.14.0",
     "@sergiocabral/screeps": "^1.1.1",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.172",
@@ -46,7 +46,6 @@
     "rollup-plugin-clear": "^2.0.7",
     "rollup-plugin-screeps": "^1.0.1",
     "rollup-plugin-typescript2": "^0.30.0",
-    "rollup-plugin-uglify": "^6.0.4",
     "ts-jest": "^27.0.4",
     "ts-node": "^10.1.0",
     "tslib": "^2.3.0",

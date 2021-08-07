@@ -13,7 +13,6 @@ export default {
     commonjs(),                                // Converte os módulos de CommonJS para ES6.
     nodeResolve(),                             // Importa as bibliotecas do npm.
     cleanupPlugin(),                           // Remove os comentários do código-fonte.
-  //uglify(),                                  // Minifica o código-fonte.
     typescript({tsconfig: './tsconfig.json'}), // Compilação TypeScript.
     screeps({configFile: './screeps.json'})    // Envia o código para o Screeps.
   ]
