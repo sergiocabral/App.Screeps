@@ -1,12 +1,11 @@
 import { MemoryHandler } from '../Core/MemoryHandler';
 import { InvalidExecutionError, KeyValue, Message } from '@sergiocabral/helper';
 import { ScheduleMessage } from './Message/ScheduleMessage';
-import { BeforeGameExecutionEvent } from '../Core/Message/BeforeGameExecutionEvent';
-import { ClockTimeEmmitLogCommand } from './Message/ClockTimeEmmitLogCommand';
 import { IListOfScheduledMessagesType } from './IListOfScheduledMessagesType';
 import { ClockTime } from './ClockTime';
 import { Definition } from '../Definition';
 import { ScheduledMessage } from './Message/ScheduledMessage';
+import { BeginExecutionEvent } from '../Core/Message/BeginExecutionEvent';
 
 /**
  * Agendador de mensagens.
@@ -27,9 +26,8 @@ export class Scheduler
     void new ClockTime(memory, Definition.MemoryClockTime);
 
     Message.subscribe(ScheduleMessage, this.handleScheduleMessage.bind(this));
-    Message.subscribe(
-      BeforeGameExecutionEvent,
-      this.handleBeforeGameExecutionEvent.bind(this)
+    Message.subscribe(BeginExecutionEvent, () =>
+      this.dispatchExpiredMessages()
     );
   }
 
@@ -37,9 +35,7 @@ export class Scheduler
    * Lista dos tipos de mensagens que podem ser agendadas.
    * @private
    */
-  private scheduledMessageTypesValue: typeof ScheduledMessage[] = [
-    ClockTimeEmmitLogCommand
-  ];
+  private scheduledMessageTypesValue: typeof ScheduledMessage[] = [];
 
   /**
    * Lista dos tipos de mensagens que podem ser agendadas.
@@ -84,14 +80,6 @@ export class Scheduler
 
       void new MessageConstructor().send();
     }
-  }
-
-  /**
-   * Handler de mensagem BeforeGameExecutionEvent
-   * @private
-   */
-  private handleBeforeGameExecutionEvent(): void {
-    this.dispatchExpiredMessages();
   }
 
   /**

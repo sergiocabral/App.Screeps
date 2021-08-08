@@ -1,9 +1,8 @@
 import { MemoryHandler } from '../Core/MemoryHandler';
 import { ClockTimeData } from './ClockTimeData';
-import { HelperDate, Logger, LogLevel, Message } from '@sergiocabral/helper';
-import { BeforeGameExecutionEvent } from '../Core/Message/BeforeGameExecutionEvent';
-import { ScheduleMessage } from './Message/ScheduleMessage';
-import { ClockTimeEmmitLogCommand } from './Message/ClockTimeEmmitLogCommand';
+import { Message } from '@sergiocabral/helper';
+import { SendDebugToConsole } from '../Console/Message/SendDebugToConsole';
+import { EndExecutionEvent } from '../Core/Message/EndExecutionEvent';
 
 /**
  * Informações do momento (time) de execução.
@@ -39,53 +38,7 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
 
     this.elapsedTime = this.currentExecution - this.firstExecution;
 
-    Message.subscribe(
-      BeforeGameExecutionEvent,
-      this.handleBeforeGameExecutionEvent.bind(this)
-    );
-    Message.subscribe(
-      ClockTimeEmmitLogCommand,
-      this.handleClockTimeEmmitLogCommand.bind(this)
-    );
-  }
-
-  /**
-   * Handler de mensagem BeforeGameExecutionEvent
-   * @private
-   */
-  private handleBeforeGameExecutionEvent(): void {
-    void new ScheduleMessage(
-      ClockTimeEmmitLogCommand,
-      HelperDate.addMinutes(1)
-    ).send();
-  }
-
-  /**
-   * Handler de mensagem ClockTimeEmmitLogCommand
-   * @private
-   */
-  private handleClockTimeEmmitLogCommand(): void {
-    Logger.post(
-      [
-        'Ticks {ticks}.',
-        'Uptime: {uptime}.',
-        'Average tick time: {averageTickTime}.',
-        'Data source: Memory.{propertyName}'
-      ].join(' '),
-      () => {
-        return {
-          ticks: this.ticks,
-          uptime: ClockTime.formatTime(this.elapsedTime, 'minutes'),
-          averageTickTime: ClockTime.formatTime(
-            this.averageTickTime,
-            'seconds'
-          ),
-          propertyName: this.propertyName
-        };
-      },
-      LogLevel.Verbose,
-      'ClockTime'
-    );
+    Message.subscribe(EndExecutionEvent, () => this.sendDebugToConsole());
   }
 
   /**
@@ -147,6 +100,41 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
   public get averageTickTime(): number {
     const average = (this.lastExecution - this.firstExecution) / this.ticks;
     return Number.isFinite(average) ? average : 0;
+  }
+
+  /**
+   * Envia uma mensagem de log tipo debug para o console.
+   * @private
+   */
+  private sendDebugToConsole(): void {
+    const section = 'Clock';
+    new SendDebugToConsole(
+      () => 'Ticks: {ticks}',
+      () => {
+        return {
+          ticks: this.ticks
+        };
+      },
+      section
+    ).send();
+    new SendDebugToConsole(
+      () => 'Average tick time: {averageTickTime}',
+      () => {
+        return {
+          averageTickTime: ClockTime.formatTime(this.averageTickTime, 'seconds')
+        };
+      },
+      section
+    ).send();
+    new SendDebugToConsole(
+      () => 'Uptime: {uptime}',
+      () => {
+        return {
+          uptime: ClockTime.formatTime(this.elapsedTime, 'minutes')
+        };
+      },
+      section
+    ).send();
   }
 
   /**

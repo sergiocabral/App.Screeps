@@ -1,7 +1,17 @@
-import { HelperText, Message } from '@sergiocabral/helper';
+import {
+  HelperDate,
+  HelperText,
+  Logger,
+  LogLevel,
+  Message
+} from '@sergiocabral/helper';
 import { ReceivedConsoleCommand } from './ReceivedConsoleCommand';
 import { MemoryHandler } from '../Core/MemoryHandler';
-import { BeforeGameExecutionEvent } from '../Core/Message/BeforeGameExecutionEvent';
+import { SendDebugToConsole } from './Message/SendDebugToConsole';
+import { ScheduleMessage } from '../Schedule/Message/ScheduleMessage';
+import { ShowDebugToConsole } from './Message/ShowDebugToConsole';
+import { Definition } from '../Definition';
+import { BeginExecutionEvent } from '../Core/Message/BeginExecutionEvent';
 
 /**
  * Configuração do console como entrada de comandos.
@@ -16,9 +26,18 @@ export class Console extends MemoryHandler<string> {
     super(memory, propertyName, () => '');
     this.args = HelperText.getCommandArguments(this.source);
     this.command = this.args.shift();
+    Message.subscribe(BeginExecutionEvent, () => {
+      this.dispatchCommand();
+      this.scheduleShowDebugToConsole();
+    });
     Message.subscribe(
-      BeforeGameExecutionEvent,
-      this.handleBeforeGameExecutionEvent.bind(this)
+      SendDebugToConsole,
+      this.handleSendDebugToConsole.bind(this)
+    );
+    Message.subscribe(ShowDebugToConsole, () => this.showDebugToConsole());
+    Message.subscribe(
+      ReceivedConsoleCommand,
+      this.handleReceivedConsoleCommand.bind(this)
     );
   }
 
@@ -35,12 +54,77 @@ export class Console extends MemoryHandler<string> {
   private readonly args: string[];
 
   /**
-   * Handler de mensagem BeforeGameExecutionEvent
+   * Despacha o comando recebido (se existir).
    * @private
    */
-  private handleBeforeGameExecutionEvent(): void {
+  private dispatchCommand(): void {
     if (!this.command) return;
     void new ReceivedConsoleCommand(this.command, this.args).send();
     this.clearMemory();
+  }
+
+  /**
+   * Agenda a exibição das informações de debug.
+   * @private
+   */
+  private scheduleShowDebugToConsole(): void {
+    new ScheduleMessage(
+      ShowDebugToConsole,
+      HelperDate.addMinutes(Definition.intervalInMinutesToShowDebug)
+    ).send();
+  }
+
+  /**
+   * Lista de mensagens para o console recebidas.
+   * @private
+   */
+  private listOfSendDebugToConsole: SendDebugToConsole[] = [];
+
+  /**
+   * Handler de mensagem SendDebugToConsole
+   * @param message
+   * @private
+   */
+  private handleSendDebugToConsole(message: SendDebugToConsole): void {
+    this.listOfSendDebugToConsole.push(message);
+  }
+
+  /**
+   * Handler de mensagem ReceivedConsoleCommand
+   * @param message
+   * @private
+   */
+  private handleReceivedConsoleCommand(message: ReceivedConsoleCommand): void {
+    if (message.command === Definition.commandList.showDebugToConsole) {
+      new ShowDebugToConsole().send();
+    }
+  }
+
+  /**
+   * Exibe as mensagens coletadas no console.
+   * @private
+   */
+  private showDebugToConsole(): void {
+    if (!this.listOfSendDebugToConsole.length) return;
+
+    console.log();
+    console.log('     _      _');
+    console.log('  __| | ___| |__  _   _  __ _');
+    console.log(' / _` |/ _ \\ `_ \\| | | |/ _` |');
+    console.log('| (_| |  __/ |_) | |_| | (_| |');
+    console.log(' \\__,_|\\___|_.__/ \\__,_|\\__, |');
+    console.log(' github.com/sergiocabral |__/');
+    console.log();
+
+    for (const sendDebugToConsole of this.listOfSendDebugToConsole) {
+      Logger.post(
+        sendDebugToConsole.messageTemplate,
+        sendDebugToConsole.values,
+        LogLevel.Debug,
+        sendDebugToConsole.section
+      );
+    }
+
+    console.log();
   }
 }
