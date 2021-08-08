@@ -1,7 +1,7 @@
 import { KeyValue } from '@sergiocabral/helper';
 
 /**
- * Abstração para clases que manipulam o Memory.
+ * Abstração para classes que manipulam o Memory.
  */
 export abstract class MemoryHandler<T> {
   /**
@@ -10,7 +10,7 @@ export abstract class MemoryHandler<T> {
    * @param propertyName Nome da propriedade que será ouvida.
    * @param defaultValue Constrói o valor padrão se não existir.
    */
-  public constructor(
+  protected constructor(
     memory: Memory,
     protected readonly propertyName: string,
     defaultValue: () => T

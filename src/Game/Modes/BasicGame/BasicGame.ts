@@ -44,11 +44,11 @@ export class BasicGame implements IGame {
 
   /**
    * Inicializa a classe.
-   * @param screepEnvironment
+   * @param screepsOperation
    * @private
    */
-  private initialize(screepEnvironment: IScreepsOperation) {
-    this.screepsOperationValue = screepEnvironment;
+  private initialize(screepsOperation: IScreepsOperation) {
+    this.screepsOperationValue = screepsOperation;
   }
 
   /**
