@@ -1,8 +1,7 @@
-import { InvalidExecutionError, Logger } from '@sergiocabral/helper';
+import { InvalidExecutionError } from '@sergiocabral/helper';
 import { IScreepsOperation } from '../Screeps/IScreepsOperation';
 import { Query } from '../Screeps/Query';
 import { IScreepsEnvironment } from '../Screeps/IScreepsEnvironment';
-import { LogWriterToScreeps } from '@sergiocabral/screeps';
 import { Console } from '../Console/Console';
 import { Definition } from '../Definition';
 import { EndExecutionEvent } from './Message/EndExecutionEvent';
@@ -41,8 +40,6 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
    * @param gameExecutor Modo operacional do jogo.
    */
   private constructor(private gameExecutor: IGame) {
-    Logger.defaultLogger = new LogWriterToScreeps();
-
     void new Console(this.memory, Definition.MemoryConsoleCommand)
       .addConsoleHelpCommands(Definition.ConsoleHelpCommand)
       .addConsoleHelpCommands(gameExecutor);
