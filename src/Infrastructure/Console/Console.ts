@@ -76,7 +76,11 @@ export class Console
   public addConsoleHelpCommands(
     consoleHelpCommands: IConsoleHelpCommands
   ): Console {
-    this.helpValue.push(...consoleHelpCommands.help);
+    Array.isArray(consoleHelpCommands.help)
+      ? this.helpValue.push(...consoleHelpCommands.help)
+      : consoleHelpCommands.help
+      ? this.helpValue.push(consoleHelpCommands.help)
+      : this.helpValue.push(...[]);
     return this;
   }
 

@@ -38,8 +38,7 @@ export class Definition {
    * Representação das informações de ajuda para comandos de console.
    */
   public static readonly ConsoleHelpCommand: IConsoleHelpCommands = {
-    help: [
-      `
+    help: `
 > help
   Para enviar comandos através do console atribua o nome do comando e seus
   argumentos à variável: Memory.{MemoryConsoleCommand}
@@ -51,6 +50,5 @@ export class Definition {
   O resultado desse comando já emitido no console automaticamente
   a cada {IntervalInMinutesToShowDebug} minutos. 
 `
-    ]
   };
 }

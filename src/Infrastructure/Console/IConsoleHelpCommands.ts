@@ -5,5 +5,5 @@ export interface IConsoleHelpCommands {
   /**
    * Ajuda para os comandos.
    */
-  get help(): string[];
+  get help(): string[] | string;
 }

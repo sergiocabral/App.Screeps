@@ -23,7 +23,7 @@ export class BasicGame implements IGame {
   /**
    * Ajuda para os comandos.
    */
-  public help: string[] = [];
+  public help: string = '';
 
   /**
    * Objetos presentes no ambiente do Screeps
