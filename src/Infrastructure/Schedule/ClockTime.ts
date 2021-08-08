@@ -1,6 +1,6 @@
 import { MemoryHandler } from '../Core/MemoryHandler';
 import { ClockTimeData } from './ClockTimeData';
-import { Message } from '@sergiocabral/helper';
+import { InvalidExecutionError, Message } from '@sergiocabral/helper';
 import { SendDebugToConsole } from '../Console/Message/SendDebugToConsole';
 import { EndExecutionEvent } from '../Core/Message/EndExecutionEvent';
 
@@ -18,7 +18,9 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
       return {
         ticks: 0,
         first: 0,
-        last: 0
+        last: 0,
+        runtime: 0,
+        lastRuntime: 0
       };
     });
 
@@ -35,6 +37,9 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
       this.source.first = this.currentExecution;
     }
     this.firstExecution = this.source.first;
+
+    this.runtime = this.source.runtime;
+    this.lastRuntime = this.source.lastRuntime;
 
     this.elapsedTime = this.currentExecution - this.firstExecution;
 
@@ -60,6 +65,23 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
    * Momento da execução atual.
    */
   public readonly currentExecution: number;
+
+  /**
+   * Tempo global de execução da aplicação.
+   */
+  public readonly runtime: number;
+
+  /**
+   * Tempo da última execução da aplicação.
+   */
+  public readonly lastRuntime: number;
+
+  /**
+   * Tempo médio de cada execução da aplicação.
+   */
+  public get averageRuntime(): number {
+    return Math.floor(this.runtime / this.ticks);
+  }
 
   /**
    * Tempo total decorrido do jogo.
@@ -103,6 +125,27 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
   }
 
   /**
+   * Sinaliza se runtimeElapsed já foi definido.
+   * @private
+   */
+  private runtimeElapsedAlreadyDefined = false;
+
+  /**
+   * Atualiza as informações relacionadas a duração do tempo de execução.
+   * @private
+   */
+  public setRuntimeElapsed(value: number): void {
+    if (this.runtimeElapsedAlreadyDefined) {
+      throw new InvalidExecutionError(
+        'setRuntimeElapsed() cannot be called more than once.'
+      );
+    }
+    this.runtimeElapsedAlreadyDefined = true;
+    this.source.runtime += value;
+    this.source.lastRuntime = value;
+  }
+
+  /**
    * Envia uma mensagem de log tipo debug para o console.
    * @private
    */
@@ -122,6 +165,33 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
       () => {
         return {
           averageTickTime: ClockTime.formatTime(this.averageTickTime, 'seconds')
+        };
+      },
+      section
+    ).send();
+    new SendDebugToConsole(
+      () => 'Last runtime elapsed: {lastRuntime}',
+      () => {
+        return {
+          lastRuntime: `${this.lastRuntime} milliseconds`
+        };
+      },
+      section
+    ).send();
+    new SendDebugToConsole(
+      () => 'Average runtime elapsed: {averageRuntime}',
+      () => {
+        return {
+          averageRuntime: `${this.averageRuntime} milliseconds`
+        };
+      },
+      section
+    ).send();
+    new SendDebugToConsole(
+      () => 'Global runtime elapsed: {runtime}',
+      () => {
+        return {
+          runtime: ClockTime.formatTime(this.runtime, 'seconds')
         };
       },
       section

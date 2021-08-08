@@ -13,4 +13,14 @@ export type ClockTimeData = {
    * Momento da última execução antes do momento atual.
    */
   last: number;
+
+  /**
+   * Tempo global de execução da aplicação.
+   */
+  runtime: number;
+
+  /**
+   * Tempo da última execução da aplicação.
+   */
+  lastRuntime: number;
 };

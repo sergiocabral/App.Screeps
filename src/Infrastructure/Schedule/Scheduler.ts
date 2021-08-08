@@ -2,8 +2,6 @@ import { MemoryHandler } from '../Core/MemoryHandler';
 import { InvalidExecutionError, KeyValue, Message } from '@sergiocabral/helper';
 import { ScheduleMessage } from './Message/ScheduleMessage';
 import { IListOfScheduledMessagesType } from './IListOfScheduledMessagesType';
-import { ClockTime } from './ClockTime';
-import { Definition } from '../Definition';
 import { ScheduledMessage } from './Message/ScheduledMessage';
 import { BeginExecutionEvent } from '../Core/Message/BeginExecutionEvent';
 
@@ -23,8 +21,6 @@ export class Scheduler
     super(memory, propertyName, () => {
       return {};
     });
-    void new ClockTime(memory, Definition.MemoryClockTime);
-
     Message.subscribe(ScheduleMessage, this.handleScheduleMessage.bind(this));
     Message.subscribe(BeginExecutionEvent, () =>
       this.dispatchExpiredMessages()

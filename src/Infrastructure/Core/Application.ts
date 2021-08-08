@@ -9,6 +9,7 @@ import { EndExecutionEvent } from './Message/EndExecutionEvent';
 import { BeginExecutionEvent } from './Message/BeginExecutionEvent';
 import { Scheduler } from '../Schedule/Scheduler';
 import { IGame } from './IGame';
+import { ClockTime } from '../Schedule/ClockTime';
 
 /**
  * Classe principal da aplicação.
@@ -46,12 +47,21 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
       .addConsoleHelpCommands(Definition.ConsoleHelpCommand)
       .addConsoleHelpCommands(gameExecutor);
 
+    this.clockTime = new ClockTime(this.memory, Definition.MemoryClockTime);
+
     new Scheduler(this.memory, Definition.MemoryScheduler)
       .loadMessageTypes(Definition.ListOfScheduledMessagesType)
       .loadMessageTypes(gameExecutor);
 
     this.query = new Query(this);
   }
+
+  /**
+   * Momento do início do tempo de execução da aplicação.
+   * @private
+   */
+  private static runtimeStarted = new Date().getTime();
+
   /**
    * Executa a aplicação.
    */
@@ -59,7 +69,17 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
     void new EndExecutionEvent(this).send();
     this.gameExecutor.loop(this);
     void new BeginExecutionEvent(this).send();
+
+    this.clockTime.setRuntimeElapsed(
+      new Date().getTime() - Application.runtimeStarted
+    );
   }
+
+  /**
+   * Informações do momento (time) de execução.
+   * @private
+   */
+  private readonly clockTime: ClockTime;
 
   /**
    * Objeto principal do jogo.
