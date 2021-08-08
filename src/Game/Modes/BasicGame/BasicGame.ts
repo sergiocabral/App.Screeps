@@ -23,7 +23,7 @@ export class BasicGame implements IGame {
   /**
    * Ajuda para os comandos.
    */
-  public help: string = '';
+  public help = '';
 
   /**
    * Objetos presentes no ambiente do Screeps
@@ -91,7 +91,7 @@ export class BasicGame implements IGame {
    * @private
    */
   private tryCreateCreep(): void {
-    const creepsLimit = 20;
+    const creepsLimit = 25;
     if (this.screepsOperation.query.getCreeps().length >= creepsLimit) return;
 
     const harvestBodyPart = [WORK, CARRY, MOVE];
@@ -103,7 +103,7 @@ export class BasicGame implements IGame {
 
     const creepName = NameGenerator.firstAndLastName;
     spawn.spawnCreep([WORK, CARRY, MOVE], creepName, {
-      memory: { roleHarvest: Math.random() * 3 <= 1 }
+      memory: { roleHarvest: Math.random() * 4 <= 1 }
     });
 
     Logger.post('Creep created: {creepName}.', { creepName }, LogLevel.Debug);
