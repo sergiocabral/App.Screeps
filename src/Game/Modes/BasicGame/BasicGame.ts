@@ -21,6 +21,11 @@ export class BasicGame implements IGame {
   public scheduledMessageTypes: typeof ScheduledMessage[] = [];
 
   /**
+   * Ajuda para os comandos.
+   */
+  public help: string[] = [];
+
+  /**
    * Objetos presentes no ambiente do Screeps
    * @private
    */

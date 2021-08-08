@@ -42,10 +42,12 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
   private constructor(private gameExecutor: IGame) {
     Logger.defaultLogger = new LogWriterToScreeps();
 
-    void new Console(this.memory, Definition.MemoryConsoleCommand);
+    void new Console(this.memory, Definition.MemoryConsoleCommand)
+      .addConsoleHelpCommands(Definition.ConsoleHelpCommand)
+      .addConsoleHelpCommands(gameExecutor);
 
     new Scheduler(this.memory, Definition.MemoryScheduler)
-      .loadMessageTypes(Definition.listOfScheduledMessagesType)
+      .loadMessageTypes(Definition.ListOfScheduledMessagesType)
       .loadMessageTypes(gameExecutor);
 
     this.query = new Query(this);

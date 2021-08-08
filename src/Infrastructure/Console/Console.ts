@@ -12,11 +12,15 @@ import { ScheduleMessage } from '../Schedule/Message/ScheduleMessage';
 import { ShowDebugToConsole } from './Message/ShowDebugToConsole';
 import { Definition } from '../Definition';
 import { BeginExecutionEvent } from '../Core/Message/BeginExecutionEvent';
+import { IConsoleHelpCommands } from './IConsoleHelpCommands';
 
 /**
  * Configuração do console como entrada de comandos.
  */
-export class Console extends MemoryHandler<string> {
+export class Console
+  extends MemoryHandler<string>
+  implements IConsoleHelpCommands
+{
   /**
    * Construtor.
    * @param memory Objeto que servirá de fonte de dados.
@@ -54,6 +58,29 @@ export class Console extends MemoryHandler<string> {
   private readonly args: string[];
 
   /**
+   * Ajuda para os comandos.
+   */
+  private helpValue: string[] = [];
+
+  /**
+   * Ajuda para os comandos.
+   */
+  public get help(): string[] {
+    return Array<string>().concat(this.helpValue);
+  }
+
+  /**
+   * Adiciona informações de linha de comando.
+   * @param consoleHelpCommands
+   */
+  public addConsoleHelpCommands(
+    consoleHelpCommands: IConsoleHelpCommands
+  ): Console {
+    this.helpValue.push(...consoleHelpCommands.help);
+    return this;
+  }
+
+  /**
    * Despacha o comando recebido (se existir).
    * @private
    */
@@ -70,7 +97,7 @@ export class Console extends MemoryHandler<string> {
   private scheduleShowDebugToConsole(): void {
     new ScheduleMessage(
       ShowDebugToConsole,
-      HelperDate.addMinutes(Definition.intervalInMinutesToShowDebug)
+      HelperDate.addMinutes(Definition.IntervalInMinutesToShowDebug)
     ).send();
   }
 
@@ -95,8 +122,43 @@ export class Console extends MemoryHandler<string> {
    * @private
    */
   private handleReceivedConsoleCommand(message: ReceivedConsoleCommand): void {
-    if (message.command === Definition.commandList.showDebugToConsole) {
-      new ShowDebugToConsole().send();
+    switch (message.command) {
+      case 'help':
+        this.showHelp();
+        break;
+      case 'debug':
+        new ShowDebugToConsole().send();
+        break;
+    }
+  }
+
+  /**
+   * Exibe a ajuda dos comandos de console.
+   * @private
+   */
+  private showHelp(): void {
+    console.log();
+    console.log(' _          _');
+    console.log('| |__   ___| |_ __');
+    console.log("| '_ \\ / _ \\ | '_ \\");
+    console.log('| | | |  __/ | |_) |');
+    console.log('|_| |_|\\___|_| .__/');
+    console.log(' for console |_|');
+    console.log();
+    if (this.help.length) {
+      const replacement = Object.assign({}, Definition);
+      this.help.map(section => {
+        section
+          .trim()
+          .split('\n')
+          .map(line =>
+            line ? console.log(line.querystring(replacement)) : console.log()
+          );
+        console.log();
+      });
+    } else {
+      console.log('Oops! The help is empty.');
+      console.log();
     }
   }
 
