@@ -80,7 +80,7 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
    * Tempo médio de cada execução da aplicação.
    */
   public get averageRuntime(): number {
-    return Math.floor(this.runtime / this.ticks);
+    return this.runtime / this.ticks;
   }
 
   /**
@@ -152,76 +152,34 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
   private sendDebugToConsole(): void {
     const section = 'Clock';
     new SendDebugToConsole(
-      () => 'Ticks: {ticks}',
-      () => {
-        return {
-          ticks: this.ticks
-        };
-      },
+      () => 'Ticks: {0}',
+      () => [this.ticks.format({ digits: 0 })],
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Average tick time: {averageTickTime}',
-      () => {
-        return {
-          averageTickTime: ClockTime.formatTime(this.averageTickTime, 'seconds')
-        };
-      },
+      () => 'Average tick time: {0}',
+      () => [(this.averageTickTime / 1000).format({ suffix: ' seconds' })],
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Last runtime elapsed: {lastRuntime}',
-      () => {
-        return {
-          lastRuntime: `${this.lastRuntime} milliseconds`
-        };
-      },
+      () => 'Last runtime elapsed: {0}',
+      () => [this.lastRuntime.format({ digits: 0, suffix: ' milliseconds' })],
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Average runtime elapsed: {averageRuntime}',
-      () => {
-        return {
-          averageRuntime: `${this.averageRuntime} milliseconds`
-        };
-      },
+      () => 'Average runtime elapsed: {0}',
+      () => [this.averageRuntime.format({ suffix: ' milliseconds' })],
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Global runtime elapsed: {runtime}',
-      () => {
-        return {
-          runtime: ClockTime.formatTime(this.runtime, 'seconds')
-        };
-      },
+      () => 'Global runtime elapsed: {0}',
+      () => [new Date(this.runtime).format({ mask: 'running' })],
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Uptime: {uptime}',
-      () => {
-        return {
-          uptime: ClockTime.formatTime(this.elapsedTime, 'minutes')
-        };
-      },
+      () => 'Uptime: {0}',
+      () => [new Date(this.elapsedTime).format({ mask: 'running' })],
       section
     ).send();
-  }
-
-  /**
-   * Formata a exibição de milissegundos.
-   * @param milliseconds Tempo decorrido.
-   * @param output Unidade .
-   */
-  private static formatTime(
-    milliseconds: number,
-    output: 'seconds' | 'minutes'
-  ): string {
-    let time = milliseconds / 1000;
-    if (output === 'minutes') {
-      time /= 60;
-      return `${Math.round(time)} ${output}`;
-    } else {
-      return `${time.toFixed(1)} ${output}`;
-    }
   }
 }
