@@ -1,15 +1,41 @@
 /**
  * Consulta informações do jogo.
  */
-import { KeyValue, ShouldNeverHappenError } from '@sergiocabral/helper';
+import {
+  KeyValue,
+  Message,
+  ShouldNeverHappenError
+} from '@sergiocabral/helper';
 import { IScreepsEnvironment } from './IScreepsEnvironment';
+import { BeginExecutionEvent } from '../Core/Message/BeginExecutionEvent';
+import { SendDebugToConsole } from '../Console/Message/SendDebugToConsole';
 
 export class Query {
   /**
    * Construtor.
    * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
    */
-  constructor(private screepsEnvironment: IScreepsEnvironment) {}
+  constructor(private screepsEnvironment: IScreepsEnvironment) {
+    Message.subscribe(BeginExecutionEvent, () => this.sendDebugToConsole());
+  }
+
+  /**
+   * Envia uma mensagem de log tipo debug para o console.
+   * @private
+   */
+  private sendDebugToConsole(): void {
+    const section = 'Screeps';
+    new SendDebugToConsole(
+      () => 'Count, spawns: {0}',
+      () => [this.getSpawns().length],
+      section
+    ).send();
+    new SendDebugToConsole(
+      () => 'Count, creeps: {0}',
+      () => [this.getCreeps().length],
+      section
+    ).send();
+  }
 
   /**
    * Retorna a lista dos spawns existentes.
