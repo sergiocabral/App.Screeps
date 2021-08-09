@@ -7,7 +7,10 @@ import { EndExecutionEvent } from '../Core/Message/EndExecutionEvent';
 /**
  * Informações do momento (time) de execução.
  */
-export class ClockTime extends MemoryHandler<ClockTimeData> {
+export class ClockTime
+  extends MemoryHandler<ClockTimeData>
+  implements ClockTimeData
+{
   /**
    * Construtor.
    * @param memory Objeto que servirá de fonte de dados.
@@ -16,112 +19,88 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
   public constructor(memory: Memory, propertyName: string) {
     super(memory, propertyName, () => {
       return {
-        ticks: 0,
-        first: 0,
-        last: 0,
-        runtime: 0,
-        lastRuntime: 0
+        tickCount: 0,
+        firstExecutionTime: 0,
+        lastExecutionTime: 0,
+        totalExecutionDuration: 0,
+        lastExecutionDuration: 0
       };
     });
+    this.source.tickCount++;
 
-    this.currentExecution = new Date().getTime();
-
-    this.lastExecution =
-      this.source.last > 0 ? this.source.last : this.currentExecution;
-
-    this.source.last = this.currentExecution;
-
-    this.ticks = ++this.source.ticks;
-
-    if (this.source.first <= 0) {
-      this.source.first = this.currentExecution;
+    if (
+      this.source.firstExecutionTime === 0 ||
+      this.source.lastExecutionTime === 0
+    ) {
+      this.source.firstExecutionTime = this.source.lastExecutionTime =
+        this.currentTime;
     }
-    this.firstExecution = this.source.first;
 
-    this.runtime = this.source.runtime;
-    this.lastRuntime = this.source.lastRuntime;
-
-    this.elapsedTime = this.currentExecution - this.firstExecution;
+    this.lastExecutionTime = this.source.lastExecutionTime;
+    this.source.lastExecutionTime = this.currentTime;
 
     Message.subscribe(EndExecutionEvent, () => this.sendDebugToConsole());
   }
 
   /**
+   * Data e hora atual.
+   */
+  public readonly currentTime: number = new Date().getTime();
+
+  /**
    * Total de ticks.
    */
-  public readonly ticks: number;
-
-  /**
-   * Momento da primeira execução.
-   */
-  public readonly firstExecution: number;
-
-  /**
-   * Momento da última execução antes do momento atual.
-   */
-  public readonly lastExecution: number;
-
-  /**
-   * Momento da execução atual.
-   */
-  public readonly currentExecution: number;
-
-  /**
-   * Tempo global de execução da aplicação.
-   */
-  public readonly runtime: number;
-
-  /**
-   * Tempo da última execução da aplicação.
-   */
-  public readonly lastRuntime: number;
-
-  /**
-   * Tempo médio de cada execução da aplicação.
-   */
-  public get averageRuntime(): number {
-    return this.runtime / this.ticks;
+  public get tickCount(): number {
+    return this.source.tickCount;
   }
 
   /**
-   * Tempo total decorrido do jogo.
+   * Tempo médio da duração do tick.
    */
-  public readonly elapsedTime: number;
-
-  /**
-   * Tempo total decorrido do jogo: em segundos
-   */
-  public get elapsedSeconds(): number {
-    return Math.floor(this.elapsedTime / 1000);
-  }
-
-  /**
-   * Tempo total decorrido do jogo: em minutos
-   */
-  public get elapsedMinutes(): number {
-    return Math.floor(this.elapsedTime / 1000 / 60);
-  }
-
-  /**
-   * Tempo total decorrido do jogo: em horas
-   */
-  public get elapsedHours(): number {
-    return Math.floor(this.elapsedTime / 1000 / 60 / 60);
-  }
-
-  /**
-   * Tempo total decorrido do jogo: em dias
-   */
-  public get elapsedDays(): number {
-    return Math.floor(this.elapsedTime / 1000 / 60 / 60 / 24);
-  }
-
-  /**
-   * Tempo médio do tick
-   */
-  public get averageTickTime(): number {
-    const average = (this.lastExecution - this.firstExecution) / this.ticks;
+  public get averageTickDuration(): number {
+    const average =
+      (this.lastExecutionTime - this.firstExecutionTime) / this.tickCount;
     return Number.isFinite(average) ? average : 0;
+  }
+
+  /**
+   * Data e hora da primeira execução.
+   */
+  public get firstExecutionTime(): number {
+    return this.source.firstExecutionTime;
+  }
+
+  /**
+   * Data e hora da última execução.
+   */
+  public readonly lastExecutionTime: number;
+
+  /**
+   * Duração total da aplicação em execução.
+   */
+  public get totalExecutionDuration(): number {
+    return this.source.totalExecutionDuration;
+  }
+
+  /**
+   * Duração da última execução da aplicação.
+   */
+  public get lastExecutionDuration(): number {
+    return this.source.lastExecutionDuration;
+  }
+
+  /**
+   * Duração média de cada execução da aplicação.
+   */
+  public get averageExecutionDuration(): number {
+    return this.totalExecutionDuration / this.tickCount;
+  }
+
+  /**
+   * Tempo total da aplicação no ar.
+   */
+  public get applicationUptime(): number {
+    return this.currentTime - this.firstExecutionTime;
   }
 
   /**
@@ -131,18 +110,18 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
   private runtimeElapsedAlreadyDefined = false;
 
   /**
-   * Atualiza as informações relacionadas a duração do tempo de execução.
-   * @private
+   * Atualiza as informações relacionadas a duração do tempo de execução atual.
+   * @param currentExecutionDuration Em milissegundos.
    */
-  public setRuntimeElapsed(value: number): void {
+  public setCurrentExecutionDuration(currentExecutionDuration: number): void {
     if (this.runtimeElapsedAlreadyDefined) {
       throw new InvalidExecutionError(
         'setRuntimeElapsed() cannot be called more than once.'
       );
     }
     this.runtimeElapsedAlreadyDefined = true;
-    this.source.runtime += value;
-    this.source.lastRuntime = value;
+    this.source.totalExecutionDuration += currentExecutionDuration;
+    this.source.lastExecutionDuration = currentExecutionDuration;
   }
 
   /**
@@ -152,33 +131,43 @@ export class ClockTime extends MemoryHandler<ClockTimeData> {
   private sendDebugToConsole(): void {
     const section = 'Clock';
     new SendDebugToConsole(
-      () => 'Ticks: {0}',
-      () => [this.ticks.format({ digits: 0 })],
+      () => 'Tick, count: {0}',
+      () => [this.tickCount.format({ digits: 0 })],
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Average tick time: {0}',
-      () => [(this.averageTickTime / 1000).format({ suffix: ' seconds' })],
+      () => 'Tick, average duration: {0}',
+      () => [(this.averageTickDuration / 1000).format({ suffix: ' seconds' })],
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Last runtime elapsed: {0}',
-      () => [this.lastRuntime.format({ digits: 0, suffix: ' milliseconds' })],
+      () => 'Execution, first time: {0}',
+      () => [new Date(this.firstExecutionTime).format({ mask: 'universal' })],
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Average runtime elapsed: {0}',
-      () => [this.averageRuntime.format({ suffix: ' milliseconds' })],
+      () => 'Execution, last duration: {0}',
+      () => [
+        this.lastExecutionDuration.format({
+          digits: 0,
+          suffix: ' milliseconds'
+        })
+      ],
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Global runtime elapsed: {0}',
-      () => [new Date(this.runtime).format({ mask: 'running' })],
+      () => 'Execution, average duration: {0}',
+      () => [this.averageExecutionDuration.format({ suffix: ' milliseconds' })],
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Uptime: {0}',
-      () => [new Date(this.elapsedTime).format({ mask: 'running' })],
+      () => 'Execution, total duration: {0}',
+      () => [new Date(this.totalExecutionDuration).format({ mask: 'running' })],
+      section
+    ).send();
+    new SendDebugToConsole(
+      () => 'Application, Uptime: {0}',
+      () => [new Date(this.applicationUptime).format({ mask: 'running' })],
       section
     ).send();
   }

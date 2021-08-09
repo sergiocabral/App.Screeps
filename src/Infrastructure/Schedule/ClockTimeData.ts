@@ -1,26 +1,26 @@
-export type ClockTimeData = {
+export interface ClockTimeData {
   /**
    * Total de ticks.
    */
-  ticks: number;
+  tickCount: number;
 
   /**
-   * Momento da primeira execução.
+   * Data e hora da primeira execução.
    */
-  first: number;
+  firstExecutionTime: number;
 
   /**
-   * Momento da última execução antes do momento atual.
+   * Data e hora da última execução.
    */
-  last: number;
+  lastExecutionTime: number;
 
   /**
-   * Tempo global de execução da aplicação.
+   * Duração total da aplicação em execução.
    */
-  runtime: number;
+  totalExecutionDuration: number;
 
   /**
-   * Tempo da última execução da aplicação.
+   * Duração da última execução da aplicação.
    */
-  lastRuntime: number;
-};
+  lastExecutionDuration: number;
+}
