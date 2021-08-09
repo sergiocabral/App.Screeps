@@ -12,9 +12,9 @@ import { IGame } from '../../../Infrastructure/Core/IGame';
 import { ScheduledMessage } from '../../../Infrastructure/Schedule/Message/ScheduledMessage';
 
 /**
- * Jogo no funcionamento básico.
+ * Jogo no funcionamento de fazer upgrade do controller.
  */
-export class BasicGame implements IGame {
+export class UpgradeController implements IGame {
   /**
    * Lista dos tipos de mensagens que podem ser agendadas.
    */

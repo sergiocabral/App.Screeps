@@ -1,4 +1,4 @@
 import { Application } from './Infrastructure/Core/Application';
-import { BasicGame } from './Game/Modes/BasicGame/BasicGame';
+import { UpgradeController } from './Game/Modes/UpgradeController/UpgradeController';
 
-Application.start(new BasicGame());
+Application.start(new UpgradeController());
