@@ -1,70 +1,27 @@
 import {
-  EmptyError,
   HelperList,
   KeyValue,
   Logger,
   LogLevel,
   NotImplementedError
 } from '@sergiocabral/helper';
-import { IScreepsOperation } from '../../../Infrastructure/Screeps/IScreepsOperation';
 import { NameGenerator } from '@sergiocabral/screeps';
-import { IGame } from '../../../Infrastructure/Core/IGame';
-import { ScheduledMessage } from '../../../Infrastructure/Schedule/Message/ScheduledMessage';
+import { BaseGame } from '../../../Infrastructure/Core/BaseGame';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
  */
-export class UpgradeController implements IGame {
-  /**
-   * Lista dos tipos de mensagens que podem ser agendadas.
-   */
-  public scheduledMessageTypes: typeof ScheduledMessage[] = [];
-
+export class UpgradeController extends BaseGame {
   /**
    * Ajuda para os comandos.
    */
-  public help = '';
-
-  /**
-   * Objetos presentes no ambiente do Screeps
-   * @private
-   */
-  private screepsOperationValue: IScreepsOperation | null = null;
-
-  /**
-   * Objetos presentes no ambiente do Screeps
-   * @private
-   */
-  private get screepsOperation(): IScreepsOperation {
-    if (this.screepsOperationValue === null) {
-      throw new EmptyError('Value is not defined.');
-    }
-    return this.screepsOperationValue;
-  }
-
-  /**
-   * Inicializa a classe.
-   * @param screepsOperation
-   * @private
-   */
-  private initialize(screepsOperation: IScreepsOperation) {
-    this.screepsOperationValue = screepsOperation;
-  }
-
-  /**
-   * Implementada a lógica do loop do jogo.
-   * @param screepsOperation Propriedades que lidam diretamente com o ambiente do Screeps.
-   */
-  public loop(screepsOperation: IScreepsOperation): void {
-    this.initialize(screepsOperation);
-    this.do();
-  }
+  public override help = 'Modo atual do jogo: fazer upgrade do controller.';
 
   /**
    * Executa o loop de fato.
    * @private
    */
-  private do(): void {
+  protected override do(): void {
     this.tryCreateCreep();
     this.tryHarvestEnergy();
     this.tryTransferEnergyToSpawn();

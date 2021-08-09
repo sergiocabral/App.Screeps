@@ -5,12 +5,10 @@ import { InvalidExecutionError, KeyValue } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../src/Infrastructure/Screeps/IScreepsEnvironment';
 import { IScreepsOperation } from '../../src/Infrastructure/Screeps/IScreepsOperation';
 import { Query } from '../../src/Infrastructure/Screeps/Query';
-import { IGame } from '../../src/Infrastructure/Core/IGame';
-import { ScheduledMessage } from '../../src/Infrastructure/Schedule/Message/ScheduledMessage';
+import { BaseGame } from '../../src/Infrastructure/Core/BaseGame';
 
-class DummyGame implements IGame {
-  scheduledMessageTypes: typeof ScheduledMessage[] = [];
-  loop(): void {}
+class DummyGame extends BaseGame {
+  protected override do(): void {}
 }
 
 describe('Class Application', () => {
