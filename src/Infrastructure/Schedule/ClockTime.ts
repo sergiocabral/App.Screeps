@@ -2,7 +2,7 @@ import { MemoryHandler } from '../Core/MemoryHandler';
 import { ClockTimeData } from './ClockTimeData';
 import { InvalidExecutionError, Message } from '@sergiocabral/helper';
 import { SendDebugToConsole } from '../Console/Message/SendDebugToConsole';
-import { EndExecutionEvent } from '../Core/Message/EndExecutionEvent';
+import { BeginExecutionEvent } from '../Core/Message/BeginExecutionEvent';
 
 /**
  * Informações do momento (time) de execução.
@@ -39,7 +39,7 @@ export class ClockTime
     this.lastExecutionTime = this.source.lastExecutionTime;
     this.source.lastExecutionTime = this.currentTime;
 
-    Message.subscribe(EndExecutionEvent, () => this.sendDebugToConsole());
+    Message.subscribe(BeginExecutionEvent, () => this.sendDebugToConsole());
   }
 
   /**
@@ -141,11 +141,6 @@ export class ClockTime
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Execution, first time: {0}',
-      () => [new Date(this.firstExecutionTime).format({ mask: 'universal' })],
-      section
-    ).send();
-    new SendDebugToConsole(
       () => 'Execution, last duration: {0}',
       () => [
         this.lastExecutionDuration.format({
@@ -163,6 +158,11 @@ export class ClockTime
     new SendDebugToConsole(
       () => 'Execution, total duration: {0}',
       () => [new Date(this.totalExecutionDuration).format({ mask: 'running' })],
+      section
+    ).send();
+    new SendDebugToConsole(
+      () => 'Application, started: {0}',
+      () => [new Date(this.firstExecutionTime).format({ mask: 'universal' })],
       section
     ).send();
     new SendDebugToConsole(

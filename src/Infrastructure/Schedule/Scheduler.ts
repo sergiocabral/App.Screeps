@@ -3,7 +3,7 @@ import { InvalidExecutionError, KeyValue, Message } from '@sergiocabral/helper';
 import { ScheduleMessage } from './Message/ScheduleMessage';
 import { IListOfScheduledMessagesType } from './IListOfScheduledMessagesType';
 import { ScheduledMessage } from './Message/ScheduledMessage';
-import { BeginExecutionEvent } from '../Core/Message/BeginExecutionEvent';
+import { EndExecutionEvent } from '../Core/Message/EndExecutionEvent';
 
 /**
  * Agendador de mensagens.
@@ -22,9 +22,7 @@ export class Scheduler
       return {};
     });
     Message.subscribe(ScheduleMessage, this.handleScheduleMessage.bind(this));
-    Message.subscribe(BeginExecutionEvent, () =>
-      this.dispatchExpiredMessages()
-    );
+    Message.subscribe(EndExecutionEvent, () => this.dispatchExpiredMessages());
   }
 
   /**

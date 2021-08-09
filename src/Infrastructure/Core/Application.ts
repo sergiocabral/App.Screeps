@@ -4,8 +4,8 @@ import { Query } from '../Screeps/Query';
 import { IScreepsEnvironment } from '../Screeps/IScreepsEnvironment';
 import { Console } from '../Console/Console';
 import { Definition } from '../Definition';
-import { EndExecutionEvent } from './Message/EndExecutionEvent';
 import { BeginExecutionEvent } from './Message/BeginExecutionEvent';
+import { EndExecutionEvent } from './Message/EndExecutionEvent';
 import { Scheduler } from '../Schedule/Scheduler';
 import { IGame } from './IGame';
 import { ClockTime } from '../Schedule/ClockTime';
@@ -57,18 +57,18 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
    * Momento do início do tempo de execução da aplicação.
    * @private
    */
-  private static runtimeStarted = new Date().getTime();
+  private static executionStarted = new Date().getTime();
 
   /**
    * Executa a aplicação.
    */
   public run(): void {
-    void new EndExecutionEvent(this).send();
-    this.gameExecutor.loop(this);
     void new BeginExecutionEvent(this).send();
+    this.gameExecutor.loop(this);
+    void new EndExecutionEvent(this).send();
 
     this.clockTime.setCurrentExecutionDuration(
-      new Date().getTime() - Application.runtimeStarted
+      new Date().getTime() - Application.executionStarted
     );
   }
 

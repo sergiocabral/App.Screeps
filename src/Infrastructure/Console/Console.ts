@@ -11,7 +11,7 @@ import { SendDebugToConsole } from './Message/SendDebugToConsole';
 import { ScheduleMessage } from '../Schedule/Message/ScheduleMessage';
 import { ShowDebugToConsole } from './Message/ShowDebugToConsole';
 import { Definition } from '../Definition';
-import { BeginExecutionEvent } from '../Core/Message/BeginExecutionEvent';
+import { EndExecutionEvent } from '../Core/Message/EndExecutionEvent';
 import { IConsoleHelpCommands } from './IConsoleHelpCommands';
 import { LogWriterToScreeps } from '@sergiocabral/screeps';
 
@@ -33,9 +33,9 @@ export class Console
 
     this.args = HelperText.getCommandArguments(this.source);
     this.command = this.args.shift();
-    Message.subscribe(BeginExecutionEvent, () => {
+    Message.subscribe(EndExecutionEvent, () => {
       this.dispatchCommand();
-      this.scheduleShowDebugToConsole();
+      Console.scheduleShowDebugToConsole();
     });
     Message.subscribe(
       SendDebugToConsole,
@@ -107,7 +107,7 @@ export class Console
    * Agenda a exibição das informações de debug.
    * @private
    */
-  private scheduleShowDebugToConsole(): void {
+  private static scheduleShowDebugToConsole(): void {
     new ScheduleMessage(
       ShowDebugToConsole,
       HelperDate.addMinutes(Definition.IntervalInMinutesToShowDebug)
