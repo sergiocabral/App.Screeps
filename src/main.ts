@@ -1,4 +1,6 @@
 import { Application } from './Infrastructure/Core/Application';
 import { UpgradeController } from './Game/Modes/UpgradeController/UpgradeController';
+import { Definition } from './Infrastructure/Definition';
 
-Application.start(new UpgradeController());
+(Game as unknown as Record<string, Application>)[Definition.GameApplication] =
+  Application.start(new UpgradeController());

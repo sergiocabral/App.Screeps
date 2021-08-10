@@ -7,6 +7,11 @@ import { IConsoleHelpCommands } from './Console/IConsoleHelpCommands';
  */
 export class Definition {
   /**
+   * Propriedade em Game para: instância da aplicação.
+   */
+  public static readonly GameApplication = 'app';
+
+  /**
    * Propriedade em Memory para: Receber comandos pelo console.
    */
   public static readonly MemoryConsoleCommand = 'run';
@@ -39,16 +44,25 @@ export class Definition {
    */
   public static readonly ConsoleHelpCommand: IConsoleHelpCommands = {
     help: `
-> help
-  Para enviar comandos através do console atribua o nome do comando e seus
-  argumentos à variável: Memory.{MemoryConsoleCommand}
-  Por exemplo, para exibir essa ajuda escreva no console:
-  Memory.{MemoryConsoleCommand} = "help";
+# Lista de comandos através da atribuição:
+  Memory.{MemoryConsoleCommand} = "comando";
+    
+  > help
+  Exibe esta ajuda.
   
-> debug  
+  > debug  
   Exibe informações de depuração referente a execução do código no Screeps.
   O resultado desse comando já emitido no console automaticamente
-  a cada {IntervalInMinutesToShowDebug} minutos. 
+  a cada {IntervalInMinutesToShowDebug} minutos.
+
+# A instância da aplicação está acessível em:
+  Game.{GameApplication};
+  
+  > Game.{GameApplication}.query.getSpawns();
+  Retorna a lista dos spawns existentes. 
+   
+  > Game.{GameApplication}.query.getCreeps();
+  Retorna a lista dos screeps existentes.
 `
   };
 }

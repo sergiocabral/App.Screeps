@@ -26,14 +26,14 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
    * Inicia a aplicação.
    * @param gameExecutor Modo operacional do jogo.
    */
-  public static start(gameExecutor: IGame): void {
+  public static start(gameExecutor: IGame): Application {
     if (this.uniqueInstance !== null) {
       throw new InvalidExecutionError(
         'This class can only be instantiated once.'
       );
     }
     this.uniqueInstance = new Application(gameExecutor);
-    this.uniqueInstance.run();
+    return this.uniqueInstance.run();
   }
 
   /**
@@ -64,7 +64,7 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
   /**
    * Executa a aplicação.
    */
-  public run(): void {
+  public run(): Application {
     void new BeginExecutionEvent(this).send();
     this.gameExecutor.loop(this);
     void new EndExecutionEvent(this).send();
@@ -72,6 +72,8 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
     this.clockTime.setCurrentExecutionDuration(
       new Date().getTime() - Application.executionStarted
     );
+
+    return this;
   }
 
   /**
