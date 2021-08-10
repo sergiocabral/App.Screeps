@@ -1,5 +1,5 @@
 import { BaseGame } from '../../../Infrastructure/Core/BaseGame';
-import { Logger } from '@sergiocabral/helper';
+import { SpawnWrapper } from '../../../Infrastructure/Screeps/Entity/SpawnWrapper';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
@@ -15,6 +15,9 @@ export class Laboratory extends BaseGame {
    * @private
    */
   protected override do(): void {
-    Logger.post('Not implemented.');
+    const spawn = this.screepsOperation.query.getSpawns()[0] as SpawnWrapper;
+    if (this.screepsOperation.entity.canCreateCreep(spawn)) {
+      this.screepsOperation.entity.createCreep(spawn);
+    }
   }
 }
