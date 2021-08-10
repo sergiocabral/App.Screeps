@@ -1,5 +1,5 @@
 import { EmptyError } from '@sergiocabral/helper';
-import { IScreepsOperation } from '../Screeps/IScreepsOperation';
+import { IScreepsOperation } from '../Screeps/ScreepsOperation/IScreepsOperation';
 import { IGame } from './IGame';
 import { ScheduledMessage } from '../Schedule/Message/ScheduledMessage';
 

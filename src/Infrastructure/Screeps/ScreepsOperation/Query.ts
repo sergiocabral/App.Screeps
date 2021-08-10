@@ -1,15 +1,18 @@
-/**
- * Consulta informações do jogo.
- */
 import {
   KeyValue,
   Message,
   ShouldNeverHappenError
 } from '@sergiocabral/helper';
-import { IScreepsEnvironment } from './IScreepsEnvironment';
-import { BeginExecutionEvent } from '../Core/Message/BeginExecutionEvent';
-import { SendDebugToConsole } from '../Console/Message/SendDebugToConsole';
+import { IScreepsEnvironment } from '../IScreepsEnvironment';
+import { BeginExecutionEvent } from '../../Core/Message/BeginExecutionEvent';
+import { SendDebugToConsole } from '../../Console/Message/SendDebugToConsole';
+import { CreepWrapper } from '../Entity/CreepWrapper';
+import { SpawnWrapper } from '../Entity/SpawnWrapper';
+import { BaseWrapper } from '../Entity/BaseWrapper';
 
+/**
+ * Consulta informações do jogo.
+ */
 export class Query {
   /**
    * Construtor.
@@ -39,27 +42,42 @@ export class Query {
 
   /**
    * Retorna a lista dos spawns existentes.
+   * @param instances Lista de instâncias do Screeps.
+   * @param ctor Constrói um wrapper para a instâncias do Screeps
+   * @private
    */
-  private getEntity<T>(object: KeyValue<T>): T[] {
-    return Object.keys(object).map(name => {
-      const entity = object[name];
+  private getEntity<TScreeps, TWrapper extends BaseWrapper<TScreeps>>(
+    instances: KeyValue<TScreeps>,
+    ctor: new (
+      instance: TScreeps,
+      screepsEnvironment: IScreepsEnvironment
+    ) => TWrapper
+  ): TWrapper[] {
+    return Object.keys(instances).map(name => {
+      const entity = instances[name];
       if (entity === undefined) throw new ShouldNeverHappenError();
-      return entity;
+      return new ctor(entity, this.screepsEnvironment);
     });
   }
 
   /**
    * Retorna a lista dos spawns existentes.
    */
-  public getSpawns(): StructureSpawn[] {
-    return this.getEntity<StructureSpawn>(this.screepsEnvironment.game.spawns);
+  public getSpawns(): SpawnWrapper[] {
+    return this.getEntity<StructureSpawn, SpawnWrapper>(
+      this.screepsEnvironment.game.spawns,
+      SpawnWrapper
+    );
   }
 
   /**
    * Retorna a lista dos screeps existentes.
    */
-  public getCreeps(): Creep[] {
-    return this.getEntity<Creep>(this.screepsEnvironment.game.creeps);
+  public getCreeps(): CreepWrapper[] {
+    return this.getEntity<Creep, CreepWrapper>(
+      this.screepsEnvironment.game.creeps,
+      CreepWrapper
+    );
   }
 
   /**

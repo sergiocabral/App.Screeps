@@ -1,4 +1,4 @@
-import { IScreepsOperation } from '../Screeps/IScreepsOperation';
+import { IScreepsOperation } from '../Screeps/ScreepsOperation/IScreepsOperation';
 
 /**
  * Representa uma classe que é executada pelo loop do jogo.

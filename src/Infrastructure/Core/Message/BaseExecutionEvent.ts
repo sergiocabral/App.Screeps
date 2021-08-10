@@ -1,5 +1,5 @@
 import { Message } from '@sergiocabral/helper';
-import { IScreepsOperation } from '../../Screeps/IScreepsOperation';
+import { IScreepsOperation } from '../../Screeps/ScreepsOperation/IScreepsOperation';
 
 /**
  * Abstração para um evento relacionado a execução do jogo.
