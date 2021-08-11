@@ -1,5 +1,6 @@
 import { BaseGame } from '../../../Infrastructure/Core/BaseGame';
 import { SpawnWrapper } from '../../../Infrastructure/Screeps/Entity/SpawnWrapper';
+import { BodyPartSet } from '@sergiocabral/screeps';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
@@ -16,8 +17,13 @@ export class Laboratory extends BaseGame {
    */
   protected override do(): void {
     const spawn = this.screepsOperation.query.getSpawns()[0] as SpawnWrapper;
-    if (this.screepsOperation.entity.canCreateCreep(spawn)) {
-      this.screepsOperation.entity.createCreep(spawn);
+    const bodyParts: BodyPartSet = {
+      move: 1,
+      work: 1,
+      carry: 1
+    };
+    if (this.screepsOperation.entity.canCreateCreep(spawn, bodyParts)) {
+      this.screepsOperation.entity.createCreep(spawn, bodyParts);
     }
   }
 }

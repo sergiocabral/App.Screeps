@@ -1,7 +1,12 @@
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
 import { CreepWrapper } from '../Entity/CreepWrapper';
 import { SpawnWrapper } from '../Entity/SpawnWrapper';
-import { BodyPart, Constant, NameGenerator } from '@sergiocabral/screeps';
+import {
+  BodyPart,
+  BodyPartSet,
+  Constant,
+  NameGenerator
+} from '@sergiocabral/screeps';
 import { Logger, LogLevel } from '@sergiocabral/helper';
 
 /**
@@ -19,13 +24,10 @@ export class Entity {
    * @param spawn
    * @param bodyParts
    */
-  canCreateCreep(
-    spawn: SpawnWrapper,
-    bodyParts: BodyPartConstant[] = [WORK, CARRY, MOVE]
-  ): boolean {
+  canCreateCreep(spawn: SpawnWrapper, bodyParts: BodyPartSet): boolean {
     const spawnEnergy = spawn.instance.store[RESOURCE_ENERGY];
     return (
-      BodyPart.calculateCost(bodyParts) <= spawnEnergy &&
+      BodyPart.calculateCost(BodyPart.toPartList(bodyParts)) <= spawnEnergy &&
       spawn.instance.spawning === null
     );
   }
@@ -37,10 +39,13 @@ export class Entity {
    */
   createCreep(
     spawn: SpawnWrapper,
-    bodyParts: BodyPartConstant[] = [WORK, CARRY, MOVE]
+    bodyParts: BodyPartSet
   ): CreepWrapper | null {
     const creepName = NameGenerator.firstAndLastName;
-    const statusCode = spawn.instance.spawnCreep(bodyParts, creepName);
+    const statusCode = spawn.instance.spawnCreep(
+      BodyPart.toPartList(bodyParts),
+      creepName
+    );
 
     if (statusCode !== OK) {
       Logger.post(
