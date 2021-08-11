@@ -79,16 +79,4 @@ export class Query {
       CreepWrapper
     );
   }
-
-  /**
-   * Calcula o custo para as partes de construção do creep.
-   * @param bodyParts Partes de construção do creep
-   */
-  public calculateCost(bodyParts: BodyPartConstant[]): number {
-    let cost = 0;
-    for (const bodyPart of bodyParts) {
-      cost += BODYPART_COST[bodyPart];
-    }
-    return cost;
-  }
 }

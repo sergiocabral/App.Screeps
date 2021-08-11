@@ -52,7 +52,7 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
       .loadMessageTypes(gameExecutor);
 
     this.query = new Query(this);
-    this.entity = new Entity(this, this.query);
+    this.entity = new Entity(this);
   }
 
   /**

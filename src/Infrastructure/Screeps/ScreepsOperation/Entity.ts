@@ -1,10 +1,8 @@
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
 import { CreepWrapper } from '../Entity/CreepWrapper';
 import { SpawnWrapper } from '../Entity/SpawnWrapper';
-import { NameGenerator } from '@sergiocabral/screeps';
+import { BodyPart, Constant, NameGenerator } from '@sergiocabral/screeps';
 import { Logger, LogLevel } from '@sergiocabral/helper';
-import { Constant } from '../../../Helper/Constant';
-import { Query } from './Query';
 
 /**
  * Entidades do jogo.
@@ -13,12 +11,8 @@ export class Entity {
   /**
    * Construtor.
    * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
-   * @param query Consulta informações do jogo
    */
-  constructor(
-    private screepsEnvironment: IScreepsEnvironment,
-    private query: Query
-  ) {}
+  constructor(private screepsEnvironment: IScreepsEnvironment) {}
 
   /**
    * Determina se um Spawn pode criar um Creep.
@@ -31,7 +25,7 @@ export class Entity {
   ): boolean {
     const spawnEnergy = spawn.instance.store[RESOURCE_ENERGY];
     return (
-      this.query.calculateCost(bodyParts) <= spawnEnergy &&
+      BodyPart.calculateCost(bodyParts) <= spawnEnergy &&
       spawn.instance.spawning === null
     );
   }

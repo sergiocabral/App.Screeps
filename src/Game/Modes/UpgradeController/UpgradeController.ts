@@ -5,7 +5,7 @@ import {
   LogLevel,
   NotImplementedError
 } from '@sergiocabral/helper';
-import { NameGenerator } from '@sergiocabral/screeps';
+import { BodyPart, NameGenerator } from '@sergiocabral/screeps';
 import { BaseGame } from '../../../Infrastructure/Core/BaseGame';
 import { SpawnWrapper } from '../../../Infrastructure/Screeps/Entity/SpawnWrapper';
 import { CreepWrapper } from '../../../Infrastructure/Screeps/Entity/CreepWrapper';
@@ -54,8 +54,7 @@ export class UpgradeController extends BaseGame {
     if (this.screepsOperation.query.getCreeps().length >= creepsLimit) return;
 
     const harvestBodyPart = [WORK, CARRY, MOVE];
-    const harvestBodyPartCost =
-      this.screepsOperation.query.calculateCost(harvestBodyPart);
+    const harvestBodyPartCost = BodyPart.calculateCost(harvestBodyPart);
 
     const spawn = this.getSpawn();
     if (spawn.instance.room.energyAvailable < harvestBodyPartCost) return;
