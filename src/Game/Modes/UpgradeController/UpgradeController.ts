@@ -59,7 +59,7 @@ export class UpgradeController extends BaseGame {
     const spawn = this.getSpawn();
     if (spawn.instance.room.energyAvailable < harvestBodyPartCost) return;
 
-    const creepName = NameGenerator.firstAndLastName;
+    const creepName = NameGenerator.random();
     spawn.instance.spawnCreep([WORK, CARRY, MOVE], creepName, {
       memory: { roleHarvest: Math.random() * 4 <= 1 }
     });

@@ -41,7 +41,7 @@ export class Entity {
     spawn: SpawnWrapper,
     bodyParts: BodyPartSet
   ): CreepWrapper | null {
-    const creepName = NameGenerator.firstAndLastName;
+    const creepName = NameGenerator.random();
     const statusCode = spawn.instance.spawnCreep(
       BodyPart.toPartList(bodyParts),
       creepName
