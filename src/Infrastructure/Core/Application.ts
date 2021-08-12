@@ -10,6 +10,7 @@ import { Scheduler } from '../Schedule/Scheduler';
 import { IGame } from './IGame';
 import { ClockTime } from '../Schedule/ClockTime';
 import { Entity } from '../Screeps/ScreepsOperation/Entity';
+import { GarbageCollector } from '../Screeps/ScreepsOperation/GarbageCollector';
 
 /**
  * Classe principal da aplicação.
@@ -53,6 +54,7 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
 
     this.query = new Query(this);
     this.entity = new Entity(this);
+    this.garbageCollector = new GarbageCollector(this.memory);
   }
 
   /**
@@ -68,6 +70,7 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
     void new BeginExecutionEvent(this).send();
     this.gameExecutor.loop(this);
     void new EndExecutionEvent(this).send();
+    this.garbageCollector.recycle();
 
     this.clockTime.setCurrentExecutionDuration(
       new Date().getTime() - Application.executionStarted
@@ -111,4 +114,9 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
    * Entidades do jogo.
    */
   public readonly entity: Entity;
+
+  /**
+   * Responsável por limpar o lixo da memoria
+   */
+  public readonly garbageCollector: GarbageCollector;
 }

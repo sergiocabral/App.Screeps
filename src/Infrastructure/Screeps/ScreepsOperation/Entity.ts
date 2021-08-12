@@ -7,7 +7,7 @@ import {
   Constant,
   NameGenerator
 } from '@sergiocabral/screeps';
-import { Logger, LogLevel } from '@sergiocabral/helper';
+import { HelperObject, Logger, LogLevel } from '@sergiocabral/helper';
 
 /**
  * Entidades do jogo.
@@ -78,7 +78,7 @@ export class Entity {
       {
         creepName,
         spawnName: spawn.instance.name,
-        json: JSON.stringify(creep, undefined, 2)
+        json: HelperObject.toText(creep)
       },
       LogLevel.Verbose
     );

@@ -1,5 +1,6 @@
 import { Query } from './Query';
 import { Entity } from './Entity';
+import { GarbageCollector } from './GarbageCollector';
 
 /**
  * Responsável por operar o Screeps.
@@ -14,4 +15,9 @@ export interface IScreepsOperation {
    * Entidades do jogo.
    */
   readonly entity: Entity;
+
+  /**
+   * Responsável por limpar o lixo da memoria
+   */
+  readonly garbageCollector: GarbageCollector;
 }
