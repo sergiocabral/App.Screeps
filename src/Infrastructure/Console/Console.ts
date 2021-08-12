@@ -110,12 +110,12 @@ export class Console
    */
   private dispatchCommand(): void {
     if (!this.command) return;
-    const captured = new ReceivedConsoleCommand(this.command, this.args).send()
-      .rounds;
-    if (captured === 0) {
+    const processed = new ReceivedConsoleCommand(this.command, this.args).send()
+      .message.processed;
+    if (!processed) {
       Logger.post(
-        'Invalid command: "{0}"',
-        this.command,
+        'Use "help" to learn more. Invalid command or arguments: {0}',
+        [this.command, ...this.args].join(' '),
         LogLevel.Error,
         Console.LoggerSection
       );
@@ -157,10 +157,16 @@ export class Console
   private handleReceivedConsoleCommand(message: ReceivedConsoleCommand): void {
     switch (message.command) {
       case 'help':
-        this.showHelp();
+        if (message.args.length === 0) {
+          this.showHelp();
+          message.processed = true;
+        }
         break;
       case 'debug':
-        new ShowDebugToConsole().send();
+        if (message.args.length === 0) {
+          new ShowDebugToConsole().send();
+          message.processed = true;
+        }
         break;
     }
   }

@@ -15,4 +15,9 @@ export class ReceivedConsoleCommand extends Message {
   ) {
     super();
   }
+
+  /**
+   * Sinaliza que o comando foi processado.
+   */
+  public processed = false;
 }

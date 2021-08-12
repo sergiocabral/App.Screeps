@@ -73,7 +73,10 @@ export class ConsoleLogger extends MemoryHandler<ConsoleLoggerData> {
   private handleReceivedConsoleCommand(message: ReceivedConsoleCommand): void {
     switch (message.command) {
       case 'log':
-        this.configureLog(message.args);
+        if (message.args.length <= 1) {
+          this.configureLog(message.args[0]);
+          message.processed = true;
+        }
         break;
     }
   }
@@ -93,26 +96,16 @@ export class ConsoleLogger extends MemoryHandler<ConsoleLoggerData> {
 
   /**
    * Configura a exibição do log no console.
-   * @param args
+   * @param minimumLevelName Nome do nível de log.
    * @private
    */
-  private configureLog(args: string[]): void {
-    if (args.length === 0) {
-      Logger.post(
-        'Minimum logging level currently defined: {minimumLevel}',
-        {
-          minimumLevel: LogLevel[this.logger.minimumLevel]
-        },
-        LogLevel.Information,
-        ConsoleLogger.LoggerSection
-      );
-    } else if (args.length === 1) {
-      const newMinimumLevelName = args[0];
-      const newMinimumLevel = ConsoleLogger.toLogLevel(newMinimumLevelName);
+  private configureLog(minimumLevelName?: string): void {
+    if (minimumLevelName) {
+      const minimumLevel = ConsoleLogger.toLogLevel(minimumLevelName);
 
-      if (newMinimumLevel !== null) {
-        this.logger.minimumLevel = newMinimumLevel;
-        this.source.minimumLevel = LogLevel[newMinimumLevel] as string;
+      if (minimumLevel !== null) {
+        this.logger.minimumLevel = minimumLevel;
+        this.source.minimumLevel = LogLevel[minimumLevel] as string;
 
         Logger.post(
           'Defined the minimum logging level: {minimumLevel}',
@@ -125,16 +118,18 @@ export class ConsoleLogger extends MemoryHandler<ConsoleLoggerData> {
       } else {
         Logger.post(
           'Invalid log level: {0}',
-          newMinimumLevelName,
+          minimumLevelName,
           LogLevel.Error,
           ConsoleLogger.LoggerSection
         );
       }
     } else {
       Logger.post(
-        'Expected only zero or one parameter.',
-        null,
-        LogLevel.Error,
+        'Minimum logging level currently defined: {minimumLevel}',
+        {
+          minimumLevel: LogLevel[this.logger.minimumLevel]
+        },
+        LogLevel.Information,
         ConsoleLogger.LoggerSection
       );
     }
