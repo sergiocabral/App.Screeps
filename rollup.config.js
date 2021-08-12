@@ -5,6 +5,8 @@ import cleanupPlugin from 'rollup-plugin-cleanup';
 import typescript from 'rollup-plugin-typescript2';
 import screeps from 'rollup-plugin-screeps';
 
+const configFile = process.argv[4] ?? './screeps.json';
+
 export default {
   input: 'src/main.ts',                        // Arquivo principal a partir de onde a compilação será feita.
   output: { file: 'output/main.js', },         // Arquivo único de saída que será enviado para o Screeps.
@@ -14,6 +16,6 @@ export default {
     nodeResolve(),                             // Importa as bibliotecas do npm.
     cleanupPlugin(),                           // Remove os comentários do código-fonte.
     typescript({tsconfig: './tsconfig.json'}), // Compilação TypeScript.
-    screeps({configFile: './screeps.json'})    // Envia o código para o Screeps.
+    screeps({configFile})    // Envia o código para o Screeps.
   ]
 }
