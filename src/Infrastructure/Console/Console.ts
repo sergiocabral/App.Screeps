@@ -13,7 +13,7 @@ import { ShowDebugToConsole } from './Message/ShowDebugToConsole';
 import { Definition } from '../Definition';
 import { EndExecutionEvent } from '../Core/Message/EndExecutionEvent';
 import { IConsoleHelpCommands } from './IConsoleHelpCommands';
-import { LogWriterToScreeps } from '@sergiocabral/screeps';
+import { ConsoleLogger } from './ConsoleLogger';
 
 /**
  * Configuração do console como entrada de comandos.
@@ -29,19 +29,24 @@ export class Console
    */
   public constructor(memory: Memory, propertyName: string) {
     super(memory, propertyName, () => '');
-    Logger.defaultLogger = this.logWriterToScreeps = new LogWriterToScreeps();
+
+    this.consoleLogger = new ConsoleLogger(memory, Definition.MemoryLogger);
 
     this.args = HelperText.getCommandArguments(this.source);
     this.command = this.args.shift();
+
     Message.subscribe(EndExecutionEvent, () => {
       this.dispatchCommand();
       Console.scheduleShowDebugToConsole();
     });
+
     Message.subscribe(
       SendDebugToConsole,
       this.handleSendDebugToConsole.bind(this)
     );
+
     Message.subscribe(ShowDebugToConsole, () => this.showDebugToConsole());
+
     Message.subscribe(
       ReceivedConsoleCommand,
       this.handleReceivedConsoleCommand.bind(this)
@@ -49,10 +54,10 @@ export class Console
   }
 
   /**
-   * Logger da aplicação.
+   * Logger padrão do sistema
    * @private
    */
-  private logWriterToScreeps: LogWriterToScreeps;
+  private consoleLogger: ConsoleLogger;
 
   /**
    * Nome do comando atualmente recebido.
@@ -183,7 +188,7 @@ export class Console
     if (!this.listOfSendDebugToConsole.length) return;
 
     const logLevel = LogLevel.Information;
-    if (logLevel < this.logWriterToScreeps.minimumLevel) return;
+    if (logLevel < this.consoleLogger.logger.minimumLevel) return;
 
     console.log();
     console.log('     _      _');

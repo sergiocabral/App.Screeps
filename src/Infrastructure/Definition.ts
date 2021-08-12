@@ -27,6 +27,11 @@ export class Definition {
   public static readonly MemoryScheduler = 'scheduler';
 
   /**
+   * Propriedade em Memory para: Logger
+   */
+  public static readonly MemoryLogger = 'logger';
+
+  /**
    * Intervalo entre exibição de informações de debug no console.
    */
   public static readonly IntervalInMinutesToShowDebug = 10;
@@ -49,6 +54,10 @@ export class Definition {
     
   > help
   Exibe esta ajuda.
+  
+  > log [level]
+  Verifica ou define o nível mínimo de log a ser exibido no console. Níveis
+  disponíveis: Verbose, Debug, Information, Warning, Error, Critical, Fatal
   
   > debug  
   Exibe informações de depuração referente a execução do código no Screeps.

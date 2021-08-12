@@ -54,7 +54,8 @@ export class Entity {
           spawnName: spawn.instance.name,
           statusCode: Constant.format(statusCode)
         },
-        LogLevel.Error
+        LogLevel.Error,
+        'Entity'
       );
       return null;
     }
@@ -66,7 +67,8 @@ export class Entity {
           creepName,
           spawnName: spawn.instance.name
         },
-        LogLevel.Error
+        LogLevel.Critical,
+        'Entity'
       );
       return null;
     }
@@ -74,13 +76,26 @@ export class Entity {
     const creepWrapper = new CreepWrapper(creep, this.screepsEnvironment);
 
     Logger.post(
-      'Spawn "{spawnName}" created the creep "{creepName}". JSON: {json}',
+      'Properties of new Creep "{creepName}": {json}',
+      () => {
+        return {
+          creepName,
+          spawnName: spawn.instance.name,
+          json: HelperObject.toText(creep)
+        };
+      },
+      LogLevel.Verbose,
+      'Entity'
+    );
+
+    Logger.post(
+      'Spawn "{spawnName}" created the Creep "{creepName}".',
       {
         creepName,
-        spawnName: spawn.instance.name,
-        json: HelperObject.toText(creep)
+        spawnName: spawn.instance.name
       },
-      LogLevel.Verbose
+      LogLevel.Debug,
+      'Entity'
     );
 
     return creepWrapper;
