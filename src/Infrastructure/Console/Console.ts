@@ -155,14 +155,15 @@ export class Console
    * @private
    */
   private showHelp(): void {
-    console.log();
-    console.log(' _          _');
-    console.log('| |__   ___| |_ __');
-    console.log("| '_ \\ / _ \\ | '_ \\");
-    console.log('| | | |  __/ | |_) |');
-    console.log('|_| |_|\\___|_| .__/');
-    console.log(' for console |_|');
-    console.log();
+    const lines = [
+      ' _          _',
+      '| |__   ___| |_ __',
+      "| '_ \\ / _ \\ | '_ \\",
+      '| | | |  __/ | |_) |',
+      '|_| |_|\\___|_| .__/',
+      ' for console |_|',
+      ''
+    ];
     if (this.help.length) {
       const replacement = Object.assign({}, Definition);
       this.help.map(section => {
@@ -170,14 +171,16 @@ export class Console
           .trim()
           .split('\n')
           .map(line =>
-            line ? console.log(line.querystring(replacement)) : console.log()
+            line ? lines.push(line.querystring(replacement)) : lines.push('')
           );
-        console.log();
+        lines.push('');
       });
     } else {
-      console.log('Oops! The help is empty.');
-      console.log();
+      lines.push('Oops! The help is empty.');
+      lines.push('');
     }
+    console.log(lines.join('\n'));
+    console.log();
   }
 
   /**
@@ -190,14 +193,17 @@ export class Console
     const logLevel = LogLevel.Information;
     if (logLevel < this.consoleLogger.logger.minimumLevel) return;
 
-    console.log();
-    console.log('     _      _');
-    console.log('  __| | ___| |__  _   _  __ _');
-    console.log(' / _` |/ _ \\ `_ \\| | | |/ _` |');
-    console.log('| (_| |  __/ |_) | |_| | (_| |');
-    console.log(' \\__,_|\\___|_.__/ \\__,_|\\__, |');
-    console.log(' github.com/sergiocabral |__/');
-    console.log();
+    const lines = [
+      '     _      _',
+      '  __| | ___| |__  _   _  __ _',
+      ' / _` |/ _ \\ `_ \\| | | |/ _` |',
+      '| (_| |  __/ |_) | |_| | (_| |',
+      ' \\__,_|\\___|_.__/ \\__,_|\\__, |',
+      ' github.com/sergiocabral |__/',
+      '',
+      ''
+    ];
+    console.log(lines.join('\n'));
 
     for (const sendDebugToConsole of this.listOfSendDebugToConsole) {
       Logger.post(
