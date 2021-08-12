@@ -23,6 +23,12 @@ export class Console
   implements IConsoleHelpCommands
 {
   /**
+   * Seção identificador do log.
+   * @private
+   */
+  private static LoggerSection = 'Console';
+
+  /**
    * Construtor.
    * @param memory Objeto que servirá de fonte de dados.
    * @param propertyName Nome da propriedade que será ouvida.
@@ -104,7 +110,16 @@ export class Console
    */
   private dispatchCommand(): void {
     if (!this.command) return;
-    void new ReceivedConsoleCommand(this.command, this.args).send();
+    const captured = new ReceivedConsoleCommand(this.command, this.args).send()
+      .rounds;
+    if (captured === 0) {
+      Logger.post(
+        'Invalid command: "{0}"',
+        this.command,
+        LogLevel.Error,
+        Console.LoggerSection
+      );
+    }
     this.clearMemory();
   }
 

@@ -3,11 +3,19 @@ import { ReceivedConsoleCommand } from './ReceivedConsoleCommand';
 import { MemoryHandler } from '../Core/MemoryHandler';
 import { LogWriterToScreeps } from '@sergiocabral/screeps';
 import { ConsoleLoggerData } from './ConsoleLoggerData';
+import { BeginExecutionEvent } from '../Core/Message/BeginExecutionEvent';
+import { SendDebugToConsole } from './Message/SendDebugToConsole';
 
 /**
  * Configuração do log para o console.
  */
 export class ConsoleLogger extends MemoryHandler<ConsoleLoggerData> {
+  /**
+   * Seção identificador do log.
+   * @private
+   */
+  private static LoggerSection = 'Logger';
+
   /**
    * Nível mínimo de log padrão
    * @private
@@ -31,6 +39,8 @@ export class ConsoleLogger extends MemoryHandler<ConsoleLoggerData> {
 
     Logger.defaultLogger = this.logger = new LogWriterToScreeps(minimumLevel);
 
+    Message.subscribe(BeginExecutionEvent, () => this.sendDebugToConsole());
+
     Message.subscribe(
       ReceivedConsoleCommand,
       this.handleReceivedConsoleCommand.bind(this)
@@ -42,6 +52,18 @@ export class ConsoleLogger extends MemoryHandler<ConsoleLoggerData> {
    * @private
    */
   public logger: LogWriterToScreeps;
+
+  /**
+   * Envia uma mensagem de log tipo debug para o console.
+   * @private
+   */
+  private sendDebugToConsole(): void {
+    new SendDebugToConsole(
+      () => 'Minimum log level to show: {0}',
+      () => LogLevel[this.logger.minimumLevel],
+      ConsoleLogger.LoggerSection
+    ).send();
+  }
 
   /**
    * Handler de mensagem ReceivedConsoleCommand
@@ -82,7 +104,7 @@ export class ConsoleLogger extends MemoryHandler<ConsoleLoggerData> {
           minimumLevel: LogLevel[this.logger.minimumLevel]
         },
         LogLevel.Information,
-        'ConsoleLogger'
+        ConsoleLogger.LoggerSection
       );
     } else if (args.length === 1) {
       const newMinimumLevelName = args[0];
@@ -98,14 +120,14 @@ export class ConsoleLogger extends MemoryHandler<ConsoleLoggerData> {
             minimumLevel: LogLevel[this.logger.minimumLevel]
           },
           LogLevel.Information,
-          'ConsoleLogger'
+          ConsoleLogger.LoggerSection
         );
       } else {
         Logger.post(
           'Invalid log level: {0}',
           newMinimumLevelName,
           LogLevel.Error,
-          'ConsoleLogger'
+          ConsoleLogger.LoggerSection
         );
       }
     } else {
@@ -113,7 +135,7 @@ export class ConsoleLogger extends MemoryHandler<ConsoleLoggerData> {
         'Expected only zero or one parameter.',
         null,
         LogLevel.Error,
-        'ConsoleLogger'
+        ConsoleLogger.LoggerSection
       );
     }
   }

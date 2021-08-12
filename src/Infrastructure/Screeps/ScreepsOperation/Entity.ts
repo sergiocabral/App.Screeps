@@ -14,6 +14,12 @@ import { HelperObject, Logger, LogLevel } from '@sergiocabral/helper';
  */
 export class Entity {
   /**
+   * Seção identificador do log.
+   * @private
+   */
+  private static LoggerSection = 'Entity';
+
+  /**
    * Construtor.
    * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
    */
@@ -55,7 +61,7 @@ export class Entity {
           statusCode: Constant.format(statusCode)
         },
         LogLevel.Error,
-        'Entity'
+        Entity.LoggerSection
       );
       return null;
     }
@@ -68,7 +74,7 @@ export class Entity {
           spawnName: spawn.instance.name
         },
         LogLevel.Critical,
-        'Entity'
+        Entity.LoggerSection
       );
       return null;
     }
@@ -85,7 +91,7 @@ export class Entity {
         };
       },
       LogLevel.Verbose,
-      'Entity'
+      Entity.LoggerSection
     );
 
     Logger.post(
@@ -95,7 +101,7 @@ export class Entity {
         spawnName: spawn.instance.name
       },
       LogLevel.Debug,
-      'Entity'
+      Entity.LoggerSection
     );
 
     return creepWrapper;

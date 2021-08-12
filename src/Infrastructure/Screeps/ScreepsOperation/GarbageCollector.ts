@@ -5,6 +5,12 @@ import { HelperObject, Logger, LogLevel } from '@sergiocabral/helper';
 
 export class GarbageCollector {
   /**
+   * Seção identificador do log.
+   * @private
+   */
+  private static LoggerSection = 'GarbageCollector';
+
+  /**
    * Construtor.
    * @param memory Memória.
    */
@@ -27,7 +33,7 @@ export class GarbageCollector {
             return { bytes: bytes.format({ digits: 0 }), creepName, json };
           },
           LogLevel.Verbose,
-          'GarbageCollector'
+          GarbageCollector.LoggerSection
         );
 
         delete Memory.creeps[creepName];
@@ -39,7 +45,7 @@ export class GarbageCollector {
         'A total of {totalBytes} bytes were discarded.',
         { totalBytes: totalBytes.format({ digits: 0 }) },
         LogLevel.Debug,
-        'GarbageCollector'
+        GarbageCollector.LoggerSection
       );
     }
   }
