@@ -1,5 +1,5 @@
 import { Logger, LogLevel, Message } from '@sergiocabral/helper';
-import { ReceivedConsoleCommand } from './ReceivedConsoleCommand';
+import { ReceivedConsoleCommand } from './Message/ReceivedConsoleCommand';
 import { MemoryHandler } from '../Core/MemoryHandler';
 import { LogWriterToScreeps } from '@sergiocabral/screeps';
 import { ConsoleLoggerData } from './ConsoleLoggerData';

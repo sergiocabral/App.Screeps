@@ -5,7 +5,7 @@ import {
   LogLevel,
   Message
 } from '@sergiocabral/helper';
-import { ReceivedConsoleCommand } from './ReceivedConsoleCommand';
+import { ReceivedConsoleCommand } from './Message/ReceivedConsoleCommand';
 import { MemoryHandler } from '../Core/MemoryHandler';
 import { SendDebugToConsole } from './Message/SendDebugToConsole';
 import { ScheduleMessage } from '../Schedule/Message/ScheduleMessage';
