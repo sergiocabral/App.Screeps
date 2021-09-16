@@ -11,6 +11,7 @@ import { IGame } from './IGame';
 import { ClockTime } from '../Schedule/ClockTime';
 import { Entity } from '../Screeps/ScreepsOperation/Entity';
 import { GarbageCollector } from '../Screeps/ScreepsOperation/GarbageCollector';
+import { ConsoleCommandHandler } from '../Screeps/ConsoleCommandHandler';
 
 /**
  * Classe principal da aplicação.
@@ -51,6 +52,8 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
     new Scheduler(this.memory, Definition.MemoryScheduler)
       .loadMessageTypes(Definition.ListOfScheduledMessagesType)
       .loadMessageTypes(gameExecutor);
+
+    void new ConsoleCommandHandler();
 
     this.query = new Query(this);
     this.entity = new Entity(this);
