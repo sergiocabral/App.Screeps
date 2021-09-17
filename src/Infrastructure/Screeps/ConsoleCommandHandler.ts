@@ -1,6 +1,6 @@
 import { Logger, LogLevel, Message } from '@sergiocabral/helper';
 import { ReceivedConsoleCommand } from '../Console/Message/ReceivedConsoleCommand';
-import { TerrainMap } from '../Helper/TerrainMap';
+import { TerrainMap } from '@sergiocabral/screeps';
 
 /**
  * Trata comandos recebidos pelo console.
