@@ -7,21 +7,56 @@ import screeps from 'rollup-plugin-screeps';
 
 const configFile = process.env.auth ?? './screeps.json';
 
-const applyBuildStamp = () => {
+/**
+ * Plugin para o rollup
+ */
+const applyBuildInfo = () => {
+  /**
+   * Aplica a estampa do build.
+   * @param inputCode Código de entrada.
+   * @return Código com substituições feitas.
+   */
+  function applyBuildStamp(inputCode) {
+    const mark = '{BUILD_STAMP}';
+    const value = Buffer
+      .from(Math.random().toString())
+      .toString('base64')
+      .substr(10, 4)
+      .toUpperCase();
+    console.log('Build Stamp:', value);
+    return inputCode.replace(new RegExp(mark, 'g'), value);
+  }
+
+  /**
+   * Aplica o número do build.
+   * @param inputCode Código de entrada.
+   * @return Código com substituições feitas.
+   */
+  function applyBuildNumber(inputCode) {
+    const mark = '{BUILD_NUMBER}';
+    const value = 0;
+    console.log('Build Number:', value);
+    return inputCode.replace(new RegExp(mark, 'g'), value);
+  }
+
+  /**
+   * Aplica as substituições da versão no código.
+   * @param inputCode Código de entrada.
+   * @return Código com substituições feitas.
+   */
+  function applyBuild(inputCode) {
+    return applyBuildNumber(applyBuildStamp(inputCode))
+  }
+
   return {
-    name: 'applyBuildStamp',
+    name: 'applyBuildInfo',
     generateBundle(config, bundle) {
       const mainFile = 'main.js';
-      const buildStampMark = '{BUILD_STAMP}';
-      const buildStampValue = Buffer
-        .from(Math.random().toString())
-        .toString('base64')
-        .substr(10, 10);
       if (bundle[mainFile]?.code) {
-        bundle[mainFile].code = bundle[mainFile].code.replace(
-          new RegExp(buildStampMark, 'g'),
-          buildStampValue
-        );
+        console.error('Applying version.');
+        bundle[mainFile].code = applyBuild(bundle[mainFile].code);
+      } else {
+        console.error('File not found:', mainFile)
       }
     }
   };
@@ -36,7 +71,7 @@ export default {
     nodeResolve(),                             // Importa as bibliotecas do npm.
     cleanupPlugin(),                           // Remove os comentários do código-fonte.
     typescript({tsconfig: './tsconfig.json'}), // Compilação TypeScript.
-    applyBuildStamp(),                         // Aplica no código uma marcação única para o build.
+    applyBuildInfo(),                          // Aplica no código informações do build.
     screeps({configFile})                      // Envia o código para o Screeps.
   ]
 }
