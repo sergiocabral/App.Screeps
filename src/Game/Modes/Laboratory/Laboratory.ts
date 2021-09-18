@@ -22,8 +22,8 @@ export class Laboratory extends BaseGame {
       work: 1,
       carry: 1
     };
-    if (this.screepsOperation.entity.canCreateCreep(spawn, bodyParts)) {
-      this.screepsOperation.entity.createCreep(spawn, bodyParts);
+    if (this.screepsOperation.entity.creep.canCreate(spawn, bodyParts)) {
+      this.screepsOperation.entity.creep.create(spawn, bodyParts);
     }
   }
 }
