@@ -40,7 +40,7 @@ export class UpgradeControllerV2 extends ModeBase {
       );
       if (creep) {
         Logger.post(
-          'Creep created: {creepName}. Roles: {roles}',
+          'Creep created: {creep}. Roles: {roles}',
           {
             creep,
             roles: creep.roles
