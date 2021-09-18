@@ -44,10 +44,13 @@ export class TagManager<TType = string> {
 
   /**
    * Verifica se a tag existe.
-   * @param tag
+   * @param tags
    */
-  public has(tag: TType): boolean {
-    return this.index(tag) >= 0;
+  public has(...tags: TType[]): boolean {
+    for (const tag of tags) {
+      if (this.index(tag) >= 0) return true;
+    }
+    return false;
   }
 
   /**

@@ -2,6 +2,7 @@ import { KeyValue, ShouldNeverHappenError } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { BaseWrapper } from '../../Entity/BaseWrapper';
 import { Named } from '../../../Type/Named';
+import { QueryFilter } from './QueryFilter';
 
 /**
  * Classe base para consultar informações do jogo.
@@ -76,9 +77,38 @@ export abstract class QueryBase<
   }
 
   /**
-   * Localiza uma entidade pela role.
+   * Localiza uma entidade que possui uma ou mais roles.
+   * @param roles
    */
-  public getByRole(role: string): TWrapper[] {
-    return this.getAll().filter(entity => entity.roles.has(role));
+  public getByRole(...roles: string[]): TWrapper[] {
+    return this.getAll().filter(entity => entity.roles.has(...roles));
+  }
+
+  /**
+   * Localiza uma entidade que não possui uma ou mais roles.
+   * @param roles
+   */
+  public getWithoutRole(...roles: string[]): TWrapper[] {
+    return this.getAll().filter(entity => !entity.roles.has(...roles));
+  }
+
+  /**
+   * Filtar uma lista
+   * @param filter
+   * @param list
+   */
+  public filter(filter: QueryFilter, list?: TWrapper[]): TWrapper[] {
+    return (list ?? this.getAll()).filter(entity => {
+      return (
+        (filter.withName === undefined ||
+          filter.withName === entity.instance.name) &&
+        (filter.withoutName === undefined ||
+          filter.withoutName !== entity.instance.name) &&
+        (!filter.withRoles?.length ||
+          entity.roles.has(...(filter.withRoles ?? []))) &&
+        (!filter.withoutRoles?.length ||
+          !entity.roles.has(...(filter.withoutRoles ?? [])))
+      );
+    });
   }
 }
