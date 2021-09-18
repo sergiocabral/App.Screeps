@@ -31,7 +31,7 @@ export class UpgradeController extends BaseGame {
   }
 
   private getSpawn(): SpawnWrapper {
-    const spawns = this.screepsOperation.query.spawn.list();
+    const spawns = this.screepsOperation.query.spawn.getAll();
     const uniqueSpawn = spawns[0];
 
     if (spawns.length !== 1 || uniqueSpawn === undefined) {
@@ -51,7 +51,8 @@ export class UpgradeController extends BaseGame {
    */
   private tryCreateCreep(): void {
     const creepsLimit = 25;
-    if (this.screepsOperation.query.creep.list().length >= creepsLimit) return;
+    if (this.screepsOperation.query.creep.getAll().length >= creepsLimit)
+      return;
 
     const harvestBodyPart = [WORK, CARRY, MOVE];
     const harvestBodyPartCost = BodyPart.calculateCost(harvestBodyPart);
@@ -71,7 +72,7 @@ export class UpgradeController extends BaseGame {
     const spawn = this.getSpawn();
 
     const creeps = this.screepsOperation.query.creep
-      .list()
+      .getAll()
       .filter(
         creep =>
           creep.instance.room.name === spawn.instance.room.name &&
@@ -110,7 +111,7 @@ export class UpgradeController extends BaseGame {
     const spawn = this.getSpawn();
 
     const creeps = this.screepsOperation.query.creep
-      .list()
+      .getAll()
       .filter(
         creep =>
           creep.instance.room.name === spawn.instance.room.name &&
@@ -136,7 +137,7 @@ export class UpgradeController extends BaseGame {
     if (!controller) return;
 
     const creeps = this.screepsOperation.query.creep
-      .list()
+      .getAll()
       .filter(
         creep =>
           creep.instance.room.name === spawn.instance.room.name &&

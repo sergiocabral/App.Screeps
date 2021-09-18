@@ -28,12 +28,12 @@ export class Query {
     const section = 'Screeps';
     new SendDebugToConsole(
       () => 'Count, spawns: {0}',
-      () => [this.spawn.list().length],
+      () => [this.spawn.getAll().length],
       section
     ).send();
     new SendDebugToConsole(
       () => 'Count, creeps: {0}',
-      () => [this.creep.list().length],
+      () => [this.creep.getAll().length],
       section
     ).send();
   }

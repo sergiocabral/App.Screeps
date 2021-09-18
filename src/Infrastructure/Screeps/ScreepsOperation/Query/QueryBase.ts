@@ -64,14 +64,21 @@ export abstract class QueryBase<
   /**
    * Retorna a lista de entidade existentes.
    */
-  public list(): TWrapper[] {
+  public getAll(): TWrapper[] {
     return this.getEntities(this.instances, this.wrapperConstructor);
   }
 
   /**
    * Localiza uma entidade pelo nome.
    */
-  public get(name: string): TWrapper | null {
-    return this.getEntityByName(name, this.list());
+  public getByName(name: string): TWrapper | null {
+    return this.getEntityByName(name, this.getAll());
+  }
+
+  /**
+   * Localiza uma entidade pela role.
+   */
+  public getByRole(role: string): TWrapper[] {
+    return this.getAll().filter(entity => entity.roles.has(role));
   }
 }
