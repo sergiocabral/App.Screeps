@@ -4,7 +4,7 @@ import { BaseWrapper } from '../../Entity/BaseWrapper';
 import { Named } from '../../../Type/Named';
 
 /**
- * Clase base para consultar informações do jogo.
+ * Classe base para consultar informações do jogo.
  */
 export class QueryBase {
   /**
@@ -14,12 +14,12 @@ export class QueryBase {
   public constructor(protected screepsEnvironment: IScreepsEnvironment) {}
 
   /**
-   * Retorna a lista dos spawns existentes.
+   * Retorna a lista das entidades existentes.
    * @param instances Lista de instâncias do Screeps.
    * @param ctor Constrói um wrapper para a instâncias do Screeps
    * @private
    */
-  protected getNamedEntity<
+  protected getNamedEntities<
     TScreeps extends Named,
     TWrapper extends BaseWrapper<TScreeps>
   >(
@@ -34,5 +34,18 @@ export class QueryBase {
       if (entity === undefined) throw new ShouldNeverHappenError();
       return new ctor(entity, this.screepsEnvironment);
     });
+  }
+
+  /**
+   * Busca uma entidade pelo nome.
+   * @param name Nome
+   * @param list Lista de entidades.
+   * @protected
+   */
+  protected getNamedEntity<
+    TScreeps extends Named,
+    TWrapper extends BaseWrapper<TScreeps>
+  >(name: string, list: TWrapper[]): TWrapper | null {
+    return list.find(wrapper => wrapper.instance.name === name) ?? null;
   }
 }
