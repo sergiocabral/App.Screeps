@@ -1,6 +1,7 @@
 import { KeyValue, ShouldNeverHappenError } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { BaseWrapper } from '../../Entity/BaseWrapper';
+import { Named } from '../../../Type/Named';
 
 /**
  * Clase base para consultar informações do jogo.
@@ -18,7 +19,10 @@ export class QueryBase {
    * @param ctor Constrói um wrapper para a instâncias do Screeps
    * @private
    */
-  protected getEntity<TScreeps, TWrapper extends BaseWrapper<TScreeps>>(
+  protected getEntity<
+    TScreeps extends Named,
+    TWrapper extends BaseWrapper<TScreeps>
+  >(
     instances: KeyValue<TScreeps>,
     ctor: new (
       instance: TScreeps,

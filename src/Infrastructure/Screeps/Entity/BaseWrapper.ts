@@ -1,10 +1,11 @@
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
 import { TagManager } from '../../Data/TagManager';
+import { Named } from '../../Type/Named';
 
 /**
  * Creep
  */
-export abstract class BaseWrapper<TScreepsEntity extends { name: string }> {
+export abstract class BaseWrapper<TScreepsEntity extends Named> {
   /**
    * Construtor.
    * @param instance Instância original no Screeps.
