@@ -69,6 +69,10 @@ export class Definition {
   estar no formato: "W0N0", "E0N0", "W0S0", "E0S0". Onde cada posição é: 
   (West-East)(Quadrante West-East)(North-South)(Quadrante North-South)
 
+  > kill <entityType>
+  Destrói todas as instâncias da entidade especificada.
+  Valores válidos para <entityType>: "creeps"
+
 # A instância da aplicação está acessível em:
   Game.{GameApplication};
   

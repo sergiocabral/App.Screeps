@@ -1,6 +1,7 @@
 import { Logger, LogLevel, Message } from '@sergiocabral/helper';
 import { ReceivedConsoleCommand } from '../Console/Message/ReceivedConsoleCommand';
 import { TerrainMap } from '@sergiocabral/screeps';
+import { IScreepsOperation } from './ScreepsOperation/IScreepsOperation';
 
 /**
  * Trata comandos recebidos pelo console.
@@ -14,11 +15,12 @@ export class ConsoleCommandHandler {
 
   /**
    * Construtor.
+   * @param screepsOperation
    */
-  public constructor() {
+  public constructor(private screepsOperation: IScreepsOperation) {
     Message.subscribe(
       ReceivedConsoleCommand,
-      ConsoleCommandHandler.handleReceivedConsoleCommand.bind(this)
+      this.handleReceivedConsoleCommand.bind(this)
     );
   }
 
@@ -27,13 +29,17 @@ export class ConsoleCommandHandler {
    * @param message
    * @private
    */
-  private static handleReceivedConsoleCommand(
-    message: ReceivedConsoleCommand
-  ): void {
+  private handleReceivedConsoleCommand(message: ReceivedConsoleCommand): void {
     switch (message.command) {
       case 'map':
         if (message.args.length === 1) {
           ConsoleCommandHandler.map(message.args[0] ?? '');
+          message.processed = true;
+        }
+        break;
+      case 'kill':
+        if (message.args.length === 1 && message.args[0] === 'creeps') {
+          this.killCreeps();
           message.processed = true;
         }
         break;
@@ -66,6 +72,36 @@ export class ConsoleCommandHandler {
         errorMessage,
         undefined,
         LogLevel.Error,
+        ConsoleCommandHandler.LoggerSection
+      );
+    }
+  }
+
+  private killCreeps(): void {
+    const creeps = this.screepsOperation.query.creep.getAll();
+    if (creeps.length > 0) {
+      for (const creep of creeps) {
+        Logger.post(
+          'Killing creep: {creep}',
+          { creep },
+          LogLevel.Debug,
+          ConsoleCommandHandler.LoggerSection
+        );
+        creep.instance.suicide();
+      }
+      Logger.post(
+        'A total of {count} creeps were killed.',
+        {
+          count: creeps.length
+        },
+        LogLevel.Information,
+        ConsoleCommandHandler.LoggerSection
+      );
+    } else {
+      Logger.post(
+        'There are no creeps to be killed.',
+        undefined,
+        LogLevel.Information,
         ConsoleCommandHandler.LoggerSection
       );
     }

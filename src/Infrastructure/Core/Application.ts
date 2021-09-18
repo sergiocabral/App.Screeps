@@ -53,7 +53,7 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
       .loadMessageTypes(Definition.ListOfScheduledMessagesType)
       .loadMessageTypes(gameExecutor);
 
-    void new ConsoleCommandHandler();
+    void new ConsoleCommandHandler(this);
 
     this.query = new Query(this);
     this.entity = new Entity(this);
