@@ -19,7 +19,7 @@ export class QueryBase {
    * @param ctor Constrói um wrapper para a instâncias do Screeps
    * @private
    */
-  protected getEntity<
+  protected getNamedEntity<
     TScreeps extends Named,
     TWrapper extends BaseWrapper<TScreeps>
   >(

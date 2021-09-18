@@ -10,6 +10,7 @@ export class CreepHarvest extends CreepWrapper {
    * @protected
    */
   protected override onInitialize(): void {
+    super.onInitialize();
     this.roles.add(CreepRole.Harvest);
   }
 }

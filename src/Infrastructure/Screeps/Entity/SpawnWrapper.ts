@@ -1,12 +1,19 @@
 import { BaseWrapper } from './BaseWrapper';
+import { IScreepsEnvironment } from '../IScreepsEnvironment';
 
 /**
  * Spawn
  */
 export class SpawnWrapper extends BaseWrapper<StructureSpawn> {
   /**
-   * Nome da propriedade do objeto Memory.
-   * @protected
+   * Construtor.
+   * @param instance Instância original no Screeps.
+   * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
    */
-  protected override readonly instanceMemoryEntry = 'spawn';
+  public constructor(
+    instance: StructureSpawn,
+    screepsEnvironment: IScreepsEnvironment
+  ) {
+    super(instance, screepsEnvironment, 'spawn');
+  }
 }

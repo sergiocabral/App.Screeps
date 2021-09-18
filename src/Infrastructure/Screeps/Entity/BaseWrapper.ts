@@ -10,10 +10,12 @@ export abstract class BaseWrapper<TScreepsEntity extends Named> {
    * Construtor.
    * @param instance Instância original no Screeps.
    * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
+   * @param instanceMemoryEntry Nome da propriedade do objeto Memory usada para a classe.
    */
-  public constructor(
+  protected constructor(
     public instance: TScreepsEntity,
-    protected readonly screepsEnvironment: IScreepsEnvironment
+    protected readonly screepsEnvironment: IScreepsEnvironment,
+    private readonly instanceMemoryEntry: string
   ) {
     this.roles = new TagManager(
       this.onRoleChanged.bind(this),
@@ -29,20 +31,14 @@ export abstract class BaseWrapper<TScreepsEntity extends Named> {
    * @protected
    */
   protected onInitialize(): void {
-    // Implementar nas subclasses se preciso.
+    // Implementar nas classes filhas se necessário.
   }
 
   /**
    * Entrada na memória para role.
    * @private
    */
-  private readonly roleMemoryEntry: string = 'role';
-
-  /**
-   * Nome da propriedade do objeto Memory usada para a classe.
-   * @protected
-   */
-  protected abstract get instanceMemoryEntry(): string;
+  private readonly roleMemoryEntry: string = 'roles';
 
   /**
    * Retorna o objeto de memória devidamente tipado.
@@ -123,6 +119,6 @@ export abstract class BaseWrapper<TScreepsEntity extends Named> {
    * @private
    */
   private onRoleChanged(): void {
-    this.setTagToMemory('roles', this.roles.list);
+    this.setTagToMemory(this.roleMemoryEntry, this.roles.list);
   }
 }
