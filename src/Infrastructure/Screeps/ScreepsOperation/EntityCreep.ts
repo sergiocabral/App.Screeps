@@ -1,4 +1,3 @@
-import { IScreepsEnvironment } from '../IScreepsEnvironment';
 import { CreepWrapper } from '../Entity/CreepWrapper';
 import { SpawnWrapper } from '../Entity/SpawnWrapper';
 import {
@@ -8,22 +7,17 @@ import {
   NameGenerator
 } from '@sergiocabral/screeps';
 import { HelperObject, Logger, LogLevel } from '@sergiocabral/helper';
+import { EntityBase } from './EntityBase';
 
 /**
  * Entidades do jogo: Creep
  */
-export class EntityCreep {
+export class EntityCreep extends EntityBase {
   /**
    * Seção identificador do log.
    * @private
    */
   private static LoggerSection = 'EntityCreep';
-
-  /**
-   * Construtor.
-   * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
-   */
-  constructor(private screepsEnvironment: IScreepsEnvironment) {}
 
   /**
    * Determina se um Spawn pode criar um Creep.
