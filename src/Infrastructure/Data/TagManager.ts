@@ -1,17 +1,18 @@
 /**
- * Tipo de função usada para comparar duas tags.
- */
-type EqualsFunction = (a: unknown, b: unknown) => boolean;
-
-/**
  * Gerencia uma lista de tags.
  */
 export class TagManager<TType = string> {
   /**
    * Construtor.
+   * @param onAdded Evento ao adiciona uma tag.
+   * @param onRemoved Evento ao remover uma tag.
    * @param equals Função para estabelecer igualdade.
    */
-  public constructor(equals?: EqualsFunction) {
+  public constructor(
+    private onAdded?: (item: TType) => void,
+    private onRemoved?: (item: TType) => void,
+    equals?: (a: TType, b: TType) => boolean
+  ) {
     this.equals =
       equals ?? ((a: unknown, b: unknown) => String(a) === String(b));
   }
@@ -20,7 +21,7 @@ export class TagManager<TType = string> {
    * Função para estabelecer igualdade.
    * @private
    */
-  private equals: EqualsFunction;
+  private equals: (a: TType, b: TType) => boolean;
 
   /**
    * Lista original de tags
@@ -58,6 +59,7 @@ export class TagManager<TType = string> {
   public add(tag: TType): boolean {
     if (!this.has(tag)) {
       this.tags.push(tag);
+      if (this.onAdded) this.onAdded(tag);
       return true;
     }
     return false;
@@ -71,6 +73,7 @@ export class TagManager<TType = string> {
     const index = this.index(tag);
     if (index >= 0) {
       this.tags.splice(index, 1);
+      if (this.onRemoved) this.onRemoved(tag);
       return true;
     }
     return false;
