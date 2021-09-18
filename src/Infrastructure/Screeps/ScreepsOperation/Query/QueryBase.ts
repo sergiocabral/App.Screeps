@@ -1,6 +1,6 @@
 import { KeyValue, ShouldNeverHappenError } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
-import { BaseWrapper } from '../../Entity/BaseWrapper';
+import { WrapperBase } from '../../Entity/WrapperBase';
 import { Named } from '../../../Type/Named';
 import { QueryFilter } from './QueryFilter';
 
@@ -9,7 +9,7 @@ import { QueryFilter } from './QueryFilter';
  */
 export abstract class QueryBase<
   TScreeps extends Named,
-  TWrapper extends BaseWrapper<TScreeps>
+  TWrapper extends WrapperBase<TScreeps>
 > {
   /**
    * Construtor.

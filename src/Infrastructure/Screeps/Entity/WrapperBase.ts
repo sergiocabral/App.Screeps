@@ -5,7 +5,7 @@ import { Named } from '../../Type/Named';
 /**
  * Creep
  */
-export abstract class BaseWrapper<TScreepsEntity extends Named> {
+export abstract class WrapperBase<TScreepsEntity extends Named> {
   /**
    * Construtor.
    * @param instance Instância original no Screeps.
@@ -19,16 +19,6 @@ export abstract class BaseWrapper<TScreepsEntity extends Named> {
   ) {
     this.roles = new TagManager(this.onRoleChanged.bind(this));
     this.roles.add(...this.getTagFromMemory<string>(this.roleMemoryEntry));
-
-    this.onInitialize();
-  }
-
-  /**
-   * Chamada durante a construção.
-   * @protected
-   */
-  protected onInitialize(): void {
-    // Implementar nas classes filhas se necessário.
   }
 
   /**

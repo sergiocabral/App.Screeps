@@ -5,9 +5,9 @@ import { InvalidExecutionError, KeyValue } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../src/Infrastructure/Screeps/IScreepsEnvironment';
 import { IScreepsOperation } from '../../src/Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
 import { Query } from '../../src/Infrastructure/Screeps/ScreepsOperation/Query/Query';
-import { BaseGame } from '../../src/Infrastructure/Core/BaseGame';
+import { GameBase } from '../../src/Infrastructure/Core/GameBase';
 
-class DummyGame extends BaseGame {
+class DummyGame extends GameBase {
   protected override do(): void {}
 }
 

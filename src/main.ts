@@ -1,6 +1,6 @@
 import { Application } from './Infrastructure/Core/Application';
 import { Definition } from './Infrastructure/Definition';
-import { UpgradeController } from './Game/Modes/UpgradeController/UpgradeController';
+import { Laboratory } from './Game/Modes/Laboratory/Laboratory';
 
 (Game as unknown as Record<string, Application>)[Definition.GameApplication] =
-  Application.start(new UpgradeController());
+  Application.start(new Laboratory());

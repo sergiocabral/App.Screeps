@@ -6,7 +6,7 @@ import { ScheduledMessage } from '../Schedule/Message/ScheduledMessage';
 /**
  * Estrutura base para modos de jogo.
  */
-export abstract class BaseGame implements IGame {
+export abstract class GameBase implements IGame {
   /**
    * Lista dos tipos de mensagens que podem ser agendadas.
    */

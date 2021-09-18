@@ -6,14 +6,14 @@ import {
   NotImplementedError
 } from '@sergiocabral/helper';
 import { BodyPart, NameGenerator } from '@sergiocabral/screeps';
-import { BaseGame } from '../../../Infrastructure/Core/BaseGame';
 import { SpawnWrapper } from '../../../Infrastructure/Screeps/Entity/SpawnWrapper';
 import { CreepWrapper } from '../../../Infrastructure/Screeps/Entity/CreepWrapper';
+import { ModeBase } from '../../ModeBase';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
  */
-export class UpgradeController extends BaseGame {
+export class UpgradeController extends ModeBase {
   /**
    * Ajuda para os comandos.
    */

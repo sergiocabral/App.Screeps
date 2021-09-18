@@ -1,10 +1,10 @@
-import { BaseWrapper } from './BaseWrapper';
+import { WrapperBase } from './WrapperBase';
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
 
 /**
  * Spawn
  */
-export class SpawnWrapper extends BaseWrapper<StructureSpawn> {
+export class SpawnWrapper extends WrapperBase<StructureSpawn> {
   /**
    * Construtor.
    * @param instance Instância original no Screeps.

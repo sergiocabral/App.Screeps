@@ -4,7 +4,7 @@ import { IScreepsOperation } from '../../Screeps/ScreepsOperation/IScreepsOperat
 /**
  * Abstração para um evento relacionado a execução do jogo.
  */
-export abstract class BaseExecutionEvent extends Message {
+export abstract class ExecutionEventBase extends Message {
   /**
    * Construtor.
    * @param screepsEnvironment Objetos do Screeps.
