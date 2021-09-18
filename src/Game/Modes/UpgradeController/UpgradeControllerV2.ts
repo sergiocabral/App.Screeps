@@ -63,7 +63,7 @@ export class UpgradeControllerV2 extends ModeBase {
       .filter(creep => creep.instance.store.getFreeCapacity() > 0);
 
     for (const creep of creeps) {
-      creep.properties.add('source', HelperList.getRandom(sources).id);
+      creep.properties.set('source', HelperList.getRandom(sources).id);
     }
   }
 
@@ -87,7 +87,7 @@ export class UpgradeControllerV2 extends ModeBase {
       .filter({
         withSpawn: [spawn],
         withRoles: [CreepRole.BasicHarvest],
-        withoutRoles: ['upgrading']
+        withoutProperties: ['upgrading']
       })
       .filter(creep => creep.instance.store.getFreeCapacity() === 0);
 
@@ -112,7 +112,7 @@ export class UpgradeControllerV2 extends ModeBase {
       })
       .filter(
         creep =>
-          creep.roles.has('upgrading') ||
+          creep.properties.has('upgrading') ||
           creep.instance.store.getFreeCapacity() === 0
       );
 
@@ -122,9 +122,9 @@ export class UpgradeControllerV2 extends ModeBase {
         creep.instance.moveTo(controller);
       }
       if (creep.instance.store.getUsedCapacity() > 0) {
-        creep.roles.add('upgrading');
+        creep.properties.set('upgrading', true);
       } else {
-        creep.roles.remove('upgrading');
+        creep.properties.remove('upgrading');
       }
     }
   }

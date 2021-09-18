@@ -50,12 +50,16 @@ export class KeyValueManager {
   }
 
   /**
-   * Adiciona uma chave e valor.
+   * Define uma chave e valor.
    * @param key
    * @param value
    */
-  public add<TType = string>(key: string, value: TType): void {
-    if (value === undefined || value === null) {
+  public set<TType = string>(key: string, value: TType): void {
+    if (
+      value === undefined ||
+      value === null ||
+      !(value as unknown as boolean)
+    ) {
       this.remove(key);
     } else {
       this.dataset[key] = value;
