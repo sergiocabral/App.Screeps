@@ -4,10 +4,12 @@
 export class TagManager<TType = string> {
   /**
    * Construtor.
+   * @param tags Lista original de tags
    * @param onChanged Evento disparado quando ocorre alguma alteração
    * @param equals Função para estabelecer igualdade.
    */
   public constructor(
+    private readonly tags: TType[] = [],
     private onChanged?: () => void,
     equals?: (a: TType, b: TType) => boolean
   ) {
@@ -20,12 +22,6 @@ export class TagManager<TType = string> {
    * @private
    */
   private equals: (a: TType, b: TType) => boolean;
-
-  /**
-   * Lista original de tags
-   * @private
-   */
-  private readonly tags: TType[] = [];
 
   /**
    * Verifica a posição de uma tag na lista.
@@ -89,4 +85,11 @@ export class TagManager<TType = string> {
       if (this.onChanged) this.onChanged();
     }
   }
+
+  /**
+   * Override para toString().
+   */
+  public readonly toString = (): string => {
+    return this.tags.join(', ');
+  };
 }

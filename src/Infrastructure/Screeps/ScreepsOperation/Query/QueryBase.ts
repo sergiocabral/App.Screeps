@@ -3,6 +3,7 @@ import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { WrapperBase } from '../../Entity/WrapperBase';
 import { Named } from '../../../Type/Named';
 import { QueryFilter } from './QueryFilter';
+import { IntoRoom } from '../../../Type/IntoRoom';
 
 /**
  * Classe base para consultar informações do jogo.
@@ -100,14 +101,34 @@ export abstract class QueryBase<
   public filter(filter: QueryFilter, list?: TWrapper[]): TWrapper[] {
     return (list ?? this.getAll()).filter(entity => {
       return (
-        (filter.withName === undefined ||
-          filter.withName === entity.instance.name) &&
-        (filter.withoutName === undefined ||
-          filter.withoutName !== entity.instance.name) &&
+        (!filter.withName?.length ||
+          (filter.withName || []).includes(entity.instance.name)) &&
+        (!filter.withoutName?.length ||
+          !(filter.withoutName || []).includes(entity.instance.name)) &&
+        (!filter.withSpawn?.length ||
+          (filter.withSpawn || []).find(
+            e =>
+              e.instance.room.name ===
+              (entity.instance as unknown as IntoRoom)?.room.name
+          )) &&
+        (!filter.withoutName?.length ||
+          !(filter.withSpawn || []).find(
+            e =>
+              e.instance.room.name ===
+              (entity.instance as unknown as IntoRoom)?.room.name
+          )) &&
         (!filter.withRoles?.length ||
           entity.roles.has(...(filter.withRoles ?? []))) &&
         (!filter.withoutRoles?.length ||
-          !entity.roles.has(...(filter.withoutRoles ?? [])))
+          !entity.roles.has(...(filter.withoutRoles ?? []))) &&
+        (!filter.withProperties?.length ||
+          entity.properties.has(...(filter.withProperties ?? []))) &&
+        (!filter.withoutProperties?.length ||
+          !entity.properties.has(...(filter.withoutProperties ?? []))) &&
+        (!filter.withPropertyValues?.length ||
+          entity.properties.match(filter.withPropertyValues)) &&
+        (!filter.withoutPropertyValues?.length ||
+          !entity.properties.match(filter.withoutPropertyValues))
       );
     });
   }

@@ -1,6 +1,7 @@
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
 import { TagManager } from '../../Data/TagManager';
 import { Named } from '../../Type/Named';
+import { KeyValueManager } from '../../Data/KeyValueManager';
 
 /**
  * Creep
@@ -17,8 +18,17 @@ export abstract class WrapperBase<TScreepsEntity extends Named> {
     protected readonly screepsEnvironment: IScreepsEnvironment,
     private readonly instanceMemoryEntry: string
   ) {
-    this.roles = new TagManager(this.onRoleChanged.bind(this));
-    this.roles.add(...this.getTagFromMemory<string>(this.roleMemoryEntry));
+    this.roles = new TagManager(
+      this.getEntryFromMemory<string[]>(this.roleMemoryEntry, []),
+      this.onRoleChanged.bind(this)
+    );
+    this.properties = new KeyValueManager(
+      this.getEntryFromMemory<Record<string, unknown>>(
+        this.propertiesMemoryEntry,
+        {}
+      ),
+      this.onPropertiesChanged.bind(this)
+    );
   }
 
   /**
@@ -28,18 +38,10 @@ export abstract class WrapperBase<TScreepsEntity extends Named> {
   private readonly roleMemoryEntry: string = 'roles';
 
   /**
-   * Retorna o objeto de memória devidamente tipado.
+   * Entrada na memória para properiedades.
    * @private
    */
-  private getMemory<TType>(): Record<
-    string,
-    Record<string, Record<string, TType[]>>
-  > {
-    return this.screepsEnvironment.memory as unknown as Record<
-      string,
-      Record<string, Record<string, TType[]>>
-    >;
-  }
+  private readonly propertiesMemoryEntry: string = 'props';
 
   /**
    * Papeis do creep.
@@ -47,41 +49,88 @@ export abstract class WrapperBase<TScreepsEntity extends Named> {
   public readonly roles: TagManager;
 
   /**
-   * Retorna tags da memória para esta instância.
-   * @param property Nome da propriedade no objeto Memory
+   * Propriedades gerais.
+   */
+  public readonly properties: KeyValueManager;
+
+  /**
+   * Quando a lista de roles é alterada.
    * @private
    */
-  private getTagFromMemory<TType>(property: string): TType[] {
+  private onRoleChanged(): void {
+    this.setEntryToMemory(
+      this.roleMemoryEntry,
+      this.roles.list.length ? this.roles.list : undefined
+    );
+  }
+
+  /**
+   * Quando a lista de roles é alterada.
+   * @private
+   */
+  private onPropertiesChanged(): void {
+    this.setEntryToMemory(
+      this.propertiesMemoryEntry,
+      Object.keys(this.properties.dataset).length
+        ? this.properties.dataset
+        : undefined
+    );
+  }
+
+  /**
+   * Retorna o objeto de memória devidamente tipado.
+   * @private
+   */
+  private getMemory<TType>(): Record<
+    string,
+    Record<string, Record<string, TType>>
+  > {
+    return this.screepsEnvironment.memory as unknown as Record<
+      string,
+      Record<string, Record<string, TType>>
+    >;
+  }
+
+  /**
+   * Retorna uma entrada da memória para esta instância
+   * @param entryName Nome no objeto Memory
+   * @param defaultValue Valor padrão se não existir.
+   * @private
+   */
+  private getEntryFromMemory<TType>(
+    entryName: string,
+    defaultValue: TType
+  ): TType {
     const memory = this.getMemory<TType>();
     const memoryEntry = memory[this.instanceMemoryEntry];
     if (memoryEntry !== undefined) {
       const instanceEntry = memoryEntry[this.instance.name];
       if (instanceEntry !== undefined) {
-        const tags = instanceEntry[property];
-        if (tags !== undefined) {
-          return tags;
+        const value = instanceEntry[entryName];
+        if (value !== undefined) {
+          return value;
         }
       }
     }
-    return [];
+    return defaultValue;
   }
 
   /**
-   * Define tags na memória para esta instância.
-   * @param property Nome da propriedade no objeto Memory
-   * @param tags Valor da tag.
+   * Define uma entrada da memória para esta instância
+   * @param entryName Nome no objeto Memory
+   * @param value Valor para definir.
    * @private
    */
-  private setTagToMemory<TType>(property: string, tags: TType[]): void {
+  private setEntryToMemory<TType>(entryName: string, value?: TType): void {
     const memory = this.getMemory<TType>();
     let memoryEntry = memory[this.instanceMemoryEntry];
     let instanceEntry = memoryEntry
       ? memoryEntry[this.instance.name]
       : undefined;
-    if (tags.length === 0) {
+    if (value === undefined) {
       if (memoryEntry !== undefined) {
         if (instanceEntry !== undefined) {
-          delete instanceEntry[property];
+          delete instanceEntry[entryName];
           if (Object.keys(instanceEntry).length === 0) {
             delete memoryEntry[this.instance.name];
           }
@@ -97,15 +146,14 @@ export abstract class WrapperBase<TScreepsEntity extends Named> {
       if (instanceEntry === undefined) {
         memoryEntry[this.instance.name] = instanceEntry = {};
       }
-      instanceEntry[property] = tags;
+      instanceEntry[entryName] = value;
     }
   }
 
   /**
-   * Quando a lista de roles é alterada.
-   * @private
+   * Override para toString().
    */
-  private onRoleChanged(): void {
-    this.setTagToMemory(this.roleMemoryEntry, this.roles.list);
-  }
+  public readonly toString = (): string => {
+    return this.instance.name;
+  };
 }

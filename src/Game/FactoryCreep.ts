@@ -2,6 +2,8 @@ import { IScreepsOperation } from '../Infrastructure/Screeps/ScreepsOperation/IS
 import { CreepWrapper } from '../Infrastructure/Screeps/Entity/CreepWrapper';
 import { SpawnWrapper } from '../Infrastructure/Screeps/Entity/SpawnWrapper';
 import { BodyPartSet } from '@sergiocabral/screeps';
+import { CreepRole } from './CreepRole';
+import { InvalidArgumentError } from '@sergiocabral/helper';
 
 /**
  * Constrói instâncias de creeps;
@@ -14,23 +16,72 @@ export class FactoryCreep {
   public constructor(private readonly screepsOperation: IScreepsOperation) {}
 
   /**
-   * Coletor de energia básico.
+   * Cria um creep.
    * @param spawn
+   * @param role
    */
-  public basicHarvest(spawn: SpawnWrapper): CreepWrapper | null {
-    const bodyPartSet: BodyPartSet = {
-      move: 1,
-      work: 1,
-      carry: 1
-    };
+  public create(spawn: SpawnWrapper, role: CreepRole): CreepWrapper | null {
+    switch (role) {
+      case CreepRole.BasicHarvest:
+        return this.basicHarvest(spawn);
+      case CreepRole.BasicUpgrader:
+        return this.basicUpgrader(spawn);
+    }
+    throw new InvalidArgumentError('Unknown role to create a creep.');
+  }
+
+  /**
+   * Cria um creep.
+   * @param spawn
+   * @param bodyPartSet
+   * @param roles
+   * @private
+   */
+  private createCreep(
+    spawn: SpawnWrapper,
+    bodyPartSet: BodyPartSet,
+    ...roles: CreepRole[]
+  ): CreepWrapper | null {
     if (this.screepsOperation.entity.creep.canCreate(spawn, bodyPartSet)) {
       const creep = this.screepsOperation.entity.creep.create(
         spawn,
         bodyPartSet
       );
-      creep?.roles.add('basicHarvest');
+      creep?.roles.add(...roles);
       return creep;
     }
     return null;
+  }
+
+  /**
+   * Coletor de energia básico.
+   * @param spawn
+   */
+  private basicHarvest(spawn: SpawnWrapper): CreepWrapper | null {
+    return this.createCreep(
+      spawn,
+      {
+        move: 1,
+        work: 1,
+        carry: 1
+      },
+      CreepRole.BasicHarvest
+    );
+  }
+
+  /**
+   * Upgrader para Controller
+   * @param spawn
+   */
+  private basicUpgrader(spawn: SpawnWrapper): CreepWrapper | null {
+    return this.createCreep(
+      spawn,
+      {
+        move: 1,
+        work: 1,
+        carry: 1
+      },
+      CreepRole.BasicUpgrader
+    );
   }
 }
