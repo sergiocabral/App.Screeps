@@ -7,6 +7,26 @@ import screeps from 'rollup-plugin-screeps';
 
 const configFile = process.env.auth ?? './screeps.json';
 
+const applyBuildStamp = () => {
+  return {
+    name: 'applyBuildStamp',
+    generateBundle(config, bundle) {
+      const mainFile = 'main.js';
+      const buildStampMark = '{BUILD_STAMP}';
+      const buildStampValue = Buffer
+        .from(Math.random().toString())
+        .toString('base64')
+        .substr(10, 10);
+      if (bundle[mainFile]?.code) {
+        bundle[mainFile].code = bundle[mainFile].code.replace(
+          new RegExp(buildStampMark, 'g'),
+          buildStampValue
+        );
+      }
+    }
+  };
+};
+
 export default {
   input: 'src/main.ts',                        // Arquivo principal a partir de onde a compilação será feita.
   output: { file: 'output/main.js', },         // Arquivo único de saída que será enviado para o Screeps.
@@ -16,6 +36,7 @@ export default {
     nodeResolve(),                             // Importa as bibliotecas do npm.
     cleanupPlugin(),                           // Remove os comentários do código-fonte.
     typescript({tsconfig: './tsconfig.json'}), // Compilação TypeScript.
-    screeps({configFile})    // Envia o código para o Screeps.
+    applyBuildStamp(),                         // Aplica no código uma marcação única para o build.
+    screeps({configFile})                      // Envia o código para o Screeps.
   ]
 }

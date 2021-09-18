@@ -7,6 +7,11 @@ import { IConsoleHelpCommands } from './Console/IConsoleHelpCommands';
  */
 export class Definition {
   /**
+   * Marcação única para identificar o build. Gerada em tempo de compilação.
+   */
+  public static readonly BuildStamp = '{BUILD_STAMP}';
+
+  /**
    * Propriedade em Game para: instância da aplicação.
    */
   public static readonly GameApplication = 'app';
