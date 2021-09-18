@@ -1,5 +1,5 @@
-import { CreepWrapper } from '../Entity/CreepWrapper';
-import { SpawnWrapper } from '../Entity/SpawnWrapper';
+import { CreepWrapper } from '../../Entity/CreepWrapper';
+import { SpawnWrapper } from '../../Entity/SpawnWrapper';
 import {
   BodyPart,
   BodyPartSet,

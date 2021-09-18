@@ -1,4 +1,4 @@
-import { CreepWrapper } from '../Entity/CreepWrapper';
+import { CreepWrapper } from '../../Entity/CreepWrapper';
 import { QueryBase } from './QueryBase';
 
 /**

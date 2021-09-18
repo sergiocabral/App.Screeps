@@ -1,5 +1,5 @@
-import { Query } from './Query';
-import { Entity } from './Entity';
+import { Query } from './Query/Query';
+import { Entity } from './Entity/Entity';
 import { GarbageCollector } from './GarbageCollector';
 
 /**

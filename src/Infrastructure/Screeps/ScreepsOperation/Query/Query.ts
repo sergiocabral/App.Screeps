@@ -1,7 +1,7 @@
 import { Message } from '@sergiocabral/helper';
-import { IScreepsEnvironment } from '../IScreepsEnvironment';
-import { BeginExecutionEvent } from '../../Core/Message/BeginExecutionEvent';
-import { SendDebugToConsole } from '../../Console/Message/SendDebugToConsole';
+import { IScreepsEnvironment } from '../../IScreepsEnvironment';
+import { BeginExecutionEvent } from '../../../Core/Message/BeginExecutionEvent';
+import { SendDebugToConsole } from '../../../Console/Message/SendDebugToConsole';
 import { QueryCreep } from './QueryCreep';
 import { QuerySpawn } from './QuerySpawn';
 

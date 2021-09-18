@@ -1,6 +1,6 @@
 import { KeyValue, ShouldNeverHappenError } from '@sergiocabral/helper';
-import { IScreepsEnvironment } from '../IScreepsEnvironment';
-import { BaseWrapper } from '../Entity/BaseWrapper';
+import { IScreepsEnvironment } from '../../IScreepsEnvironment';
+import { BaseWrapper } from '../../Entity/BaseWrapper';
 
 /**
  * Clase base para consultar informações do jogo.

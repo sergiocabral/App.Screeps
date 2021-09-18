@@ -4,7 +4,7 @@ import { Application } from '../../src/Infrastructure/Core/Application';
 import { InvalidExecutionError, KeyValue } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../src/Infrastructure/Screeps/IScreepsEnvironment';
 import { IScreepsOperation } from '../../src/Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
-import { Query } from '../../src/Infrastructure/Screeps/ScreepsOperation/Query';
+import { Query } from '../../src/Infrastructure/Screeps/ScreepsOperation/Query/Query';
 import { BaseGame } from '../../src/Infrastructure/Core/BaseGame';
 
 class DummyGame extends BaseGame {

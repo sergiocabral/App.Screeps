@@ -1,6 +1,6 @@
 import { InvalidExecutionError } from '@sergiocabral/helper';
 import { IScreepsOperation } from '../Screeps/ScreepsOperation/IScreepsOperation';
-import { Query } from '../Screeps/ScreepsOperation/Query';
+import { Query } from '../Screeps/ScreepsOperation/Query/Query';
 import { IScreepsEnvironment } from '../Screeps/IScreepsEnvironment';
 import { Console } from '../Console/Console';
 import { Definition } from '../Definition';
@@ -9,7 +9,7 @@ import { EndExecutionEvent } from './Message/EndExecutionEvent';
 import { Scheduler } from '../Schedule/Scheduler';
 import { IGame } from './IGame';
 import { ClockTime } from '../Schedule/ClockTime';
-import { Entity } from '../Screeps/ScreepsOperation/Entity';
+import { Entity } from '../Screeps/ScreepsOperation/Entity/Entity';
 import { GarbageCollector } from '../Screeps/ScreepsOperation/GarbageCollector';
 import { ConsoleCommandHandler } from '../Screeps/ConsoleCommandHandler';
 

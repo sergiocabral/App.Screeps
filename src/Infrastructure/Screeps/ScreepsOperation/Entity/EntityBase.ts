@@ -1,4 +1,4 @@
-import { IScreepsEnvironment } from '../IScreepsEnvironment';
+import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 
 /**
  * Base para entidades do jogo

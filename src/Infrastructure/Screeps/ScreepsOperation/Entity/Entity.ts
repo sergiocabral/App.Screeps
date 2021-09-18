@@ -1,4 +1,4 @@
-import { IScreepsEnvironment } from '../IScreepsEnvironment';
+import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { EntityCreep } from './EntityCreep';
 
 /**

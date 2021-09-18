@@ -1,5 +1,5 @@
 import { QueryBase } from './QueryBase';
-import { SpawnWrapper } from '../Entity/SpawnWrapper';
+import { SpawnWrapper } from '../../Entity/SpawnWrapper';
 
 /**
  * Consulta informações do jogo: Spawn
