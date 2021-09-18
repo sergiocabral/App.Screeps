@@ -4,21 +4,16 @@ import { QueryBase } from './QueryBase';
 /**
  * Consulta informações do jogo: Creeps
  */
-export class QueryCreep extends QueryBase {
+export class QueryCreep extends QueryBase<Creep, CreepWrapper> {
   /**
-   * Retorna a lista dos creeps existentes.
+   * Lista de instâncias do Screeps.
+   * @protected
    */
-  public list(): CreepWrapper[] {
-    return this.getNamedEntities<Creep, CreepWrapper>(
-      this.screepsEnvironment.game.creeps,
-      CreepWrapper
-    );
-  }
+  protected override readonly instances = this.screepsEnvironment.game.creeps;
 
   /**
-   * Localiza um creep pelo nome.
+   * Construtor para o wrapper.
+   * @protected
    */
-  public get(name: string): CreepWrapper | null {
-    return this.getNamedEntity<Creep, CreepWrapper>(name, this.list());
-  }
+  protected override readonly wrapperConstructor = CreepWrapper;
 }

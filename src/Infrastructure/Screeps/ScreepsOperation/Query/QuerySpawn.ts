@@ -4,21 +4,16 @@ import { SpawnWrapper } from '../../Entity/SpawnWrapper';
 /**
  * Consulta informações do jogo: Spawn
  */
-export class QuerySpawn extends QueryBase {
+export class QuerySpawn extends QueryBase<StructureSpawn, SpawnWrapper> {
   /**
-   * Retorna a lista dos spawns existentes.
+   * Lista de instâncias do Screeps.
+   * @protected
    */
-  public list(): SpawnWrapper[] {
-    return this.getNamedEntities<StructureSpawn, SpawnWrapper>(
-      this.screepsEnvironment.game.spawns,
-      SpawnWrapper
-    );
-  }
+  protected override readonly instances = this.screepsEnvironment.game.spawns;
 
   /**
-   * Localiza um spawn pelo nome.
+   * Construtor para o wrapper.
+   * @protected
    */
-  public get(name: string): SpawnWrapper | null {
-    return this.getNamedEntity<StructureSpawn, SpawnWrapper>(name, this.list());
-  }
+  protected override readonly wrapperConstructor = SpawnWrapper;
 }

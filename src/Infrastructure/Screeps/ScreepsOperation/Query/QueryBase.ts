@@ -6,7 +6,10 @@ import { Named } from '../../../Type/Named';
 /**
  * Classe base para consultar informações do jogo.
  */
-export class QueryBase {
+export abstract class QueryBase<
+  TScreeps extends Named,
+  TWrapper extends BaseWrapper<TScreeps>
+> {
   /**
    * Construtor.
    * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
@@ -14,15 +17,27 @@ export class QueryBase {
   public constructor(protected screepsEnvironment: IScreepsEnvironment) {}
 
   /**
+   * Lista de instâncias do Screeps.
+   * @protected
+   */
+  protected abstract get instances(): KeyValue<TScreeps>;
+
+  /**
+   * Construtor para o wrapper.
+   * @protected
+   */
+  protected abstract get wrapperConstructor(): new (
+    instance: TScreeps,
+    screepsEnvironment: IScreepsEnvironment
+  ) => TWrapper;
+
+  /**
    * Retorna a lista das entidades existentes.
    * @param instances Lista de instâncias do Screeps.
    * @param ctor Constrói um wrapper para a instâncias do Screeps
    * @private
    */
-  protected getNamedEntities<
-    TScreeps extends Named,
-    TWrapper extends BaseWrapper<TScreeps>
-  >(
+  protected getEntities(
     instances: KeyValue<TScreeps>,
     ctor: new (
       instance: TScreeps,
@@ -42,10 +57,21 @@ export class QueryBase {
    * @param list Lista de entidades.
    * @protected
    */
-  protected getNamedEntity<
-    TScreeps extends Named,
-    TWrapper extends BaseWrapper<TScreeps>
-  >(name: string, list: TWrapper[]): TWrapper | null {
+  protected getEntityByName(name: string, list: TWrapper[]): TWrapper | null {
     return list.find(wrapper => wrapper.instance.name === name) ?? null;
+  }
+
+  /**
+   * Retorna a lista de entidade existentes.
+   */
+  public list(): TWrapper[] {
+    return this.getEntities(this.instances, this.wrapperConstructor);
+  }
+
+  /**
+   * Localiza uma entidade pelo nome.
+   */
+  public get(name: string): TWrapper | null {
+    return this.getEntityByName(name, this.list());
   }
 }
