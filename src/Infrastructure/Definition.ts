@@ -64,6 +64,11 @@ export class Definition {
   O resultado desse comando já emitido no console automaticamente
   a cada {IntervalInMinutesToShowDebug} minutos.
 
+  > map <roomName>
+  Exibe o terreno de uma localização no mapa. O valor para <roomName> deve
+  estar no formato: "W0N0", "E0N0", "W0S0", "E0S0". Onde cada posição é: 
+  (West-East)(Quadrante West-East)(North-South)(Quadrante North-South)
+
 # A instância da aplicação está acessível em:
   Game.{GameApplication};
   
