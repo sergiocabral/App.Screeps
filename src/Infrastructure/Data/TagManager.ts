@@ -4,13 +4,11 @@
 export class TagManager<TType = string> {
   /**
    * Construtor.
-   * @param onAdded Evento ao adiciona uma tag.
-   * @param onRemoved Evento ao remover uma tag.
+   * @param onChanged Evento disparado quando ocorre alguma alteração
    * @param equals Função para estabelecer igualdade.
    */
   public constructor(
-    private onAdded?: (item: TType) => void,
-    private onRemoved?: (item: TType) => void,
+    private onChanged?: () => void,
     equals?: (a: TType, b: TType) => boolean
   ) {
     this.equals =
@@ -60,7 +58,7 @@ export class TagManager<TType = string> {
     for (const tag of tags) {
       if (!this.has(tag)) {
         this.tags.push(tag);
-        if (this.onAdded) this.onAdded(tag);
+        if (this.onChanged) this.onChanged();
       }
     }
   }
@@ -74,8 +72,18 @@ export class TagManager<TType = string> {
       const index = this.index(tag);
       if (index >= 0) {
         this.tags.splice(index, 1);
-        if (this.onRemoved) this.onRemoved(tag);
+        if (this.onChanged) this.onChanged();
       }
+    }
+  }
+
+  /**
+   * Remove todas as tags
+   */
+  public clear(): void {
+    if (this.tags.length > 0) {
+      this.tags.length = 0;
+      if (this.onChanged) this.onChanged();
     }
   }
 }

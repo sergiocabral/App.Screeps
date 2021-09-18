@@ -17,10 +17,7 @@ export abstract class BaseWrapper<TScreepsEntity extends Named> {
     protected readonly screepsEnvironment: IScreepsEnvironment,
     private readonly instanceMemoryEntry: string
   ) {
-    this.roles = new TagManager(
-      this.onRoleChanged.bind(this),
-      this.onRoleChanged.bind(this)
-    );
+    this.roles = new TagManager(this.onRoleChanged.bind(this));
     this.roles.add(...this.getTagFromMemory<string>(this.roleMemoryEntry));
 
     this.onInitialize();
