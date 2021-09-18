@@ -1,14 +1,9 @@
-import {
-  KeyValue,
-  Message,
-  ShouldNeverHappenError
-} from '@sergiocabral/helper';
+import { Message } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
 import { BeginExecutionEvent } from '../../Core/Message/BeginExecutionEvent';
 import { SendDebugToConsole } from '../../Console/Message/SendDebugToConsole';
-import { CreepWrapper } from '../Entity/CreepWrapper';
-import { SpawnWrapper } from '../Entity/SpawnWrapper';
-import { BaseWrapper } from '../Entity/BaseWrapper';
+import { QueryCreep } from './QueryCreep';
+import { QuerySpawn } from './QuerySpawn';
 
 /**
  * Consulta informações do jogo.
@@ -18,7 +13,10 @@ export class Query {
    * Construtor.
    * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
    */
-  constructor(private screepsEnvironment: IScreepsEnvironment) {
+  constructor(screepsEnvironment: IScreepsEnvironment) {
+    this.creep = new QueryCreep(screepsEnvironment);
+    this.spawn = new QuerySpawn(screepsEnvironment);
+
     Message.subscribe(BeginExecutionEvent, () => this.sendDebugToConsole());
   }
 
@@ -30,53 +28,23 @@ export class Query {
     const section = 'Screeps';
     new SendDebugToConsole(
       () => 'Count, spawns: {0}',
-      () => [this.getSpawns().length],
+      () => [this.spawn.list().length],
       section
     ).send();
     new SendDebugToConsole(
       () => 'Count, creeps: {0}',
-      () => [this.getCreeps().length],
+      () => [this.creep.list().length],
       section
     ).send();
   }
 
   /**
-   * Retorna a lista dos spawns existentes.
-   * @param instances Lista de instâncias do Screeps.
-   * @param ctor Constrói um wrapper para a instâncias do Screeps
-   * @private
+   * Creeps.
    */
-  private getEntity<TScreeps, TWrapper extends BaseWrapper<TScreeps>>(
-    instances: KeyValue<TScreeps>,
-    ctor: new (
-      instance: TScreeps,
-      screepsEnvironment: IScreepsEnvironment
-    ) => TWrapper
-  ): TWrapper[] {
-    return Object.keys(instances).map(name => {
-      const entity = instances[name];
-      if (entity === undefined) throw new ShouldNeverHappenError();
-      return new ctor(entity, this.screepsEnvironment);
-    });
-  }
+  public readonly creep: QueryCreep;
 
   /**
-   * Retorna a lista dos spawns existentes.
+   * Spawn.
    */
-  public getSpawns(): SpawnWrapper[] {
-    return this.getEntity<StructureSpawn, SpawnWrapper>(
-      this.screepsEnvironment.game.spawns,
-      SpawnWrapper
-    );
-  }
-
-  /**
-   * Retorna a lista dos screeps existentes.
-   */
-  public getCreeps(): CreepWrapper[] {
-    return this.getEntity<Creep, CreepWrapper>(
-      this.screepsEnvironment.game.creeps,
-      CreepWrapper
-    );
-  }
+  public readonly spawn: QuerySpawn;
 }

@@ -16,7 +16,7 @@ export class Laboratory extends BaseGame {
    * @private
    */
   protected override do(): void {
-    const spawn = this.screepsOperation.query.getSpawns()[0] as SpawnWrapper;
+    const spawn = this.screepsOperation.query.spawn.list()[0] as SpawnWrapper;
     const bodyParts: BodyPartSet = {
       move: 1,
       work: 1,
