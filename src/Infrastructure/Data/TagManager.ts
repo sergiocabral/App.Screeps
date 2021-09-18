@@ -6,7 +6,7 @@ type EqualsFunction = (a: unknown, b: unknown) => boolean;
 /**
  * Gerencia uma lista de tags.
  */
-export class TagManager<TType> {
+export class TagManager<TType = string> {
   /**
    * Construtor.
    * @param equals Função para estabelecer igualdade.

@@ -1,4 +1,5 @@
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
+import { TagManager } from '../../Data/TagManager';
 
 /**
  * Creep
@@ -12,5 +13,20 @@ export abstract class BaseWrapper<TScreepsEntity> {
   public constructor(
     public instance: TScreepsEntity,
     protected readonly screepsEnvironment: IScreepsEnvironment
-  ) {}
+  ) {
+    this.onInitialize();
+  }
+
+  /**
+   * Chamada durante a construção.
+   * @protected
+   */
+  protected onInitialize(): void {
+    // Implementar nas subclasses se preciso.
+  }
+
+  /**
+   * Papeis do creep.
+   */
+  public readonly roles: TagManager = new TagManager();
 }
