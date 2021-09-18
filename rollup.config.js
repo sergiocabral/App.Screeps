@@ -5,7 +5,7 @@ import cleanupPlugin from 'rollup-plugin-cleanup';
 import typescript from 'rollup-plugin-typescript2';
 import screeps from 'rollup-plugin-screeps';
 
-const configFile = process.argv[4] ?? './screeps.json';
+const configFile = process.env.auth ?? './screeps.json';
 
 export default {
   input: 'src/main.ts',                        // Arquivo principal a partir de onde a compilação será feita.
