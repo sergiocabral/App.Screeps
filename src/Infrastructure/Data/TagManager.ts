@@ -54,28 +54,28 @@ export class TagManager<TType = string> {
 
   /**
    * Adiciona uma tag.
-   * @param tag
+   * @param tags
    */
-  public add(tag: TType): boolean {
-    if (!this.has(tag)) {
-      this.tags.push(tag);
-      if (this.onAdded) this.onAdded(tag);
-      return true;
+  public add(...tags: TType[]): void {
+    for (const tag of tags) {
+      if (!this.has(tag)) {
+        this.tags.push(tag);
+        if (this.onAdded) this.onAdded(tag);
+      }
     }
-    return false;
   }
 
   /**
    * Adiciona uma tag.
-   * @param tag
+   * @param tags
    */
-  public remove(tag: TType): boolean {
-    const index = this.index(tag);
-    if (index >= 0) {
-      this.tags.splice(index, 1);
-      if (this.onRemoved) this.onRemoved(tag);
-      return true;
+  public remove(...tags: TType[]): void {
+    for (const tag of tags) {
+      const index = this.index(tag);
+      if (index >= 0) {
+        this.tags.splice(index, 1);
+        if (this.onRemoved) this.onRemoved(tag);
+      }
     }
-    return false;
   }
 }
