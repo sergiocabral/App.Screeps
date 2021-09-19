@@ -2,6 +2,7 @@
  * Responsável por limpar o lixo da memoria.
  */
 import { HelperObject, Logger, LogLevel } from '@sergiocabral/helper';
+import { CreepDiedEvent } from './Message/CreepDiedEvent';
 
 export class GarbageCollector {
   /**
@@ -36,7 +37,11 @@ export class GarbageCollector {
           GarbageCollector.LoggerSection
         );
 
+        const data = Memory.creeps[creepName];
+
         delete Memory.creeps[creepName];
+
+        if (data) void new CreepDiedEvent(creepName, data).send();
       }
     }
 

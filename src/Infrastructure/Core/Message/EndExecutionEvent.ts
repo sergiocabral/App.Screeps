@@ -1,6 +1,6 @@
-import { ExecutionEventBase } from './ExecutionEventBase';
+import { Message } from '@sergiocabral/helper';
 
 /**
  * Executado depois da execução da lógica do jogo.
  */
-export class EndExecutionEvent extends ExecutionEventBase {}
+export class EndExecutionEvent extends Message {}
