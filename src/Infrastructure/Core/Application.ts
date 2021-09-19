@@ -1,6 +1,6 @@
 import { InvalidExecutionError } from '@sergiocabral/helper';
 import { IScreepsOperation } from '../Screeps/ScreepsOperation/IScreepsOperation';
-import { Query } from '../Screeps/ScreepsOperation/Query/Query';
+import { Queries } from '../Screeps/ScreepsOperation/Query/Queries';
 import { IScreepsEnvironment } from '../Screeps/IScreepsEnvironment';
 import { Console } from '../Console/Console';
 import { Definition } from '../Definition';
@@ -9,7 +9,7 @@ import { EndExecutionEvent } from './Message/EndExecutionEvent';
 import { Scheduler } from '../Schedule/Scheduler';
 import { IGame } from './IGame';
 import { ClockTime } from '../Schedule/ClockTime';
-import { Entity } from '../Screeps/ScreepsOperation/Entity/Entity';
+import { Entities } from '../Screeps/ScreepsOperation/Entity/Entities';
 import { GarbageCollector } from '../Screeps/ScreepsOperation/GarbageCollector';
 import { ConsoleCommandHandler } from '../Screeps/ConsoleCommandHandler';
 import { VersionManager } from './VersionManager';
@@ -58,8 +58,8 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
 
     void new ConsoleCommandHandler(this);
 
-    this.query = new Query(this);
-    this.entity = new Entity(this);
+    this.query = new Queries(this);
+    this.entity = new Entities(this);
     this.garbageCollector = new GarbageCollector(this.memory);
   }
 
@@ -114,12 +114,12 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
   /**
    * Consulta informações do jogo.
    */
-  public readonly query: Query;
+  public readonly query: Queries;
 
   /**
    * Entidades do jogo.
    */
-  public readonly entity: Entity;
+  public readonly entity: Entities;
 
   /**
    * Responsável por limpar o lixo da memoria

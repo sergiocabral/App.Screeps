@@ -1,5 +1,5 @@
-import { Query } from './Query/Query';
-import { Entity } from './Entity/Entity';
+import { Queries } from './Query/Queries';
+import { Entities } from './Entity/Entities';
 import { GarbageCollector } from './GarbageCollector';
 
 /**
@@ -9,12 +9,12 @@ export interface IScreepsOperation {
   /**
    * Consulta informações do jogo.
    */
-  readonly query: Query;
+  readonly query: Queries;
 
   /**
    * Entidades do jogo.
    */
-  readonly entity: Entity;
+  readonly entity: Entities;
 
   /**
    * Responsável por limpar o lixo da memoria

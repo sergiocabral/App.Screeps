@@ -1,10 +1,15 @@
-import { QueryBase } from './QueryBase';
 import { SpawnWrapper } from '../../Entity/SpawnWrapper';
+import { QueryNamedBase } from './QueryNamedBase';
+import { FilterSpawn } from './FilterSpawn';
 
 /**
- * Consulta informações do jogo: Spawn
+ * Classe para consultar de entidades: Spawn
  */
-export class QuerySpawn extends QueryBase<StructureSpawn, SpawnWrapper> {
+export class QuerySpawn extends QueryNamedBase<
+  StructureSpawn,
+  SpawnWrapper,
+  FilterSpawn
+> {
   /**
    * Lista de instâncias do Screeps.
    * @protected
@@ -16,4 +21,14 @@ export class QuerySpawn extends QueryBase<StructureSpawn, SpawnWrapper> {
    * @protected
    */
   protected override readonly wrapperConstructor = SpawnWrapper;
+
+  /**
+   * Verifica se um filtro correponde a uma entidade.
+   * @param entity
+   * @param filter
+   * @protected
+   */
+  protected override match(entity: SpawnWrapper, filter: FilterSpawn): boolean {
+    return super.match(entity, filter);
+  }
 }

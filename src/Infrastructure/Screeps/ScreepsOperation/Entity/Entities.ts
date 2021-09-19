@@ -4,7 +4,7 @@ import { EntityCreep } from './EntityCreep';
 /**
  * Entidades do jogo.
  */
-export class Entity {
+export class Entities {
   /**
    * Construtor.
    * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps

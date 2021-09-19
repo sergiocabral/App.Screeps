@@ -4,7 +4,7 @@ import { Application } from '../../src/Infrastructure/Core/Application';
 import { InvalidExecutionError, KeyValue } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../src/Infrastructure/Screeps/IScreepsEnvironment';
 import { IScreepsOperation } from '../../src/Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
-import { Query } from '../../src/Infrastructure/Screeps/ScreepsOperation/Query/Query';
+import { Queries } from '../../src/Infrastructure/Screeps/ScreepsOperation/Query/Queries';
 import { GameBase } from '../../src/Infrastructure/Core/GameBase';
 
 class DummyGame extends GameBase {
@@ -67,6 +67,6 @@ describe('Class Application', () => {
 
     // Assert, Then
 
-    expect(instance.query.constructor).toBe(Query);
+    expect(instance.query.constructor).toBe(Queries);
   });
 });

@@ -1,9 +1,9 @@
-/**
- * Filtro para consulta.
- */
-import { SpawnWrapper } from '../../Entity/SpawnWrapper';
+import { Filter } from './Filter';
 
-export type QueryFilter = {
+/**
+ * Filtro para consulta de entidade: com nome
+ */
+export type FilterNamed = Filter & {
   /**
    * Com o nome.
    */
@@ -13,16 +13,6 @@ export type QueryFilter = {
    * Sem o nome.
    */
   withoutName?: string[];
-
-  /**
-   * Com o nome.
-   */
-  withSpawn?: SpawnWrapper[];
-
-  /**
-   * Não pertence a um spawn
-   */
-  withoutSpawn?: SpawnWrapper[];
 
   /**
    * Com uma ou mais roles.

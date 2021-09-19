@@ -8,7 +8,7 @@ import { QuerySpawn } from './QuerySpawn';
 /**
  * Consulta informações do jogo.
  */
-export class Query {
+export class Queries {
   /**
    * Construtor.
    * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
