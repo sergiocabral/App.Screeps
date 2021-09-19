@@ -17,7 +17,7 @@ export class VersionManager
    * Seção para identifcar mensagens de log.
    * @private
    */
-  private static readonly LoggerSection = 'VersionManager';
+  private static readonly LoggerSection = 'Version';
 
   /**
    * Construtor.
@@ -29,14 +29,16 @@ export class VersionManager
       return {
         major: 0,
         build: 0,
-        stamp: ''
+        stamp: '',
+        updated: 0
       };
     });
 
     this.beforeVersion = {
       major: this.source.major,
       build: this.source.build,
-      stamp: this.source.stamp
+      stamp: this.source.stamp,
+      updated: this.source.updated
     };
 
     this.source.major = Definition.Version;
@@ -77,25 +79,62 @@ export class VersionManager
   }
 
   /**
+   * Momento da atualização.
+   */
+  public get updated(): number {
+    return this.source.updated;
+  }
+
+  /**
    *Mensagem: BeginExecutionEvent
    * @private
    */
   private handleBeginExecutionEvent(): void {
     if (this.source.stamp !== this.beforeVersion.stamp) {
-      new VersionReleasedEvent(this.major, this.build, this.stamp).send();
-      Logger.post(
-        'Updated version from {beforeMajor}.{beforeBuild}.{beforeStamp} to {major}.{build}.{stamp}.',
-        {
-          beforeMajor: this.beforeVersion.major,
-          beforeBuild: this.beforeVersion.build,
-          beforeStamp: this.beforeVersion.stamp,
-          major: this.major,
-          build: this.build,
-          stamp: this.stamp
-        },
-        LogLevel.Information,
-        VersionManager.LoggerSection
-      );
+      const currentTime = new Date().getTime();
+      const lastUpdated = this.updated;
+      const isFirstPublish = !(lastUpdated > 0);
+      const elapsedTime = isFirstPublish ? 0 : currentTime - lastUpdated;
+
+      this.source.updated = currentTime;
+
+      new VersionReleasedEvent(
+        this.major,
+        this.build,
+        this.stamp,
+        elapsedTime
+      ).send();
+
+      if (isFirstPublish) {
+        Logger.post(
+          'First published version {major}.{build}.{stamp}.',
+          { major: this.major, build: this.build, stamp: this.stamp },
+          LogLevel.Information,
+          VersionManager.LoggerSection
+        );
+      } else {
+        Logger.post(
+          'Updated version from {beforeMajor}.{beforeBuild}.{beforeStamp} to {major}.{build}.{stamp}.',
+          {
+            beforeMajor: this.beforeVersion.major,
+            beforeBuild: this.beforeVersion.build,
+            beforeStamp: this.beforeVersion.stamp,
+            major: this.major,
+            build: this.build,
+            stamp: this.stamp
+          },
+          LogLevel.Debug,
+          VersionManager.LoggerSection
+        );
+        Logger.post(
+          'Time elapsed between version updates: {elapsedTime}',
+          {
+            elapsedTime: new Date(elapsedTime).format({ mask: 'running' })
+          },
+          LogLevel.Information,
+          VersionManager.LoggerSection
+        );
+      }
     }
     this.sendDebugToConsole();
   }
@@ -106,12 +145,23 @@ export class VersionManager
    */
   private sendDebugToConsole(): void {
     new SendDebugToConsole(
-      () => 'Version: {major}.{build}.{stamp}',
+      () => 'Number: {major}.{build}.{stamp}',
       () => {
         return {
           major: this.major,
           build: this.build,
           stamp: this.stamp
+        };
+      },
+      VersionManager.LoggerSection
+    ).send();
+    new SendDebugToConsole(
+      () => 'Usage time: {elapsedTime}',
+      () => {
+        return {
+          elapsedTime: new Date(new Date().getTime() - this.updated).format({
+            mask: 'running'
+          })
         };
       },
       VersionManager.LoggerSection

@@ -16,4 +16,9 @@ export interface VersionManagerData {
    * Estampa do build.
    */
   stamp: string;
+
+  /**
+   * Momento da atualização.
+   */
+  updated: number;
 }
