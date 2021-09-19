@@ -3,7 +3,12 @@ import { CreepWrapper } from '../Infrastructure/Screeps/Entity/CreepWrapper';
 import { SpawnWrapper } from '../Infrastructure/Screeps/Entity/SpawnWrapper';
 import { BodyPartSet } from '@sergiocabral/screeps';
 import { CreepRole } from './CreepRole';
-import { InvalidArgumentError, Logger, LogLevel } from '@sergiocabral/helper';
+import {
+  HelperObject,
+  InvalidArgumentError,
+  Logger,
+  LogLevel
+} from '@sergiocabral/helper';
 import { CreepRoleBodySet } from './CreepRoleBodySet';
 
 /**
@@ -27,6 +32,19 @@ export class FactoryCreep {
    * @param creep
    */
   public redefine(creep: CreepWrapper): boolean {
+    Logger.post(
+      'The "{creep}" creep will have its current roles erased: {roles}',
+      { creep, roles: HelperObject.toText(creep.roles.list) },
+      LogLevel.Verbose,
+      FactoryCreep.LoggerSection
+    );
+    Logger.post(
+      'The "{creep}" creep will have its current properties erased: {properties}',
+      { creep, properties: HelperObject.toText(creep.properties.dataset) },
+      LogLevel.Verbose,
+      FactoryCreep.LoggerSection
+    );
+
     for (const roleBodySet of this.roleBodySet) {
       const bodyParts = Object.entries(roleBodySet.bodyParts);
       const bodyPartsCount = bodyParts.reduce(
