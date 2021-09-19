@@ -12,6 +12,7 @@ import { ClockTime } from '../Schedule/ClockTime';
 import { Entity } from '../Screeps/ScreepsOperation/Entity/Entity';
 import { GarbageCollector } from '../Screeps/ScreepsOperation/GarbageCollector';
 import { ConsoleCommandHandler } from '../Screeps/ConsoleCommandHandler';
+import { VersionManager } from './VersionManager';
 
 /**
  * Classe principal da aplicação.
@@ -43,6 +44,8 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
    * @param gameExecutor Modo operacional do jogo.
    */
   private constructor(private gameExecutor: IGame) {
+    void new VersionManager(this.memory, Definition.MemoryVersionManager);
+
     void new Console(this.memory, Definition.MemoryConsoleCommand)
       .addConsoleHelpCommands(Definition.ConsoleHelpCommand)
       .addConsoleHelpCommands(gameExecutor);

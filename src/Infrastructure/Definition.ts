@@ -7,9 +7,9 @@ import { IConsoleHelpCommands } from './Console/IConsoleHelpCommands';
  */
 export class Definition {
   /**
-   * Marcação única para identificar o build. Gerada em tempo de compilação.
+   * Versão da aplicação.
    */
-  public static readonly BuildStamp = '{BUILD_STAMP}';
+  public static readonly Version = 1;
 
   /**
    * Propriedade em Game para: instância da aplicação.
@@ -25,6 +25,11 @@ export class Definition {
    * Propriedade em Memory para: Registrar o tempo de execução.
    */
   public static readonly MemoryClockTime = 'time';
+
+  /**
+   * Propriedade em Memory para: Informações sobre a versão.
+   */
+  public static readonly MemoryVersionManager = 'version';
 
   /**
    * Propriedade em Memory para: Agendador de mensagens.

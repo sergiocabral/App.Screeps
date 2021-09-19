@@ -1,3 +1,6 @@
+/**
+ * Informações do clock.
+ */
 export interface ClockTimeData {
   /**
    * Total de ticks.
