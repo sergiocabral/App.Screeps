@@ -58,7 +58,7 @@ const applyVersionInfo = () => {
    * @return Código com substituições feitas.
    */
   function applyBuild(inputCode) {
-    return applyBuildNumber(applyBuildStamp(inputCode));
+    return applyBuildStamp(applyBuildNumber(inputCode));
   }
 
   return {
