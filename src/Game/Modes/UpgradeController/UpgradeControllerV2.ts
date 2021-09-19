@@ -31,7 +31,7 @@ export class UpgradeControllerV2 extends GameMode {
    * @private
    */
   private tryCreateCreep(spawn: SpawnWrapper): void {
-    const creepsLimit = 4;
+    const creepsLimit = 25;
     if (this.screepsOperation.query.creep.getAll().length < creepsLimit) {
       const fiftyFifty = Math.floor(Math.random() * 10) % 2 === 0;
       const role = fiftyFifty
