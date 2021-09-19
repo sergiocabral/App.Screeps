@@ -14,7 +14,8 @@ export class GameDefinition {
   > redefine [configuration]
   Redefine configurações com valores padrão.
   Valores válidos para [configuration]:
-    - "creeps" : Ajusta as roles de todos os creeps.
+    - "creeps" : Ajusta as roles de todos os creeps e
+                 remove as propriedades.
 
 `
   };

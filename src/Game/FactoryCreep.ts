@@ -45,18 +45,19 @@ export class FactoryCreep {
       }
       if (exit) continue;
 
+      creep.properties.clear();
       if (creep.roles.list.join() !== roleBodySet.roles.join()) {
         creep.roles.clear();
         creep.roles.add(...roleBodySet.roles);
         Logger.post(
-          'The "{creep}" creep had their roles updated: {roles}',
+          'The "{creep}" creep had its properties erased and roles updated: {roles}',
           { creep, roles: creep.roles },
           LogLevel.Information,
           FactoryCreep.LoggerSection
         );
       } else {
         Logger.post(
-          'The "{creep}" creep already had its roles updated: {roles}',
+          'The "{creep}" creep had its properties erased but already had its roles updated: {roles}',
           { creep, roles: creep.roles },
           LogLevel.Information,
           FactoryCreep.LoggerSection
@@ -65,7 +66,9 @@ export class FactoryCreep {
       return true;
     }
 
+    creep.properties.clear();
     creep.roles.clear();
+
     Logger.post(
       'The parameterization of "{creep}" creep was not recognized. No role has been defined.',
       { creep },
