@@ -4,13 +4,14 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 import cleanupPlugin from 'rollup-plugin-cleanup';
 import typescript from 'rollup-plugin-typescript2';
 import screeps from 'rollup-plugin-screeps';
+import * as fs from 'fs';
 
 const configFile = process.env.auth ?? './screeps.json';
 
 /**
  * Plugin para o rollup
  */
-const applyBuildInfo = () => {
+const applyVersionInfo = () => {
   /**
    * Aplica a estampa do build.
    * @param inputCode Código de entrada.
@@ -18,8 +19,7 @@ const applyBuildInfo = () => {
    */
   function applyBuildStamp(inputCode) {
     const mark = '{BUILD_STAMP}';
-    const value = Buffer
-      .from(Math.random().toString())
+    const value = Buffer.from(Math.random().toString())
       .toString('base64')
       .substr(10, 4)
       .toUpperCase();
@@ -33,8 +33,21 @@ const applyBuildInfo = () => {
    * @return Código com substituições feitas.
    */
   function applyBuildNumber(inputCode) {
-    const mark = '{BUILD_NUMBER}';
-    const value = 0;
+    const fileName = 'BUILD_NUMBER';
+    const mark = '{' + fileName + '}';
+    let value;
+    if (!fs.existsSync(fileName)) {
+      value = 1;
+    } else {
+      value = Number.parseInt(fs.readFileSync(fileName).toString().trim()) + 1;
+      if (isNaN(value)) {
+        throw new Error(
+          `The content of the file ${fileName} must be an integer.`
+        );
+      }
+    }
+    fs.writeFileSync(fileName, value.toFixed(0));
+
     console.log('Build Number:', value);
     return inputCode.replace(new RegExp(mark, 'g'), value);
   }
@@ -45,18 +58,18 @@ const applyBuildInfo = () => {
    * @return Código com substituições feitas.
    */
   function applyBuild(inputCode) {
-    return applyBuildNumber(applyBuildStamp(inputCode))
+    return applyBuildNumber(applyBuildStamp(inputCode));
   }
 
   return {
-    name: 'applyBuildInfo',
+    name: 'applyVersionInfo',
     generateBundle(config, bundle) {
       const mainFile = 'main.js';
       if (bundle[mainFile]?.code) {
         console.error('Applying version.');
         bundle[mainFile].code = applyBuild(bundle[mainFile].code);
       } else {
-        console.error('File not found:', mainFile)
+        console.error('File not found:', mainFile);
       }
     }
   };
@@ -71,7 +84,7 @@ export default {
     nodeResolve(),                             // Importa as bibliotecas do npm.
     cleanupPlugin(),                           // Remove os comentários do código-fonte.
     typescript({tsconfig: './tsconfig.json'}), // Compilação TypeScript.
-    applyBuildInfo(),                          // Aplica no código informações do build.
+    applyVersionInfo(),                        // Aplica no código-fonte as informações da versão.
     screeps({configFile})                      // Envia o código para o Screeps.
   ]
 }
