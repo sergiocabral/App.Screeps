@@ -160,7 +160,7 @@ export class VersionManager
       () => {
         return {
           datetime: new Date(this.updated).format({
-            mask: 'universal'
+            mask: 'y-M-d'
           })
         };
       },
