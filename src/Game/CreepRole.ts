@@ -5,15 +5,15 @@ export enum CreepRole {
   /**
    * Coletor de energia.
    */
-  Harvest = 'Harvest',
+  BasicHarvest = 'BasicHarvest',
 
   /**
    * Upgrader de controlador.
    */
-  Upgrader = 'Upgrader',
+  BasicUpgrader = 'BasicUpgrader',
 
   /**
    * Upgrader de controlador.
    */
-  Builder = 'Builder'
+  BasicBuilder = 'BasicBuilder'
 }

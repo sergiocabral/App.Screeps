@@ -15,7 +15,9 @@ export abstract class GameBase implements IGame {
   /**
    * Ajuda para os comandos.
    */
-  public help = 'Modo atual do jogo: indefinido.';
+  public get help(): string[] | string {
+    return [];
+  }
 
   /**
    * Objetos presentes no ambiente do Screeps
@@ -39,7 +41,7 @@ export abstract class GameBase implements IGame {
    * @param screepsOperation
    * @private
    */
-  private initialize(screepsOperation: IScreepsOperation) {
+  protected initialize(screepsOperation: IScreepsOperation): void {
     this.screepsOperationValue = screepsOperation;
   }
 

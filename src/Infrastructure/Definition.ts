@@ -59,6 +59,15 @@ export class Definition {
    */
   public static readonly ConsoleHelpCommand: IConsoleHelpCommands = {
     help: `
+# A instância da aplicação está acessível em:
+  Game.{GameApplication};
+  
+  > Game.{GameApplication}.query.getSpawns();
+  Retorna a lista dos spawns existentes. 
+   
+  > Game.{GameApplication}.query.getCreeps();
+  Retorna a lista dos screeps existentes.
+
 # Lista de comandos através da atribuição:
   Memory.{MemoryConsoleCommand} = "comando";
     
@@ -74,23 +83,16 @@ export class Definition {
   O resultado desse comando já emitido no console automaticamente
   a cada {IntervalInMinutesToShowDebug} minutos.
 
-  > map <roomName>
-  Exibe o terreno de uma localização no mapa. O valor para <roomName> deve
+  > map [roomName]
+  Exibe o terreno de uma localização no mapa. O valor para [roomName] deve
   estar no formato: "W0N0", "E0N0", "W0S0", "E0S0". Onde cada posição é: 
   (West-East)(Quadrante West-East)(North-South)(Quadrante North-South)
 
-  > kill <entityType>
+  > kill [entityType]
   Destrói todas as instâncias da entidade especificada.
-  Valores válidos para <entityType>: "creeps"
+  Valores válidos para [entityType]:
+    - "creeps"
 
-# A instância da aplicação está acessível em:
-  Game.{GameApplication};
-  
-  > Game.{GameApplication}.query.getSpawns();
-  Retorna a lista dos spawns existentes. 
-   
-  > Game.{GameApplication}.query.getCreeps();
-  Retorna a lista dos screeps existentes.
 `
   };
 }

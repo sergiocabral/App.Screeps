@@ -1,16 +1,16 @@
 import { HelperList, Logger, LogLevel } from '@sergiocabral/helper';
 import { SpawnWrapper } from '../../../Infrastructure/Screeps/Entity/SpawnWrapper';
-import { ModeBase } from '../../ModeBase';
+import { GameMode } from '../../GameMode';
 import { CreepRole } from '../../CreepRole';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
  */
-export class UpgradeControllerV2 extends ModeBase {
+export class UpgradeControllerV2 extends GameMode {
   /**
-   * Ajuda para os comandos.
+   * Descrição do modo do jogo.
    */
-  public override help = 'Modo atual do jogo: fazer upgrade do controller.';
+  protected override readonly description = 'Fazer upgrade do controller.';
 
   /**
    * Executa o loop de fato.
@@ -34,7 +34,9 @@ export class UpgradeControllerV2 extends ModeBase {
     const creepsLimit = 4;
     if (this.screepsOperation.query.creep.getAll().length < creepsLimit) {
       const fiftyFifty = Math.floor(Math.random() * 10) % 2 === 0;
-      const role = fiftyFifty ? CreepRole.Harvest : CreepRole.Upgrader;
+      const role = fiftyFifty
+        ? CreepRole.BasicHarvest
+        : CreepRole.BasicUpgrader;
       const creep = this.factoryCreep.create(spawn, role);
       if (creep) {
         creep.properties.set('job', role);
@@ -86,7 +88,7 @@ export class UpgradeControllerV2 extends ModeBase {
     const creeps = this.screepsOperation.query.creep
       .filter({
         withSpawn: [spawn],
-        withPropertyValues: ['job', [CreepRole.Harvest]],
+        withPropertyValues: ['job', [CreepRole.BasicHarvest]],
         withoutProperties: ['upgrading']
       })
       .filter(creep => creep.instance.store.getFreeCapacity() === 0);
@@ -108,7 +110,7 @@ export class UpgradeControllerV2 extends ModeBase {
     const creeps = this.screepsOperation.query.creep
       .filter({
         withSpawn: [spawn],
-        withoutPropertyValues: ['job', [CreepRole.Upgrader]]
+        withoutPropertyValues: ['job', [CreepRole.BasicUpgrader]]
       })
       .filter(
         creep =>

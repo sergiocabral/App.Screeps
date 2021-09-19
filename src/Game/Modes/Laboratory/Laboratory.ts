@@ -1,21 +1,19 @@
-import { SpawnWrapper } from '../../../Infrastructure/Screeps/Entity/SpawnWrapper';
-import { ModeBase } from '../../ModeBase';
+import { GameMode } from '../../GameMode';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
  */
-export class Laboratory extends ModeBase {
+export class Laboratory extends GameMode {
   /**
-   * Ajuda para os comandos.
+   * Descrição do modo do jogo.
    */
-  public override help = 'Modo atual do jogo: laboratório de estratégias.';
+  protected override readonly description = 'Laboratório de estratégias.';
 
   /**
    * Executa o loop de fato.
    * @private
    */
   protected override do(): void {
-    const spawn = this.screepsOperation.query.spawn.getAll()[0] as SpawnWrapper;
-    this.factoryCreep.basicHarvest(spawn);
+    // TODO:
   }
 }

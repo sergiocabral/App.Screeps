@@ -8,16 +8,16 @@ import {
 import { BodyPart, NameGenerator } from '@sergiocabral/screeps';
 import { SpawnWrapper } from '../../../Infrastructure/Screeps/Entity/SpawnWrapper';
 import { CreepWrapper } from '../../../Infrastructure/Screeps/Entity/CreepWrapper';
-import { ModeBase } from '../../ModeBase';
+import { GameMode } from '../../GameMode';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
  */
-export class UpgradeController extends ModeBase {
+export class UpgradeController extends GameMode {
   /**
-   * Ajuda para os comandos.
+   * Descrição do modo do jogo.
    */
-  public override help = 'Modo atual do jogo: fazer upgrade do controller.';
+  protected override readonly description = 'Fazer upgrade do controller.';
 
   /**
    * Executa o loop de fato.
