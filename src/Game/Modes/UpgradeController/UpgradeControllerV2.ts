@@ -31,18 +31,18 @@ export class UpgradeControllerV2 extends ModeBase {
    * @private
    */
   private tryCreateCreep(spawn: SpawnWrapper): void {
-    const creepsLimit = 25;
+    const creepsLimit = 4;
     if (this.screepsOperation.query.creep.getAll().length < creepsLimit) {
       const fiftyFifty = Math.floor(Math.random() * 10) % 2 === 0;
-      const creep = this.factoryCreep.create(
-        spawn,
-        fiftyFifty ? CreepRole.BasicHarvest : CreepRole.BasicUpgrader
-      );
+      const role = fiftyFifty ? CreepRole.Harvest : CreepRole.Upgrader;
+      const creep = this.factoryCreep.create(spawn, role);
       if (creep) {
+        creep.properties.set('job', role);
         Logger.post(
-          'Creep created: {creep}. Roles: {roles}',
+          'Creep created: {creep}. Roles: {roles}. Job: {job}',
           {
             creep,
+            job: role,
             roles: creep.roles
           },
           LogLevel.Debug
@@ -86,7 +86,7 @@ export class UpgradeControllerV2 extends ModeBase {
     const creeps = this.screepsOperation.query.creep
       .filter({
         withSpawn: [spawn],
-        withRoles: [CreepRole.BasicHarvest],
+        withPropertyValues: ['job', [CreepRole.Harvest]],
         withoutProperties: ['upgrading']
       })
       .filter(creep => creep.instance.store.getFreeCapacity() === 0);
@@ -108,7 +108,7 @@ export class UpgradeControllerV2 extends ModeBase {
     const creeps = this.screepsOperation.query.creep
       .filter({
         withSpawn: [spawn],
-        withRoles: [CreepRole.BasicUpgrader]
+        withoutPropertyValues: ['job', [CreepRole.Upgrader]]
       })
       .filter(
         creep =>

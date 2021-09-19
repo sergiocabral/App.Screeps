@@ -22,10 +22,10 @@ export class FactoryCreep {
    */
   public create(spawn: SpawnWrapper, role: CreepRole): CreepWrapper | null {
     switch (role) {
-      case CreepRole.BasicHarvest:
-        return this.basicHarvest(spawn);
-      case CreepRole.BasicUpgrader:
-        return this.basicUpgrader(spawn);
+      case CreepRole.Harvest:
+      case CreepRole.Upgrader:
+      case CreepRole.Builder:
+        return this.basicMoveCarryWork(spawn);
     }
     throw new InvalidArgumentError('Unknown role to create a creep.');
   }
@@ -54,10 +54,10 @@ export class FactoryCreep {
   }
 
   /**
-   * Coletor de energia básico.
+   * Unidade de creep básica
    * @param spawn
    */
-  private basicHarvest(spawn: SpawnWrapper): CreepWrapper | null {
+  private basicMoveCarryWork(spawn: SpawnWrapper): CreepWrapper | null {
     return this.createCreep(
       spawn,
       {
@@ -65,23 +65,8 @@ export class FactoryCreep {
         work: 1,
         carry: 1
       },
-      CreepRole.BasicHarvest
-    );
-  }
-
-  /**
-   * Upgrader para Controller
-   * @param spawn
-   */
-  private basicUpgrader(spawn: SpawnWrapper): CreepWrapper | null {
-    return this.createCreep(
-      spawn,
-      {
-        move: 1,
-        work: 1,
-        carry: 1
-      },
-      CreepRole.BasicUpgrader
+      CreepRole.Harvest,
+      CreepRole.Upgrader
     );
   }
 }
