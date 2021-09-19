@@ -156,6 +156,17 @@ export class VersionManager
       VersionManager.LoggerSection
     ).send();
     new SendDebugToConsole(
+      () => 'Date: {datetime}',
+      () => {
+        return {
+          datetime: new Date(this.updated).format({
+            mask: 'universal'
+          })
+        };
+      },
+      VersionManager.LoggerSection
+    ).send();
+    new SendDebugToConsole(
       () => 'Usage time: {elapsedTime}',
       () => {
         return {
