@@ -1,14 +1,15 @@
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
 import { TagManager } from '../../Data/TagManager';
-import { Named } from '../../Type/Named';
+import { WithName } from '../../Type/WithName';
 import { KeyValueManager } from '../../Data/KeyValueManager';
 import { WrapperBase } from './WrapperBase';
+import { WithId } from '../../Type/WithId';
 
 /**
  * Creep
  */
 export abstract class WrapperNamedBase<
-  TScreepsEntity extends Named
+  TScreepsEntity extends WithName & WithId
 > extends WrapperBase<TScreepsEntity> {
   /**
    * Construtor.

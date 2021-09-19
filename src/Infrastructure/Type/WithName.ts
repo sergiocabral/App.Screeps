@@ -1,7 +1,7 @@
 /**
  * Instância com nome.
  */
-export interface Named {
+export interface WithName {
   /**
    * Nome.
    */

@@ -2,12 +2,13 @@ import { KeyValue, ShouldNeverHappenError } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { WrapperBase } from '../../Entity/WrapperBase';
 import { Filter } from './Filter';
+import { WithId } from '../../../Type/WithId';
 
 /**
  * Classe para consultar de entidades.
  */
 export abstract class QueryBase<
-  TScreeps,
+  TScreeps extends WithId,
   TWrapper extends WrapperBase<TScreeps>,
   TQueryFilter extends Filter
 > {
@@ -66,9 +67,12 @@ export abstract class QueryBase<
    * @protected
    */
   protected match(entity: TWrapper, filter: TQueryFilter): boolean {
-    entity;
-    filter;
-    return true;
+    return (
+      (!filter.withId?.length ||
+        filter.withId.includes(String(entity.instance.id))) &&
+      (!filter.withoutId?.length ||
+        !filter.withoutId.includes(String(entity.instance.id)))
+    );
   }
 
   /**

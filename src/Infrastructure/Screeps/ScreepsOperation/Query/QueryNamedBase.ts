@@ -1,13 +1,14 @@
 import { QueryBase } from './QueryBase';
 import { FilterNamed } from './FilterNamed';
-import { Named } from '../../../Type/Named';
+import { WithName } from '../../../Type/WithName';
 import { WrapperNamedBase } from '../../Entity/WrapperNamedBase';
+import { WithId } from '../../../Type/WithId';
 
 /**
  * Classe para consultar de entidades: com nomes
  */
 export abstract class QueryNamedBase<
-  TScreeps extends Named,
+  TScreeps extends WithName & WithId,
   TWrapper extends WrapperNamedBase<TScreeps>,
   TQueryFilter extends FilterNamed
 > extends QueryBase<TScreeps, TWrapper, TQueryFilter> {
