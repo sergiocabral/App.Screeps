@@ -32,4 +32,22 @@ export class QueryCreep extends QueryIdOrNameBase<
    * @protected
    */
   protected override readonly wrapperConstructor = CreepWrapper;
+
+  /**
+   * Localiza uma entidade que possui uma ou mais nomes.
+   */
+  public getWithRoom(...rooms: Room[]): CreepWrapper[] {
+    return this.filter({
+      withRoom: rooms
+    });
+  }
+
+  /**
+   * Localiza uma entidade que não possui uma ou mais nomes.
+   */
+  public getWithoutRoom(...rooms: Room[]): CreepWrapper[] {
+    return this.filter({
+      withoutRoom: rooms
+    });
+  }
 }

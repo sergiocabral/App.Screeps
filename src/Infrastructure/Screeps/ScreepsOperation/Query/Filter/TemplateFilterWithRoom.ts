@@ -1,4 +1,3 @@
-import { SpawnWrapper } from '../../../Entity/SpawnWrapper';
 import { TemplateFilter } from './TemplateFilter';
 
 /**
@@ -8,10 +7,10 @@ export type TemplateFilterWithRoom = TemplateFilter & {
   /**
    * Com o nome.
    */
-  withSpawn?: SpawnWrapper[];
+  withRoom?: Room[];
 
   /**
    * Não pertence a um spawn
    */
-  withoutSpawn?: SpawnWrapper[];
+  withoutRoom?: Room[];
 };
