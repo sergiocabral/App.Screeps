@@ -59,8 +59,8 @@ export class Definition {
    */
   public static readonly ConsoleHelpCommand: IConsoleHelpCommands = {
     help: `
-# A instância da aplicação está acessível em:
-  Game.{GameApplication}
+# As funcionalidades da aplicação podem ser exploradas digitando no console
+  o nome da instância da aplicação: Game.{GameApplication}
 
 # Lista de comandos através da atribuição:
   Memory.{MemoryConsoleCommand} = "comando";

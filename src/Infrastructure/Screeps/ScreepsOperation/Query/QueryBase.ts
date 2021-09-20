@@ -94,6 +94,12 @@ export abstract class QueryBase<
    * Override para toString().
    */
   public readonly toString = (): string => {
-    return ToText.instance(this, ['fail', 'getEntities', 'wrapperConstructor']);
+    return ToText.instance(this, [
+      'instances',
+      'filters',
+      'fail',
+      'getEntities',
+      'wrapperConstructor'
+    ]);
   };
 }

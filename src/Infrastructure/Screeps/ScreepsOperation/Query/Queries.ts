@@ -60,6 +60,6 @@ export class Queries {
    * Override para toString().
    */
   public readonly toString = (): string => {
-    return ToText.instance(this, ['instances', 'screepsEnvironment']);
+    return ToText.instance(this, ['instances']);
   };
 }

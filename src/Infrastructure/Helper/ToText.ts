@@ -1,7 +1,4 @@
-import { InvalidExecutionError } from '@sergiocabral/helper';
-
-//TODO: Extrair para npm.
-//TODO: exibir métodos com parâmetros.
+import { HelperObject, InvalidExecutionError } from '@sergiocabral/helper';
 
 /**
  * Utilitários de formatação.
@@ -15,22 +12,6 @@ export class ToText {
   }
 
   /**
-   * Lista métodos de um objetos
-   * @param instance
-   * @private
-   */
-  private static getAllKeys(instance: unknown): string[] {
-    const properties = new Set<string>();
-    let current = instance as Record<string, unknown>;
-    do {
-      Object.getOwnPropertyNames(current).map(item => properties.add(item));
-    } while (
-      (current = Object.getPrototypeOf(current) as Record<string, unknown>)
-    );
-    return Array.from(properties);
-  }
-
-  /**
    * Exibe a representação texto de uma instância.
    * @param instance Instância.
    * @param exclude Exclui propriedades
@@ -41,29 +22,13 @@ export class ToText {
     exclude: string[] = [],
     only: string[] = []
   ): string {
-    const instanceAsObject = instance as Record<string, unknown>;
-    const className = instanceAsObject.constructor.name;
-    const exemptKeys = ['toString', 'sendDebugToConsole'].concat(
-      exclude,
-      this.getAllKeys({})
-    );
-    const keys = this.getAllKeys(instanceAsObject)
-      .filter(
-        key =>
-          (only.length === 0 || only.includes(key)) && !exemptKeys.includes(key)
-      )
-      .sort();
-    const properties = keys.filter(
-      key => typeof instanceAsObject[key] !== 'function'
-    );
-    const methods = keys.filter(
-      key => typeof instanceAsObject[key] === 'function'
-    );
-
-    const lines = Array<string>();
-    lines.push(className);
-    if (properties.length) lines.push('Properties: ' + properties.join(', '));
-    if (methods.length) lines.push('Methods: ' + methods.join(', '));
-    return lines.join('\n');
+    exclude.push('screepsEnvironment');
+    exclude.push('sendDebugToConsole');
+    const filter = (name: string): boolean => {
+      return (
+        !exclude.includes(name) && (only.length === 0 || only.includes(name))
+      );
+    };
+    return HelperObject.describe(instance, true, true, filter);
   }
 }
