@@ -1,14 +1,7 @@
-import {
-  HelperList,
-  KeyValue,
-  Logger,
-  LogLevel,
-  NotImplementedError
-} from '@sergiocabral/helper';
-import { BodyPart, NameGenerator } from '@sergiocabral/screeps';
+import { HelperList, Logger, LogLevel } from '@sergiocabral/helper';
 import { SpawnWrapper } from '../../../Infrastructure/Screeps/Wrapper/SpawnWrapper';
-import { CreepWrapper } from '../../../Infrastructure/Screeps/Wrapper/CreepWrapper';
 import { GameMode } from '../../GameMode';
+import { CreepRole } from '../../CreepRole';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
@@ -24,101 +17,81 @@ export class UpgradeController extends GameMode {
    * @private
    */
   protected override do(): void {
-    this.tryCreateCreep();
-    this.tryHarvestEnergy();
-    this.tryTransferEnergyToSpawn();
-    this.tryUpgradeController();
-  }
-
-  private getSpawn(): SpawnWrapper {
-    const spawns = this.screepsOperation.query.spawn.getAll();
-    const uniqueSpawn = spawns[0];
-
-    if (spawns.length !== 1 || uniqueSpawn === undefined) {
-      throw new NotImplementedError(
-        'Expected only one spawn for now, but found {spawnCount}.'.querystring({
-          spawnCount: spawns.length
-        })
-      );
+    for (const spawn of this.screepsOperation.query.spawn.getAll()) {
+      this._tryCreateCreep(spawn);
+      this._assignSourceEnergy(spawn);
+      this._tryHarvestEnergy(spawn);
+      this._tryTransferEnergyToSpawn(spawn);
+      this._tryUpgradeController(spawn);
     }
-
-    return uniqueSpawn;
   }
 
   /**
    * Tenta criar um creep.
    * @private
    */
-  private tryCreateCreep(): void {
+  private _tryCreateCreep(spawn: SpawnWrapper): void {
     const creepsLimit = 25;
-    if (this.screepsOperation.query.creep.getAll().length >= creepsLimit)
-      return;
-
-    const harvestBodyPart = [WORK, CARRY, MOVE];
-    const harvestBodyPartCost = BodyPart.calculateCost(harvestBodyPart);
-
-    const spawn = this.getSpawn();
-    if (spawn.instance.room.energyAvailable < harvestBodyPartCost) return;
-
-    const creepName = NameGenerator.random();
-    spawn.instance.spawnCreep([WORK, CARRY, MOVE], creepName, {
-      memory: { roleHarvest: Math.random() * 4 <= 1 }
-    });
-
-    Logger.post('Creep created: {creepName}.', { creepName }, LogLevel.Debug);
-  }
-
-  private tryHarvestEnergy(): void {
-    const spawn = this.getSpawn();
-
-    const creeps = this.screepsOperation.query.creep
-      .getAll()
-      .filter(
-        creep =>
-          creep.instance.room.name === spawn.instance.room.name &&
-          creep.instance.store.getFreeCapacity() > 0
-      );
-
-    const allSources = spawn.instance.room.find(FIND_SOURCES);
-    const getSource = (creep: CreepWrapper): Source | null => {
-      const sources = allSources.filter(source => source.energyCapacity > 0);
-      const sourceId = (creep.instance.memory as KeyValue)['sourceId'] as
-        | string
-        | undefined;
-      if (sourceId) {
-        const source = sources.find(source => source.id === sourceId);
-        if (source) return source;
-      } else {
-        const source = HelperList.getRandom(sources);
-        if (source) {
-          (creep.instance.memory as KeyValue)['sourceId'] = source.id;
-          return source;
-        }
-      }
-      return null;
-    };
-
-    for (const creep of creeps) {
-      const source = getSource(creep);
-      if (!source) continue;
-      if (creep.instance.harvest(source) === ERR_NOT_IN_RANGE) {
-        creep.instance.moveTo(source);
+    if (this.screepsOperation.query.creep.getAll().length < creepsLimit) {
+      const fiftyFifty = Math.floor(Math.random() * 10) % 2 === 0;
+      const role = fiftyFifty
+        ? CreepRole.BasicHarvest
+        : CreepRole.BasicUpgrader;
+      const creep = this.factoryCreep.create(spawn, role);
+      if (creep) {
+        creep.properties.set('job', role);
+        Logger.post(
+          'Creep created: {creep}. Roles: {roles}. Job: {job}',
+          {
+            creep,
+            job: role,
+            roles: creep.roles
+          },
+          LogLevel.Debug
+        );
       }
     }
   }
 
-  private tryTransferEnergyToSpawn(): void {
-    const spawn = this.getSpawn();
+  private _assignSourceEnergy(spawn: SpawnWrapper): void {
+    const sources = spawn.instance.room.find(FIND_SOURCES);
+    if (sources.length === 0) return;
 
     const creeps = this.screepsOperation.query.creep
-      .getAll()
-      .filter(
-        creep =>
-          creep.instance.room.name === spawn.instance.room.name &&
-          (creep.instance.memory as KeyValue)['roleHarvest'] &&
-          creep.instance.store.getFreeCapacity() === 0 &&
-          !(creep.instance.memory as KeyValue)['upgrading']
-      );
+      .filter({
+        withRoom: [spawn.instance.room],
+        withoutProperties: ['source']
+      })
+      .filter(creep => creep.instance.store.getFreeCapacity() > 0);
+
+    for (const creep of creeps) {
+      creep.properties.set('source', HelperList.getRandom(sources).id);
+    }
+  }
+
+  private _tryHarvestEnergy(spawn: SpawnWrapper): void {
+    const sources = spawn.instance.room.find(FIND_SOURCES);
+    for (const source of sources) {
+      const creeps = this.screepsOperation.query.creep.filter({
+        withRoom: [spawn.instance.room],
+        withPropertyValues: ['source', [source.id]]
+      });
+      for (const creep of creeps) {
+        if (creep.instance.harvest(source) === ERR_NOT_IN_RANGE) {
+          creep.instance.moveTo(source);
+        }
+      }
+    }
+  }
+
+  private _tryTransferEnergyToSpawn(spawn: SpawnWrapper): void {
+    const creeps = this.screepsOperation.query.creep
+      .filter({
+        withRoom: [spawn.instance.room],
+        withPropertyValues: ['job', [CreepRole.BasicHarvest]],
+        withoutProperties: ['upgrading']
+      })
+      .filter(creep => creep.instance.store.getFreeCapacity() === 0);
 
     for (const creep of creeps) {
       if (
@@ -130,20 +103,19 @@ export class UpgradeController extends GameMode {
     }
   }
 
-  private tryUpgradeController(): void {
-    const spawn = this.getSpawn();
+  private _tryUpgradeController(spawn: SpawnWrapper): void {
     const controller = spawn.instance.room.controller;
-
     if (!controller) return;
 
     const creeps = this.screepsOperation.query.creep
-      .getAll()
+      .filter({
+        withRoom: [spawn.instance.room],
+        withoutPropertyValues: ['job', [CreepRole.BasicUpgrader]]
+      })
       .filter(
         creep =>
-          creep.instance.room.name === spawn.instance.room.name &&
-          !(creep.instance.memory as KeyValue)['roleHarvest'] &&
-          (creep.instance.store.getFreeCapacity() === 0 ||
-            (creep.instance.memory as KeyValue)['upgrading'])
+          creep.properties.has('upgrading') ||
+          creep.instance.store.getFreeCapacity() === 0
       );
 
     for (const creep of creeps) {
@@ -151,8 +123,11 @@ export class UpgradeController extends GameMode {
       if (code === ERR_NOT_IN_RANGE) {
         creep.instance.moveTo(controller);
       }
-      (creep.instance.memory as KeyValue)['upgrading'] =
-        creep.instance.store.getUsedCapacity() > 0;
+      if (creep.instance.store.getUsedCapacity() > 0) {
+        creep.properties.set('upgrading', true);
+      } else {
+        creep.properties.remove('upgrading');
+      }
     }
   }
 }
