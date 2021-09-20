@@ -29,7 +29,7 @@ export class VersionManager
       return {
         major: 0,
         build: 0,
-        stamp: '',
+        hash: '',
         updated: 0
       };
     });
@@ -37,13 +37,13 @@ export class VersionManager
     this.beforeVersion = {
       major: this.source.major,
       build: this.source.build,
-      stamp: this.source.stamp,
+      hash: this.source.hash,
       updated: this.source.updated
     };
 
     this.source.major = Definition.Version;
-    this.source.build = '{BUILD_NUMBER}' as unknown as number;
-    this.source.stamp = '{BUILD_STAMP}';
+    this.source.build = Number('{BUILD_NUMBER}' as unknown as number);
+    this.source.hash = '{BUILD_HASH}';
 
     Message.subscribe(
       BeginExecutionEvent,
@@ -72,10 +72,10 @@ export class VersionManager
   }
 
   /**
-   * Estampa do build.
+   * Hash do build.
    */
-  public get stamp(): string {
-    return this.source.stamp;
+  public get hash(): string {
+    return this.source.hash;
   }
 
   /**
@@ -90,7 +90,7 @@ export class VersionManager
    * @private
    */
   private handleBeginExecutionEvent(): void {
-    if (this.source.stamp !== this.beforeVersion.stamp) {
+    if (this.source.hash !== this.beforeVersion.hash) {
       const currentTime = new Date().getTime();
       const lastUpdated = this.updated;
       const isFirstPublish = !(lastUpdated > 0);
@@ -101,29 +101,42 @@ export class VersionManager
       new VersionReleasedEvent(
         this.major,
         this.build,
-        this.stamp,
+        this.hash,
         elapsedTime
       ).send();
 
       if (isFirstPublish) {
         Logger.post(
-          'First published version {major}.{build}.{stamp}.',
-          { major: this.major, build: this.build, stamp: this.stamp },
+          'First published version {major}.{build}.',
+          { major: this.major, build: this.build },
           LogLevel.Information,
+          VersionManager.LoggerSection
+        );
+        Logger.post(
+          'Hash of version {hash}.',
+          { hash: this.hash },
+          LogLevel.Verbose,
           VersionManager.LoggerSection
         );
       } else {
         Logger.post(
-          'Updated version from {beforeMajor}.{beforeBuild}.{beforeStamp} to {major}.{build}.{stamp}.',
+          'Updated version from {beforeMajor}.{beforeBuild} to {major}.{build}.',
           {
             beforeMajor: this.beforeVersion.major,
             beforeBuild: this.beforeVersion.build,
-            beforeStamp: this.beforeVersion.stamp,
             major: this.major,
-            build: this.build,
-            stamp: this.stamp
+            build: this.build
           },
-          LogLevel.Debug,
+          LogLevel.Information,
+          VersionManager.LoggerSection
+        );
+        Logger.post(
+          'Hash of version changed from {beforeHash} to {hash}.',
+          {
+            beforeHash: this.beforeVersion.hash,
+            hash: this.hash
+          },
+          LogLevel.Verbose,
           VersionManager.LoggerSection
         );
         Logger.post(
@@ -131,7 +144,7 @@ export class VersionManager
           {
             elapsedTime: new Date(elapsedTime).format({ mask: 'running' })
           },
-          LogLevel.Information,
+          LogLevel.Verbose,
           VersionManager.LoggerSection
         );
       }
@@ -145,13 +158,16 @@ export class VersionManager
    */
   private sendDebugToConsole(): void {
     new SendDebugToConsole(
-      () => 'Number: {major}.{build}.{stamp}',
+      () => 'Number: {major}.{build}',
       () => {
-        return {
-          major: this.major,
-          build: this.build,
-          stamp: this.stamp
-        };
+        return { major: this.major, build: this.build };
+      },
+      VersionManager.LoggerSection
+    ).send();
+    new SendDebugToConsole(
+      () => 'Hash: {hash}',
+      () => {
+        return { hash: this.hash };
       },
       VersionManager.LoggerSection
     ).send();
@@ -159,9 +175,7 @@ export class VersionManager
       () => 'Date: {datetime}',
       () => {
         return {
-          datetime: new Date(this.updated).format({
-            mask: 'y-M-d'
-          })
+          datetime: new Date(this.updated).format({ mask: 'y-M-d' })
         };
       },
       VersionManager.LoggerSection

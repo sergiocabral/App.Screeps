@@ -4,52 +4,73 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 import cleanupPlugin from 'rollup-plugin-cleanup';
 import typescript from 'rollup-plugin-typescript2';
 import screeps from 'rollup-plugin-screeps';
+import md5 from 'md5';
 import * as fs from 'fs';
 
 const configFile = process.env.auth ?? './screeps.json';
+console.log(`Auth file: ${configFile}`);
 
 /**
  * Plugin para o rollup
  */
 const applyVersionInfo = () => {
   /**
-   * Aplica a estampa do build.
-   * @param inputCode Código de entrada.
-   * @return Código com substituições feitas.
+   * Marcador no código-fonte para receber o número do build.
+   * @type {string}
    */
-  function applyBuildStamp(inputCode) {
-    const mark = '{BUILD_STAMP}';
-    const value = Buffer.from(Math.random().toString())
-      .toString('base64')
-      .substr(10, 4)
-      .toUpperCase();
-    console.log('Build Stamp:', value);
-    return inputCode.replace(new RegExp(mark, 'g'), value);
-  }
+  const sourceMarkBuildNumber = '{BUILD_NUMBER}';
 
   /**
-   * Aplica o número do build.
-   * @param inputCode Código de entrada.
-   * @return Código com substituições feitas.
+   * Marcador no código-fonte para receber o hash do build.
+   * @type {string}
    */
-  function applyBuildNumber(inputCode) {
-    const fileName = 'BUILD_NUMBER';
-    const mark = '{' + fileName + '}';
-    let value;
-    if (!fs.existsSync(fileName)) {
-      value = 1;
+  const sourceMarkBuildHash = '{BUILD_HASH}';
+
+  /**
+   * Nome do arquivo usado para armazenar a versão.
+   * @type {string}
+   */
+  const versionFile = 'VERSION';
+
+  /**
+   * Retorna do arquivo as informações da versão.
+   */
+  function getVersion() {
+    let buildNumber;
+    let buildHash;
+    if (!fs.existsSync(versionFile)) {
+      buildNumber = 1;
+      buildHash = md5('');
     } else {
-      value = Number.parseInt(fs.readFileSync(fileName).toString().trim()) + 1;
-      if (isNaN(value)) {
+      const lines = fs
+        .readFileSync(versionFile)
+        .toString()
+        .trim()
+        .split('\n')
+        .map(line => line.trim());
+      buildNumber = Number.parseInt(lines[0]);
+      buildHash = lines[1] ?? md5('');
+
+      if (isNaN(buildNumber)) {
         throw new Error(
-          `The content of the file ${fileName} must be an integer.`
+          `The content of the file ${versionFile} must be an integer.`
         );
       }
     }
-    fs.writeFileSync(fileName, value.toFixed(0));
 
-    console.log('Build Number:', value);
-    return inputCode.replace(new RegExp(mark, 'g'), value);
+    return [buildNumber, buildHash];
+  }
+
+  /**
+   * Define no arquivo as informações da versão.
+   * @param buildNumber
+   * @param buildHash
+   */
+  function setVersion(buildNumber, buildHash) {
+    buildNumber = isFinite(buildNumber) ? parseInt(buildNumber) : 0;
+    buildHash = buildHash ? String(buildHash).trim() : md5('');
+    const fileContent = [buildNumber, buildHash].join('\n');
+    fs.writeFileSync(versionFile, fileContent);
   }
 
   /**
@@ -57,8 +78,26 @@ const applyVersionInfo = () => {
    * @param inputCode Código de entrada.
    * @return Código com substituições feitas.
    */
-  function applyBuild(inputCode) {
-    return applyBuildStamp(applyBuildNumber(inputCode));
+  function applyVersion(inputCode) {
+    let [buildNumber, buildHash] = getVersion();
+
+    const hash = md5(inputCode);
+
+    if (hash !== buildHash) {
+      console.log('Previous Build Number:', buildNumber);
+      console.log('Previous Build Hash:', buildHash);
+      console.log('Updating version data.');
+
+      setVersion(++buildNumber, buildHash = hash);
+    }
+
+    console.log('Build Number:', buildNumber);
+    console.log('Build Hash:', buildHash);
+    console.log('Applying into source-code.');
+
+    return inputCode
+      .replace(new RegExp(sourceMarkBuildNumber, 'g'), buildNumber)
+      .replace(new RegExp(sourceMarkBuildHash, 'g'), buildHash);
   }
 
   return {
@@ -67,7 +106,7 @@ const applyVersionInfo = () => {
       const mainFile = 'main.js';
       if (bundle[mainFile]?.code) {
         console.error('Applying version.');
-        bundle[mainFile].code = applyBuild(bundle[mainFile].code);
+        bundle[mainFile].code = applyVersion(bundle[mainFile].code);
       } else {
         console.error('File not found:', mainFile);
       }
