@@ -1,9 +1,9 @@
-import { GameMode } from '../../Core/GameMode';
+import { GameExecutor } from '../../Core/GameExecutor';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
  */
-export class Laboratory extends GameMode {
+export class Laboratory extends GameExecutor {
   /**
    * Descrição do modo do jogo.
    */

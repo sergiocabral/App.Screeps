@@ -1,12 +1,12 @@
 import { Logger, LogLevel, Message } from '@sergiocabral/helper';
 import { IScreepsOperation } from '../../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
 import { ReceivedConsoleCommand } from '../../Infrastructure/Console/Message/ReceivedConsoleCommand';
-import { IGameMode } from './IGameMode';
+import { IGameExecutor } from './IGameExecutor';
 
 /**
  * Trata comandos recebidos pelo console.
  */
-export class GameConsoleCommandHandler {
+export class ConsoleCommandHandler {
   /**
    * Seção identificador do log.
    * @private
@@ -20,7 +20,7 @@ export class GameConsoleCommandHandler {
    */
   public constructor(
     private readonly screepsOperation: IScreepsOperation,
-    private readonly gameMode: IGameMode
+    private readonly gameMode: IGameExecutor
   ) {
     Message.subscribe(
       ReceivedConsoleCommand,
@@ -57,14 +57,14 @@ export class GameConsoleCommandHandler {
           count: creeps.length
         },
         LogLevel.Information,
-        GameConsoleCommandHandler.LoggerSection
+        ConsoleCommandHandler.LoggerSection
       );
     } else {
       Logger.post(
         'There are no creeps to be redefined.',
         undefined,
         LogLevel.Information,
-        GameConsoleCommandHandler.LoggerSection
+        ConsoleCommandHandler.LoggerSection
       );
     }
   }

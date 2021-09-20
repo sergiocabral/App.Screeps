@@ -1,12 +1,12 @@
 import { HelperList, Logger, LogLevel } from '@sergiocabral/helper';
 import { SpawnWrapper } from '../../../Infrastructure/Screeps/Wrapper/SpawnWrapper';
-import { GameMode } from '../../Core/GameMode';
+import { GameExecutor } from '../../Core/GameExecutor';
 import { CreepRole } from '../../Screeps/Creep/CreepRole';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
  */
-export class UpgradeController extends GameMode {
+export class UpgradeController extends GameExecutor {
   /**
    * Descrição do modo do jogo.
    */

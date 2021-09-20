@@ -3,7 +3,7 @@ import { IConsoleHelpCommands } from '../../Infrastructure/Console/IConsoleHelpC
 /**
  * Conjunto de definições configuráveis do jogo
  */
-export class GameDefinition {
+export class Definition {
   /**
    * Representação das informações de ajuda para comandos de console.
    */

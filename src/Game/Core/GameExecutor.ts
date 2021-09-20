@@ -1,14 +1,14 @@
 import { GameBase } from '../../Infrastructure/Core/GameBase';
 import { FactoryCreep } from '../Screeps/Creep/FactoryCreep';
-import { GameDefinition } from './GameDefinition';
-import { GameConsoleCommandHandler } from './GameConsoleCommandHandler';
+import { Definition } from './Definition';
+import { ConsoleCommandHandler } from './ConsoleCommandHandler';
 import { IScreepsOperation } from '../../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
-import { IGameMode } from './IGameMode';
+import { IGameExecutor } from './IGameExecutor';
 
 /**
  * Classe base para os modos de operação.
  */
-export abstract class GameMode extends GameBase implements IGameMode {
+export abstract class GameExecutor extends GameBase implements IGameExecutor {
   /**
    * Inicializa a classe.
    * @param screepsOperation
@@ -16,7 +16,7 @@ export abstract class GameMode extends GameBase implements IGameMode {
    */
   protected override initialize(screepsOperation: IScreepsOperation): void {
     super.initialize(screepsOperation);
-    void new GameConsoleCommandHandler(this.screepsOperation, this);
+    void new ConsoleCommandHandler(this.screepsOperation, this);
   }
 
   /**
@@ -42,9 +42,9 @@ export abstract class GameMode extends GameBase implements IGameMode {
   public override get help(): string[] | string {
     const help = Array.isArray(super.help) ? super.help : [super.help];
     help.push(
-      ...(Array.isArray(GameDefinition.ConsoleHelpCommand.help)
-        ? GameDefinition.ConsoleHelpCommand.help
-        : [GameDefinition.ConsoleHelpCommand.help])
+      ...(Array.isArray(Definition.ConsoleHelpCommand.help)
+        ? Definition.ConsoleHelpCommand.help
+        : [Definition.ConsoleHelpCommand.help])
     );
     help.push(`# Modo atual do jogo: ${this.description}`);
     return help;
