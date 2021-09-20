@@ -1,6 +1,6 @@
-import { IScreepsOperation } from '../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
-import { CreepWrapper } from '../Infrastructure/Screeps/Wrapper/CreepWrapper';
-import { SpawnWrapper } from '../Infrastructure/Screeps/Wrapper/SpawnWrapper';
+import { IScreepsOperation } from '../../../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
+import { CreepWrapper } from '../../../Infrastructure/Screeps/Wrapper/CreepWrapper';
+import { SpawnWrapper } from '../../../Infrastructure/Screeps/Wrapper/SpawnWrapper';
 import { BodyPartSet } from '@sergiocabral/screeps';
 import { CreepRole } from './CreepRole';
 import {
@@ -10,7 +10,7 @@ import {
   LogLevel
 } from '@sergiocabral/helper';
 import { CreepRoleBodySet } from './CreepRoleBodySet';
-import { ToText } from '../Infrastructure/Helper/ToText';
+import { ToText } from '../../../Infrastructure/Helper/ToText';
 
 /**
  * Constrói instâncias de creeps;

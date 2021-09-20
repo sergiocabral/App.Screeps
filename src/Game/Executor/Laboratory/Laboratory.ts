@@ -1,4 +1,4 @@
-import { GameMode } from '../../GameMode';
+import { GameMode } from '../../Core/GameMode';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.

@@ -1,6 +1,6 @@
 import { Logger, LogLevel, Message } from '@sergiocabral/helper';
-import { IScreepsOperation } from '../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
-import { ReceivedConsoleCommand } from '../Infrastructure/Console/Message/ReceivedConsoleCommand';
+import { IScreepsOperation } from '../../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
+import { ReceivedConsoleCommand } from '../../Infrastructure/Console/Message/ReceivedConsoleCommand';
 import { IGameMode } from './IGameMode';
 
 /**

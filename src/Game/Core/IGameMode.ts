@@ -1,4 +1,4 @@
-import { FactoryCreep } from './FactoryCreep';
+import { FactoryCreep } from '../Screeps/Creep/FactoryCreep';
 
 /**
  * Representa funcionalidade específicas do modo de jogo em execução.

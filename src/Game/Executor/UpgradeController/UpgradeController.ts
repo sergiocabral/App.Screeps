@@ -1,7 +1,7 @@
 import { HelperList, Logger, LogLevel } from '@sergiocabral/helper';
 import { SpawnWrapper } from '../../../Infrastructure/Screeps/Wrapper/SpawnWrapper';
-import { GameMode } from '../../GameMode';
-import { CreepRole } from '../../CreepRole';
+import { GameMode } from '../../Core/GameMode';
+import { CreepRole } from '../../Screeps/Creep/CreepRole';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.

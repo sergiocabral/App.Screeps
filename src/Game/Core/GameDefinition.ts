@@ -1,4 +1,4 @@
-import { IConsoleHelpCommands } from '../Infrastructure/Console/IConsoleHelpCommands';
+import { IConsoleHelpCommands } from '../../Infrastructure/Console/IConsoleHelpCommands';
 
 /**
  * Conjunto de definições configuráveis do jogo

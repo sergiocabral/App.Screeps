@@ -1,8 +1,8 @@
-import { GameBase } from '../Infrastructure/Core/GameBase';
-import { FactoryCreep } from './FactoryCreep';
+import { GameBase } from '../../Infrastructure/Core/GameBase';
+import { FactoryCreep } from '../Screeps/Creep/FactoryCreep';
 import { GameDefinition } from './GameDefinition';
 import { GameConsoleCommandHandler } from './GameConsoleCommandHandler';
-import { IScreepsOperation } from '../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
+import { IScreepsOperation } from '../../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
 import { IGameMode } from './IGameMode';
 
 /**
