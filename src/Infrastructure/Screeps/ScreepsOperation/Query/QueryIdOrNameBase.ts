@@ -1,15 +1,17 @@
 import { QueryBase } from './QueryBase';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
-import { TemplateFilterWithRolesAndProperties } from './Filter/TemplateFilterWithRolesAndProperties';
 import { WrapperRolesAndPropertiesBase } from '../../Entity/WrapperIdOrNamedBase';
 import { WithName } from '../../../Type/WithName';
 import { WithId } from '../../../Type/WithId';
 import { TemplateFilterWithId } from './Filter/TemplateFilterWithId';
 import { TemplateFilterWithName } from './Filter/TemplateFilterWithName';
 import { FilterMatchIdOrName } from './FilterMatch/FilterMatchIdOrName';
-import { FilterMatchRolesAndProperties } from './FilterMatch/FilterMatchRolesAndProperties';
+import { FilterMatchProperties } from './FilterMatch/FilterMatchProperties';
 import { GetByRole } from './GetBy/GetByRole';
 import { GetByProperty } from './GetBy/GetByProperty';
+import { TemplateFilterWithRoles } from './Filter/TemplateFilterWithRoles';
+import { TemplateFilterWithProperties } from './Filter/TemplateFilterWithProperties';
+import { FilterMatchRoles } from './FilterMatch/FilterMatchRoles';
 
 /**
  * Classe para consultar de entidades: com id ou nome
@@ -18,7 +20,8 @@ export abstract class QueryIdOrNameBase<
   TScreeps extends WithName | WithId,
   TWrapper extends WrapperRolesAndPropertiesBase<TScreeps>,
   TQueryFilter extends (TemplateFilterWithId | TemplateFilterWithName) &
-    TemplateFilterWithRolesAndProperties
+    TemplateFilterWithRoles &
+    TemplateFilterWithProperties
 > extends QueryBase<TScreeps, TWrapper, TQueryFilter> {
   /**
    * Construtor.
@@ -29,8 +32,9 @@ export abstract class QueryIdOrNameBase<
     this.filters.push(
       new FilterMatchIdOrName<TScreeps, TWrapper, TQueryFilter>()
     );
+    this.filters.push(new FilterMatchRoles<TScreeps, TWrapper, TQueryFilter>());
     this.filters.push(
-      new FilterMatchRolesAndProperties<TScreeps, TWrapper, TQueryFilter>()
+      new FilterMatchProperties<TScreeps, TWrapper, TQueryFilter>()
     );
   }
 

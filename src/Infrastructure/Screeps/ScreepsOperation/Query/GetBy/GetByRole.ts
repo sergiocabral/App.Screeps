@@ -1,8 +1,8 @@
 import { GetByBase } from './GetByBase';
 import { WithId } from '../../../../Type/WithId';
 import { WithName } from '../../../../Type/WithName';
-import { TemplateFilterWithRolesAndProperties } from '../Filter/TemplateFilterWithRolesAndProperties';
 import { WrapperRolesAndPropertiesBase } from '../../../Entity/WrapperIdOrNamedBase';
+import { TemplateFilterWithRoles } from '../Filter/TemplateFilterWithRoles';
 
 /**
  * Métodos para obter entidade: por roles
@@ -10,7 +10,7 @@ import { WrapperRolesAndPropertiesBase } from '../../../Entity/WrapperIdOrNamedB
 export class GetByRole<
   TScreeps extends WithId | WithName,
   TWrapper extends WrapperRolesAndPropertiesBase<TScreeps>,
-  TQueryFilter extends TemplateFilterWithRolesAndProperties
+  TQueryFilter extends TemplateFilterWithRoles
 > extends GetByBase<TScreeps, TWrapper, TQueryFilter> {
   /**
    * Localiza uma entidade que possui uma ou mais roles.

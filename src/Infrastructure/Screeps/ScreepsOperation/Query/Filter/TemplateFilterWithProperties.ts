@@ -1,17 +1,7 @@
 /**
- * Filtro para consulta de entidade: com roles e propriedades
+ * Filtro para consulta de entidade: propriedades
  */
-export type TemplateFilterWithRolesAndProperties = {
-  /**
-   * Com uma ou mais roles.
-   */
-  withRoles?: string[];
-
-  /**
-   * Sem uma ou mais roles.
-   */
-  withoutRoles?: string[];
-
+export type TemplateFilterWithProperties = {
   /**
    * Com uma ou mais propriedades definidas.
    */

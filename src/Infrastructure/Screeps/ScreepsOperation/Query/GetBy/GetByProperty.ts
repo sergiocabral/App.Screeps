@@ -1,8 +1,8 @@
 import { GetByBase } from './GetByBase';
 import { WithId } from '../../../../Type/WithId';
 import { WithName } from '../../../../Type/WithName';
-import { TemplateFilterWithRolesAndProperties } from '../Filter/TemplateFilterWithRolesAndProperties';
 import { WrapperRolesAndPropertiesBase } from '../../../Entity/WrapperIdOrNamedBase';
+import { TemplateFilterWithProperties } from '../Filter/TemplateFilterWithProperties';
 
 /**
  * Métodos para obter entidade: por propriedades
@@ -10,7 +10,7 @@ import { WrapperRolesAndPropertiesBase } from '../../../Entity/WrapperIdOrNamedB
 export class GetByProperty<
   TScreeps extends WithId | WithName,
   TWrapper extends WrapperRolesAndPropertiesBase<TScreeps>,
-  TQueryFilter extends TemplateFilterWithRolesAndProperties
+  TQueryFilter extends TemplateFilterWithProperties
 > extends GetByBase<TScreeps, TWrapper, TQueryFilter> {
   /**
    * Localiza uma entidade que possui uma ou mais propriedades.

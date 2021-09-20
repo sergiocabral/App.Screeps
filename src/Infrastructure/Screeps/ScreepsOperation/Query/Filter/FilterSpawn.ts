@@ -1,7 +1,8 @@
 import { TemplateFilterWithName } from './TemplateFilterWithName';
 import { TemplateFilterWithId } from './TemplateFilterWithId';
 import { TemplateFilter } from './TemplateFilter';
-import { TemplateFilterWithRolesAndProperties } from './TemplateFilterWithRolesAndProperties';
+import { TemplateFilterWithRoles } from './TemplateFilterWithRoles';
+import { TemplateFilterWithProperties } from './TemplateFilterWithProperties';
 
 /**
  * Filtro para consulta de entidade: Spawn
@@ -9,6 +10,7 @@ import { TemplateFilterWithRolesAndProperties } from './TemplateFilterWithRolesA
 export type FilterSpawn = TemplateFilter &
   TemplateFilterWithId &
   TemplateFilterWithName &
-  TemplateFilterWithRolesAndProperties & {
+  TemplateFilterWithRoles &
+  TemplateFilterWithProperties & {
     // Sem campos.
   };
