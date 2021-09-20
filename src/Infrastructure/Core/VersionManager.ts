@@ -5,6 +5,7 @@ import { BeginExecutionEvent } from './Message/BeginExecutionEvent';
 import { SendDebugToConsole } from '../Console/Message/SendDebugToConsole';
 import { Definition } from '../Definition';
 import { VersionReleasedEvent } from './Message/VersionReleasedEvent';
+import { EndExecutionEvent } from './Message/EndExecutionEvent';
 
 /**
  * Gerenciador de informações relacionadas a versão.
@@ -52,6 +53,10 @@ export class VersionManager
       BeginExecutionEvent,
       this.handleBeginExecutionEvent.bind(this)
     );
+    Message.subscribe(
+      EndExecutionEvent,
+      this.handleEndExecutionEvent.bind(this)
+    );
   }
 
   /**
@@ -96,7 +101,21 @@ export class VersionManager
   }
 
   /**
-   *Mensagem: BeginExecutionEvent
+   * Evento para ser emtido em caso de nova versão.
+   * @private
+   */
+  private versionReleasedEvent: VersionReleasedEvent | undefined = undefined;
+
+  /**
+   * Mensagem: EndExecutionEvent
+   * @private
+   */
+  private handleEndExecutionEvent(): void {
+    this.versionReleasedEvent?.send();
+  }
+
+  /**
+   * Mensagem: BeginExecutionEvent
    * @private
    */
   private handleBeginExecutionEvent(): void {
@@ -131,12 +150,12 @@ export class VersionManager
 
       this.source.updated = currentTime;
 
-      new VersionReleasedEvent(
+      this.versionReleasedEvent = new VersionReleasedEvent(
         this.major,
         this.build,
         this.hash,
         elapsedTime
-      ).send();
+      );
 
       if (isFirstPublish) {
         Logger.post(

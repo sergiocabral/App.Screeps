@@ -30,72 +30,92 @@ export class FactoryCreep {
 
   /**
    * Redefine as informações de um creep.
-   * @param creep
+   * @param creeps
    */
-  public redefine(creep: CreepWrapper): boolean {
-    Logger.post(
-      'The "{creep}" creep will have its current roles erased: {roles}',
-      { creep, roles: HelperObject.toText(creep.roles.list) },
-      LogLevel.Verbose,
-      FactoryCreep.LoggerSection
-    );
-    Logger.post(
-      'The "{creep}" creep will have its current properties erased: {properties}',
-      { creep, properties: HelperObject.toText(creep.properties.dataset) },
-      LogLevel.Verbose,
-      FactoryCreep.LoggerSection
-    );
-
-    for (const roleBodySet of this._roleBodySet) {
-      const bodyParts = Object.entries(roleBodySet.bodyParts);
-      const bodyPartsCount = bodyParts.reduce(
-        (sum: number, bodyPart: [string, number]) => sum + bodyPart[1],
-        0
+  public redefine(...creeps: CreepWrapper[]): void {
+    if (creeps.length === 0) {
+      Logger.post(
+        'There are no creeps to be redefined.',
+        undefined,
+        LogLevel.Information,
+        FactoryCreep.LoggerSection
       );
-      if (creep.instance.body.length !== bodyPartsCount) continue;
-      let exit = false;
-      for (const bodyPart of bodyParts) {
-        const bodyPartName = bodyPart[0];
-        const bodyPartQuantity = bodyPart[1];
-        exit =
-          creep.instance.body.filter(body => body.type === bodyPartName)
-            .length !== bodyPartQuantity;
-        if (exit) break;
-      }
-      if (exit) continue;
-
-      creep.properties.clear();
-      if (creep.roles.list.join() !== roleBodySet.roles.join()) {
-        creep.roles.clear();
-        creep.roles.add(...roleBodySet.roles);
-        Logger.post(
-          'The "{creep}" creep had its properties erased and roles updated: {roles}',
-          { creep, roles: creep.roles },
-          LogLevel.Information,
-          FactoryCreep.LoggerSection
-        );
-      } else {
-        Logger.post(
-          'The "{creep}" creep had its properties erased but already had its roles updated: {roles}',
-          { creep, roles: creep.roles },
-          LogLevel.Information,
-          FactoryCreep.LoggerSection
-        );
-      }
-      return true;
+      return;
     }
 
-    creep.properties.clear();
-    creep.roles.clear();
-
     Logger.post(
-      'The parameterization of "{creep}" creep was not recognized. No role has been defined.',
-      { creep },
-      LogLevel.Warning,
+      'A total of {count} creeps will be redefined.',
+      {
+        count: creeps.length
+      },
+      LogLevel.Information,
       FactoryCreep.LoggerSection
     );
 
-    return false;
+    for (const creep of creeps) {
+      Logger.post(
+        'The "{creep}" creep will have its current roles ({roles}) and properties ({properties}) redefined.',
+        {
+          creep,
+          roles: HelperObject.toText(creep.roles.list),
+          properties: HelperObject.toText(creep.properties.dataset)
+        },
+        LogLevel.Verbose,
+        FactoryCreep.LoggerSection
+      );
+
+      let redefined = false;
+      for (const roleBodySet of this._roleBodySet) {
+        const bodyParts = Object.entries(roleBodySet.bodyParts);
+        const bodyPartsCount = bodyParts.reduce(
+          (sum: number, bodyPart: [string, number]) => sum + bodyPart[1],
+          0
+        );
+        if (creep.instance.body.length !== bodyPartsCount) continue;
+        let exit = false;
+        for (const bodyPart of bodyParts) {
+          const bodyPartName = bodyPart[0];
+          const bodyPartQuantity = bodyPart[1];
+          exit =
+            creep.instance.body.filter(body => body.type === bodyPartName)
+              .length !== bodyPartQuantity;
+          if (exit) break;
+        }
+        if (exit) continue;
+
+        creep.properties.clear();
+        if (creep.roles.list.join() !== roleBodySet.roles.join()) {
+          creep.roles.clear();
+          creep.roles.add(...roleBodySet.roles);
+          Logger.post(
+            'The "{creep}" creep had its properties erased and roles updated: {roles}',
+            { creep, roles: creep.roles },
+            LogLevel.Debug,
+            FactoryCreep.LoggerSection
+          );
+        } else {
+          Logger.post(
+            'The "{creep}" creep had its properties erased but already had its roles updated: {roles}',
+            { creep, roles: creep.roles },
+            LogLevel.Debug,
+            FactoryCreep.LoggerSection
+          );
+        }
+        redefined = true;
+      }
+
+      if (!redefined) {
+        creep.properties.clear();
+        creep.roles.clear();
+
+        Logger.post(
+          'The parameterization of "{creep}" creep was not recognized. No role has been defined.',
+          { creep },
+          LogLevel.Warning,
+          FactoryCreep.LoggerSection
+        );
+      }
+    }
   }
 
   /**

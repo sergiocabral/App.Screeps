@@ -4,11 +4,32 @@ import { Definition } from './Definition';
 import { ConsoleCommandHandler } from './ConsoleCommandHandler';
 import { IScreepsOperation } from '../../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
 import { IGameExecutor } from './IGameExecutor';
+import { Message } from '@sergiocabral/helper';
+import { VersionReleasedEvent } from '../../Infrastructure/Core/Message/VersionReleasedEvent';
 
 /**
  * Classe base para os modos de operação.
  */
 export abstract class GameExecutor extends GameBase implements IGameExecutor {
+  /**
+   * Construtor.
+   */
+  public constructor() {
+    super();
+    Message.subscribe(
+      VersionReleasedEvent,
+      this._handleVersionReleasedEvent.bind(this)
+    );
+  }
+
+  /**
+   * Mensagem: VersionReleasedEvent
+   * @private
+   */
+  private _handleVersionReleasedEvent(): void {
+    this.factoryCreep.redefine(...this.screepsOperation.query.creep.getAll());
+  }
+
   /**
    * Inicializa a classe.
    * @param screepsOperation
