@@ -4,6 +4,7 @@ import { BeginExecutionEvent } from '../../../Core/Message/BeginExecutionEvent';
 import { SendDebugToConsole } from '../../../Console/Message/SendDebugToConsole';
 import { QueryCreep } from './QueryCreep';
 import { QuerySpawn } from './QuerySpawn';
+import { QueryFlag } from './QueryFlag';
 
 /**
  * Consulta informações do jogo.
@@ -16,6 +17,7 @@ export class Queries {
   constructor(screepsEnvironment: IScreepsEnvironment) {
     this.creep = new QueryCreep(screepsEnvironment);
     this.spawn = new QuerySpawn(screepsEnvironment);
+    this.flag = new QueryFlag(screepsEnvironment);
 
     Message.subscribe(BeginExecutionEvent, () => this.sendDebugToConsole());
   }
@@ -47,4 +49,9 @@ export class Queries {
    * Spawn.
    */
   public readonly spawn: QuerySpawn;
+
+  /**
+   * Spawn.
+   */
+  public readonly flag: QueryFlag;
 }
