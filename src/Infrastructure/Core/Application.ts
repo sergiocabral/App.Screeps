@@ -13,6 +13,7 @@ import { Entities } from '../Screeps/ScreepsOperation/Entity/Entities';
 import { GarbageCollector } from '../Screeps/ScreepsOperation/GarbageCollector';
 import { ConsoleCommandHandler } from '../Screeps/ConsoleCommandHandler';
 import { VersionManager } from './VersionManager';
+import { ToText } from '../Helper/ToText';
 
 /**
  * Classe principal da aplicação.
@@ -125,4 +126,11 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
    * Responsável por limpar o lixo da memoria
    */
   public readonly garbageCollector: GarbageCollector;
+
+  /**
+   * Override para toString().
+   */
+  public readonly toString = (): string => {
+    return ToText.instance(this, [], ['query', 'entity']);
+  };
 }

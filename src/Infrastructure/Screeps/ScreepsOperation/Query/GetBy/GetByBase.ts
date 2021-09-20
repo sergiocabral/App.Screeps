@@ -1,6 +1,7 @@
 import { QueryBase } from '../QueryBase';
 import { WrapperBase } from '../../../Wrapper/WrapperBase';
 import { TemplateFilter } from '../Filter/TemplateFilter';
+import { ToText } from '../../../../Helper/ToText';
 
 /**
  * Métodos para obter entidade
@@ -17,4 +18,11 @@ export abstract class GetByBase<
   public constructor(
     protected query: QueryBase<TScreeps, TWrapper, TQueryFilter>
   ) {}
+
+  /**
+   * Override para toString().
+   */
+  public readonly toString = (): string => {
+    return ToText.instance(this, ['query']);
+  };
 }

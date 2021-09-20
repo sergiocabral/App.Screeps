@@ -3,6 +3,7 @@ import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { WrapperBase } from '../../Wrapper/WrapperBase';
 import { TemplateFilter } from './Filter/TemplateFilter';
 import { IFilterMatch } from './FilterMatch/IFilterMatch';
+import { ToText } from '../../../Helper/ToText';
 
 /**
  * Classe para consultar de entidades.
@@ -88,4 +89,11 @@ export abstract class QueryBase<
   public filter(filter: TQueryFilter, list?: TWrapper[]): TWrapper[] {
     return (list ?? this.getAll()).filter(entity => !this.fail(entity, filter));
   }
+
+  /**
+   * Override para toString().
+   */
+  public readonly toString = (): string => {
+    return ToText.instance(this, ['fail', 'getEntities', 'wrapperConstructor']);
+  };
 }

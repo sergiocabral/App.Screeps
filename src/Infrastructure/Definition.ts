@@ -60,44 +60,7 @@ export class Definition {
   public static readonly ConsoleHelpCommand: IConsoleHelpCommands = {
     help: `
 # A instância da aplicação está acessível em:
-  Game.{GameApplication};
-
-  Operações sobre entidades.
-  Creep:
-  > Game.{GameApplication}.entity.creep.canCreate(spawn, bodyParts)
-  > Game.{GameApplication}.entity.creep.create(spawn, bodyParts)
-  Flag:
-  > Game.{GameApplication}.entity.flag.create(name, room, x, y)
-
-  Consultas. Substitua [entity] pela entidade.
-  > Game.{GameApplication}.query.[entity].getAll()
-    - [entity] = creep, spawn, flag
-  > Game.{GameApplication}.query.[entity].filter(filter, list)
-    - [entity] = creep, spawn, flag
-  > Game.{GameApplication}.query.[entity].getById.with(...ids)
-    - [entity] = creep, spawn
-  > Game.{GameApplication}.query.[entity].getById.without(...ids)
-    - [entity] = creep, spawn
-  > Game.{GameApplication}.query.[entity].getByName.with(...names)
-    - [entity] = creep, spawn, flag
-  > Game.{GameApplication}.query.[entity].getByName.without(...names)
-    - [entity] = creep, spawn, flag
-  > Game.{GameApplication}.query.[entity].getByRoom.with(...rooms)
-    - [entity] = creep, flag
-  > Game.{GameApplication}.query.[entity].getByRoom.without(...rooms)
-    - [entity] = creep, flag
-  > Game.{GameApplication}.query.[entity].getByRole.with(...roles)
-    - [entity] = creep, spawn, flag
-  > Game.{GameApplication}.query.[entity].getByRole.without(...roles)
-    - [entity] = creep, spawn, flag
-  > Game.{GameApplication}.query.[entity].getByProperty.with(...properties)
-    - [entity] = creep, spawn, flag
-  > Game.{GameApplication}.query.[entity].getByProperty.without(...properties)
-    - [entity] = creep, spawn, flag
-  > Game.{GameApplication}.query.[entity].getByProperty.withValue(property, ...values)
-    - [entity] = creep, spawn, flag
-  > Game.{GameApplication}.query.[entity].getByProperty.withoutValue(property, ...values)
-    - [entity] = creep, spawn, flag
+  Game.{GameApplication}
 
 # Lista de comandos através da atribuição:
   Memory.{MemoryConsoleCommand} = "comando";

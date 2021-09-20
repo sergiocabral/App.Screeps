@@ -1,6 +1,7 @@
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { EntityCreep } from './EntityCreep';
 import { EntityFlag } from './EntityFlag';
+import { ToText } from '../../../Helper/ToText';
 
 /**
  * Entidades do jogo.
@@ -24,4 +25,11 @@ export class Entities {
    * Flag
    */
   public readonly flag: EntityFlag;
+
+  /**
+   * Override para toString().
+   */
+  public readonly toString = (): string => {
+    return ToText.instance(this);
+  };
 }

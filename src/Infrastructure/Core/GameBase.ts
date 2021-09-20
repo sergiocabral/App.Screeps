@@ -2,6 +2,7 @@ import { EmptyError } from '@sergiocabral/helper';
 import { IScreepsOperation } from '../Screeps/ScreepsOperation/IScreepsOperation';
 import { IGame } from './IGame';
 import { ScheduledMessage } from '../Schedule/Message/ScheduledMessage';
+import { ToText } from '../Helper/ToText';
 
 /**
  * Estrutura base para modos de jogo.
@@ -59,4 +60,11 @@ export abstract class GameBase implements IGame {
    * @private
    */
   protected abstract do(): void;
+
+  /**
+   * Override para toString().
+   */
+  public readonly toString = (): string => {
+    return ToText.instance(this);
+  };
 }

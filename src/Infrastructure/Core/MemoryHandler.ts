@@ -1,4 +1,5 @@
 import { KeyValue } from '@sergiocabral/helper';
+import { ToText } from '../Helper/ToText';
 
 /**
  * Abstração para classes que manipulam o Memory.
@@ -50,4 +51,11 @@ export abstract class MemoryHandler<T> {
   protected clearMemory(): void {
     delete this.memory[this.propertyName];
   }
+
+  /**
+   * Override para toString().
+   */
+  public readonly toString = (): string => {
+    return ToText.instance(this);
+  };
 }

@@ -5,6 +5,7 @@ import { SendDebugToConsole } from '../../../Console/Message/SendDebugToConsole'
 import { QueryCreep } from './QueryCreep';
 import { QuerySpawn } from './QuerySpawn';
 import { QueryFlag } from './QueryFlag';
+import { ToText } from '../../../Helper/ToText';
 
 /**
  * Consulta informações do jogo.
@@ -54,4 +55,11 @@ export class Queries {
    * Spawn.
    */
   public readonly flag: QueryFlag;
+
+  /**
+   * Override para toString().
+   */
+  public readonly toString = (): string => {
+    return ToText.instance(this, ['instances', 'screepsEnvironment']);
+  };
 }
