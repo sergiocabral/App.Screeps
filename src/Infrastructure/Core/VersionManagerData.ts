@@ -18,6 +18,11 @@ export interface VersionManagerData {
   hash: string;
 
   /**
+   * Valor único por build.
+   */
+  nonce: string;
+
+  /**
    * Momento da atualização.
    */
   updated: number;

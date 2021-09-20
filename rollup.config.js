@@ -27,6 +27,12 @@ const applyVersionInfo = () => {
   const sourceMarkBuildHash = '{BUILD_HASH}';
 
   /**
+   * Marcador no código-fonte para receber o identificador único do build.
+   * @type {string}
+   */
+  const sourceMarkBuildNonce = '{BUILD_NONCE}';
+
+  /**
    * Nome do arquivo usado para armazenar a versão.
    * @type {string}
    */
@@ -79,6 +85,10 @@ const applyVersionInfo = () => {
    * @return Código com substituições feitas.
    */
   function applyVersion(inputCode) {
+    const buildNonce = Buffer.from(Math.random().toString())
+      .toString('base64')
+      .substr(10, 4)
+      .toUpperCase();
     let [buildNumber, buildHash] = getVersion();
 
     const hash = md5(inputCode);
@@ -93,11 +103,13 @@ const applyVersionInfo = () => {
 
     console.log('Build Number:', buildNumber);
     console.log('Build Hash:', buildHash);
+    console.log('Build Nonce:', buildNonce);
     console.log('Applying into source-code.');
 
     return inputCode
       .replace(new RegExp(sourceMarkBuildNumber, 'g'), buildNumber)
-      .replace(new RegExp(sourceMarkBuildHash, 'g'), buildHash);
+      .replace(new RegExp(sourceMarkBuildHash, 'g'), buildHash)
+      .replace(new RegExp(sourceMarkBuildNonce, 'g'), buildNonce);
   }
 
   return {

@@ -30,6 +30,7 @@ export class VersionManager
         major: 0,
         build: 0,
         hash: '',
+        nonce: '',
         updated: 0
       };
     });
@@ -38,12 +39,14 @@ export class VersionManager
       major: this.source.major,
       build: this.source.build,
       hash: this.source.hash,
+      nonce: this.source.nonce,
       updated: this.source.updated
     };
 
     this.source.major = Definition.Version;
     this.source.build = Number('{BUILD_NUMBER}' as unknown as number);
     this.source.hash = '{BUILD_HASH}';
+    this.source.nonce = '{BUILD_NONCE}';
 
     Message.subscribe(
       BeginExecutionEvent,
@@ -79,6 +82,13 @@ export class VersionManager
   }
 
   /**
+   * Valor único por build.
+   */
+  public get nonce(): string {
+    return this.source.nonce;
+  }
+
+  /**
    * Momento da atualização.
    */
   public get updated(): number {
@@ -90,10 +100,33 @@ export class VersionManager
    * @private
    */
   private handleBeginExecutionEvent(): void {
-    if (this.source.hash !== this.beforeVersion.hash) {
-      const currentTime = new Date().getTime();
+    const codeChanged = this.source.hash !== this.beforeVersion.hash;
+    const codeReceived = this.source.nonce !== this.beforeVersion.nonce;
+
+    if (codeReceived) {
+      Logger.post(
+        'Build nonce changed from "{beforeNonce}" to "{nonce}".',
+        {
+          beforeNonce: this.beforeVersion.nonce ?? '',
+          nonce: this.nonce
+        },
+        LogLevel.Verbose,
+        VersionManager.LoggerSection
+      );
+      if (!codeChanged) {
+        Logger.post(
+          'A source code has just been uploaded but the version has not been modified.',
+          undefined,
+          LogLevel.Debug,
+          VersionManager.LoggerSection
+        );
+      }
+    }
+
+    if (codeChanged) {
       const lastUpdated = this.updated;
       const isFirstPublish = !(lastUpdated > 0);
+      const currentTime = new Date().getTime();
       const elapsedTime = isFirstPublish ? 0 : currentTime - lastUpdated;
 
       this.source.updated = currentTime;
