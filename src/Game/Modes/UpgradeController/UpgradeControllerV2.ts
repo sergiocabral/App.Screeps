@@ -59,7 +59,7 @@ export class UpgradeControllerV2 extends GameMode {
 
     const creeps = this.screepsOperation.query.creep
       .filter({
-        withSpawn: [spawn],
+        withRoom: [spawn.instance.room],
         withoutProperties: ['source']
       })
       .filter(creep => creep.instance.store.getFreeCapacity() > 0);
@@ -73,7 +73,7 @@ export class UpgradeControllerV2 extends GameMode {
     const sources = spawn.instance.room.find(FIND_SOURCES);
     for (const source of sources) {
       const creeps = this.screepsOperation.query.creep.filter({
-        withSpawn: [spawn],
+        withRoom: [spawn.instance.room],
         withPropertyValues: ['source', [source.id]]
       });
       for (const creep of creeps) {
@@ -87,7 +87,7 @@ export class UpgradeControllerV2 extends GameMode {
   private tryTransferEnergyToSpawn(spawn: SpawnWrapper): void {
     const creeps = this.screepsOperation.query.creep
       .filter({
-        withSpawn: [spawn],
+        withRoom: [spawn.instance.room],
         withPropertyValues: ['job', [CreepRole.BasicHarvest]],
         withoutProperties: ['upgrading']
       })
@@ -109,7 +109,7 @@ export class UpgradeControllerV2 extends GameMode {
 
     const creeps = this.screepsOperation.query.creep
       .filter({
-        withSpawn: [spawn],
+        withRoom: [spawn.instance.room],
         withoutPropertyValues: ['job', [CreepRole.BasicUpgrader]]
       })
       .filter(

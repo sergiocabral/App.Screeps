@@ -3,6 +3,9 @@ import { FilterCreep } from './Filter/FilterCreep';
 import { QueryIdOrNameBase } from './QueryIdOrNameBase';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { FilterMatchRoom } from './FilterMatch/FilterMatchRoom';
+import { GetById } from './GetBy/GetById';
+import { GetByName } from './GetBy/GetByName';
+import { GetByRoom } from './GetBy/GetByRoom';
 
 /**
  * Classe para consultar de entidades: Creeps
@@ -34,20 +37,17 @@ export class QueryCreep extends QueryIdOrNameBase<
   protected override readonly wrapperConstructor = CreepWrapper;
 
   /**
-   * Localiza uma entidade que possui uma ou mais nomes.
+   * Consulta por: id
    */
-  public getWithRoom(...rooms: Room[]): CreepWrapper[] {
-    return this.filter({
-      withRoom: rooms
-    });
-  }
+  public readonly getById = new GetById(this);
 
   /**
-   * Localiza uma entidade que não possui uma ou mais nomes.
+   * Consulta por: nome
    */
-  public getWithoutRoom(...rooms: Room[]): CreepWrapper[] {
-    return this.filter({
-      withoutRoom: rooms
-    });
-  }
+  public readonly getByName = new GetByName(this);
+
+  /**
+   * Consulta por: sala
+   */
+  public readonly getByRoom = new GetByRoom(this);
 }
