@@ -29,6 +29,8 @@ export class ToText {
         !exclude.includes(name) && (only.length === 0 || only.includes(name))
       );
     };
-    return HelperObject.describe(instance, true, true, filter);
+    const deep = true;
+    const includeObjectMembers = false;
+    return HelperObject.describe(instance, deep, includeObjectMembers, filter);
   }
 }
