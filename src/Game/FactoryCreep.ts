@@ -10,6 +10,7 @@ import {
   LogLevel
 } from '@sergiocabral/helper';
 import { CreepRoleBodySet } from './CreepRoleBodySet';
+import { ToText } from '../Infrastructure/Helper/ToText';
 
 /**
  * Constrói instâncias de creeps;
@@ -45,7 +46,7 @@ export class FactoryCreep {
       FactoryCreep.LoggerSection
     );
 
-    for (const roleBodySet of this.roleBodySet) {
+    for (const roleBodySet of this._roleBodySet) {
       const bodyParts = Object.entries(roleBodySet.bodyParts);
       const bodyPartsCount = bodyParts.reduce(
         (sum: number, bodyPart: [string, number]) => sum + bodyPart[1],
@@ -103,9 +104,9 @@ export class FactoryCreep {
    * @param role
    */
   public create(spawn: SpawnWrapper, role: CreepRole): CreepWrapper | null {
-    for (const roleBodySet of this.roleBodySet) {
+    for (const roleBodySet of this._roleBodySet) {
       if (roleBodySet.roles.includes(role)) {
-        return this.createCreep(
+        return this._createCreep(
           spawn,
           roleBodySet.bodyParts,
           ...roleBodySet.roles
@@ -122,7 +123,7 @@ export class FactoryCreep {
    * @param roles
    * @private
    */
-  private createCreep(
+  private _createCreep(
     spawn: SpawnWrapper,
     bodyPartSet: BodyPartSet,
     ...roles: CreepRole[]
@@ -144,7 +145,7 @@ export class FactoryCreep {
    * Relação de roles e partes do corpo do creep.
    * @private
    */
-  private readonly roleBodySet: CreepRoleBodySet[] = [
+  private readonly _roleBodySet: CreepRoleBodySet[] = [
     {
       roles: [
         CreepRole.BasicHarvest,
@@ -158,4 +159,11 @@ export class FactoryCreep {
       }
     }
   ];
+
+  /**
+   * Override para toString().
+   */
+  public readonly toString = (): string => {
+    return ToText.instance(this);
+  };
 }

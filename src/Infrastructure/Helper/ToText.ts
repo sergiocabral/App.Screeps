@@ -22,11 +22,21 @@ export class ToText {
     exclude: string[] = [],
     only: string[] = []
   ): string {
-    exclude.push('screepsEnvironment');
-    exclude.push('sendDebugToConsole');
+    const regexExclude: RegExp[] = [
+      /^initialize/,
+      /^screepsEnvironment$/,
+      /^screepsOperation$/,
+      /^sendDebugToConsole$/,
+      /^scheduledMessageTypes$/,
+      /^LoggerSection$/,
+      /Value$/,
+      /^_/
+    ];
     const filter = (name: string): boolean => {
       return (
-        !exclude.includes(name) && (only.length === 0 || only.includes(name))
+        !exclude.includes(name) &&
+        (only.length === 0 || only.includes(name)) &&
+        !regexExclude.find(regex => regex.test(name))
       );
     };
     const deep = true;

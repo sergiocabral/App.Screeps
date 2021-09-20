@@ -18,11 +18,11 @@ export class UpgradeControllerV2 extends GameMode {
    */
   protected override do(): void {
     for (const spawn of this.screepsOperation.query.spawn.getAll()) {
-      this.tryCreateCreep(spawn);
-      this.assignSourceEnergy(spawn);
-      this.tryHarvestEnergy(spawn);
-      this.tryTransferEnergyToSpawn(spawn);
-      this.tryUpgradeController(spawn);
+      this._tryCreateCreep(spawn);
+      this._assignSourceEnergy(spawn);
+      this._tryHarvestEnergy(spawn);
+      this._tryTransferEnergyToSpawn(spawn);
+      this._tryUpgradeController(spawn);
     }
   }
 
@@ -30,7 +30,7 @@ export class UpgradeControllerV2 extends GameMode {
    * Tenta criar um creep.
    * @private
    */
-  private tryCreateCreep(spawn: SpawnWrapper): void {
+  private _tryCreateCreep(spawn: SpawnWrapper): void {
     const creepsLimit = 25;
     if (this.screepsOperation.query.creep.getAll().length < creepsLimit) {
       const fiftyFifty = Math.floor(Math.random() * 10) % 2 === 0;
@@ -53,7 +53,7 @@ export class UpgradeControllerV2 extends GameMode {
     }
   }
 
-  private assignSourceEnergy(spawn: SpawnWrapper): void {
+  private _assignSourceEnergy(spawn: SpawnWrapper): void {
     const sources = spawn.instance.room.find(FIND_SOURCES);
     if (sources.length === 0) return;
 
@@ -69,7 +69,7 @@ export class UpgradeControllerV2 extends GameMode {
     }
   }
 
-  private tryHarvestEnergy(spawn: SpawnWrapper): void {
+  private _tryHarvestEnergy(spawn: SpawnWrapper): void {
     const sources = spawn.instance.room.find(FIND_SOURCES);
     for (const source of sources) {
       const creeps = this.screepsOperation.query.creep.filter({
@@ -84,7 +84,7 @@ export class UpgradeControllerV2 extends GameMode {
     }
   }
 
-  private tryTransferEnergyToSpawn(spawn: SpawnWrapper): void {
+  private _tryTransferEnergyToSpawn(spawn: SpawnWrapper): void {
     const creeps = this.screepsOperation.query.creep
       .filter({
         withRoom: [spawn.instance.room],
@@ -103,7 +103,7 @@ export class UpgradeControllerV2 extends GameMode {
     }
   }
 
-  private tryUpgradeController(spawn: SpawnWrapper): void {
+  private _tryUpgradeController(spawn: SpawnWrapper): void {
     const controller = spawn.instance.room.controller;
     if (!controller) return;
 

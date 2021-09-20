@@ -42,20 +42,20 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
 
   /**
    * Construtor.
-   * @param gameExecutor Modo operacional do jogo.
+   * @param executor Modo operacional do jogo.
    */
-  private constructor(private gameExecutor: IGame) {
+  private constructor(private executor: IGame) {
     void new VersionManager(this.memory, Definition.MemoryVersionManager);
 
     void new Console(this.memory, Definition.MemoryConsoleCommand)
       .addConsoleHelpCommands(Definition.ConsoleHelpCommand)
-      .addConsoleHelpCommands(gameExecutor);
+      .addConsoleHelpCommands(executor);
 
     this.clockTime = new ClockTime(this.memory, Definition.MemoryClockTime);
 
     new Scheduler(this.memory, Definition.MemoryScheduler)
       .loadMessageTypes(Definition.ListOfScheduledMessagesType)
-      .loadMessageTypes(gameExecutor);
+      .loadMessageTypes(executor);
 
     void new ConsoleCommandHandler(this);
 
@@ -76,7 +76,7 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
   public run(): Application {
     void new BeginExecutionEvent().send();
     this.garbageCollector.recycle();
-    this.gameExecutor.loop(this);
+    this.executor.loop(this);
     void new EndExecutionEvent().send();
 
     this.clockTime.setCurrentExecutionDuration(
@@ -131,6 +131,6 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
    * Override para toString().
    */
   public readonly toString = (): string => {
-    return ToText.instance(this, [], ['query', 'entity']);
+    return ToText.instance(this, [], ['query', 'entity', 'executor']);
   };
 }

@@ -65,6 +65,6 @@ export abstract class GameBase implements IGame {
    * Override para toString().
    */
   public readonly toString = (): string => {
-    return ToText.instance(this);
+    return ToText.instance(this, ['do', 'loop', 'help']);
   };
 }
