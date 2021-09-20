@@ -1,7 +1,7 @@
 import { TemplateFilterWithId } from '../Filter/TemplateFilterWithId';
 import { GetByBase } from './GetByBase';
 import { WithId } from '../../../../Type/WithId';
-import { WrapperRolesAndPropertiesBase } from '../../../Entity/WrapperIdOrNamedBase';
+import { WrapperRolesAndPropertiesBase } from '../../../Wrapper/WrapperIdOrNamedBase';
 
 /**
  * Métodos para obter entidade: por id

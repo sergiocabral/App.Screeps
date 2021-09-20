@@ -1,5 +1,5 @@
 import { IFilterMatch } from './IFilterMatch';
-import { WrapperRolesAndPropertiesBase } from '../../../Entity/WrapperIdOrNamedBase';
+import { WrapperRolesAndPropertiesBase } from '../../../Wrapper/WrapperIdOrNamedBase';
 import { WithName } from '../../../../Type/WithName';
 import { WithId } from '../../../../Type/WithId';
 import { TemplateFilterWithRoles } from '../Filter/TemplateFilterWithRoles';

@@ -64,31 +64,31 @@ export class Definition {
   
   > Game.{GameApplication}.query.creep.getAll();
   > Game.{GameApplication}.query.creep.filter(filter, list);
-  > Game.{GameApplication}.query.creep.getWithId(...ids);
-  > Game.{GameApplication}.query.creep.getWithoutId(...ids);
-  > Game.{GameApplication}.query.creep.getWithName(...names);
-  > Game.{GameApplication}.query.creep.getWithoutName(...names);
-  > Game.{GameApplication}.query.creep.getWithRole(...roles);
-  > Game.{GameApplication}.query.creep.getWithoutRole(...roles);
-  > Game.{GameApplication}.query.creep.getWithProperties(...properties);
-  > Game.{GameApplication}.query.creep.getWithoutProperties(...properties);
-  > Game.{GameApplication}.query.creep.getByPropertyValues(property, ...values);
-  > Game.{GameApplication}.query.creep.getWithoutPropertyValues(property, ...values);
-  > Game.{GameApplication}.query.creep.getWithRoom(...rooms);
-  > Game.{GameApplication}.query.creep.getWithoutRoom(...rooms);  
+  > Game.{GameApplication}.query.creep.getById.with(...ids);
+  > Game.{GameApplication}.query.creep.getById.without(...ids);
+  > Game.{GameApplication}.query.creep.getByName.with(...names);
+  > Game.{GameApplication}.query.creep.getByName.without(...names);
+  > Game.{GameApplication}.query.creep.getByRoom.with(...rooms);
+  > Game.{GameApplication}.query.creep.getByRoom.without(...rooms);
+  > Game.{GameApplication}.query.creep.getByRole.with(...roles);
+  > Game.{GameApplication}.query.creep.getByRole.without(...roles);
+  > Game.{GameApplication}.query.creep.getByProperty.with(...properties);
+  > Game.{GameApplication}.query.creep.getByProperty.without(...properties);
+  > Game.{GameApplication}.query.creep.getByProperty.withValue(property, ...values);
+  > Game.{GameApplication}.query.creep.getByProperty.withoutValue(property, ...values);
 
   > Game.{GameApplication}.query.spawn.getAll();
   > Game.{GameApplication}.query.spawn.filter(filter, list);
-  > Game.{GameApplication}.query.spawn.getWithId(...ids);
-  > Game.{GameApplication}.query.spawn.getWithoutId(...ids);
-  > Game.{GameApplication}.query.spawn.getWithName(...names);
-  > Game.{GameApplication}.query.spawn.getWithoutName(...names);
-  > Game.{GameApplication}.query.spawn.getWithRole(...roles);
-  > Game.{GameApplication}.query.spawn.getWithoutRole(...roles);
-  > Game.{GameApplication}.query.spawn.getWithProperties(...properties);
-  > Game.{GameApplication}.query.spawn.getWithoutProperties(...properties);
-  > Game.{GameApplication}.query.spawn.getByPropertyValues(property, ...values);
-  > Game.{GameApplication}.query.spawn.getWithoutPropertyValues(property, ...values);
+  > Game.{GameApplication}.query.spawn.getById.with(...ids);
+  > Game.{GameApplication}.query.spawn.getById.without(...ids);
+  > Game.{GameApplication}.query.spawn.getByName.with(...names);
+  > Game.{GameApplication}.query.spawn.getByName.without(...names);
+  > Game.{GameApplication}.query.spawn.getByRole.with(...roles);
+  > Game.{GameApplication}.query.spawn.getByRole.without(...roles);
+  > Game.{GameApplication}.query.spawn.getByProperty.with(...properties);
+  > Game.{GameApplication}.query.spawn.getByProperty.without(...properties);
+  > Game.{GameApplication}.query.spawn.getByProperty.withValue(property, ...values);
+  > Game.{GameApplication}.query.spawn.getByProperty.withoutValue(property, ...values);
 
 # Lista de comandos através da atribuição:
   Memory.{MemoryConsoleCommand} = "comando";

@@ -1,6 +1,6 @@
 import { KeyValue, ShouldNeverHappenError } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
-import { WrapperBase } from '../../Entity/WrapperBase';
+import { WrapperBase } from '../../Wrapper/WrapperBase';
 import { TemplateFilter } from './Filter/TemplateFilter';
 import { IFilterMatch } from './FilterMatch/IFilterMatch';
 

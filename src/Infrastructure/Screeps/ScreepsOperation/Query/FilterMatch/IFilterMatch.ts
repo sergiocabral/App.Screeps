@@ -1,4 +1,4 @@
-import { WrapperBase } from '../../../Entity/WrapperBase';
+import { WrapperBase } from '../../../Wrapper/WrapperBase';
 
 export interface IFilterMatch<
   TScreeps,

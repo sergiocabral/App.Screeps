@@ -1,6 +1,6 @@
 import { QueryBase } from './QueryBase';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
-import { WrapperRolesAndPropertiesBase } from '../../Entity/WrapperIdOrNamedBase';
+import { WrapperRolesAndPropertiesBase } from '../../Wrapper/WrapperIdOrNamedBase';
 import { WithName } from '../../../Type/WithName';
 import { WithId } from '../../../Type/WithId';
 import { TemplateFilterWithId } from './Filter/TemplateFilterWithId';

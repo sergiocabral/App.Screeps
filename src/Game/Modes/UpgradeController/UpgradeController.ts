@@ -6,8 +6,8 @@ import {
   NotImplementedError
 } from '@sergiocabral/helper';
 import { BodyPart, NameGenerator } from '@sergiocabral/screeps';
-import { SpawnWrapper } from '../../../Infrastructure/Screeps/Entity/SpawnWrapper';
-import { CreepWrapper } from '../../../Infrastructure/Screeps/Entity/CreepWrapper';
+import { SpawnWrapper } from '../../../Infrastructure/Screeps/Wrapper/SpawnWrapper';
+import { CreepWrapper } from '../../../Infrastructure/Screeps/Wrapper/CreepWrapper';
 import { GameMode } from '../../GameMode';
 
 /**

@@ -1,4 +1,4 @@
-import { WrapperBase } from '../../../Entity/WrapperBase';
+import { WrapperBase } from '../../../Wrapper/WrapperBase';
 import { WithId } from '../../../../Type/WithId';
 import { TemplateFilterWithId } from '../Filter/TemplateFilterWithId';
 import { IFilterMatch } from './IFilterMatch';

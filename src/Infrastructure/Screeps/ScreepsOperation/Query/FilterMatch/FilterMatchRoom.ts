@@ -1,5 +1,5 @@
 import { IFilterMatch } from './IFilterMatch';
-import { WrapperBase } from '../../../Entity/WrapperBase';
+import { WrapperBase } from '../../../Wrapper/WrapperBase';
 import { TemplateFilterWithRoom } from '../Filter/TemplateFilterWithRoom';
 import { WithRoom } from '../../../../Type/WithRoom';
 

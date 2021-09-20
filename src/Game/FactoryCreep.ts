@@ -1,6 +1,6 @@
 import { IScreepsOperation } from '../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
-import { CreepWrapper } from '../Infrastructure/Screeps/Entity/CreepWrapper';
-import { SpawnWrapper } from '../Infrastructure/Screeps/Entity/SpawnWrapper';
+import { CreepWrapper } from '../Infrastructure/Screeps/Wrapper/CreepWrapper';
+import { SpawnWrapper } from '../Infrastructure/Screeps/Wrapper/SpawnWrapper';
 import { BodyPartSet } from '@sergiocabral/screeps';
 import { CreepRole } from './CreepRole';
 import {

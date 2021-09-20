@@ -1,4 +1,4 @@
-import { CreepWrapper } from '../../Entity/CreepWrapper';
+import { CreepWrapper } from '../../Wrapper/CreepWrapper';
 import { FilterCreep } from './Filter/FilterCreep';
 import { QueryIdOrNameBase } from './QueryIdOrNameBase';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';

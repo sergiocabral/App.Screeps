@@ -1,5 +1,5 @@
 import { HelperList, Logger, LogLevel } from '@sergiocabral/helper';
-import { SpawnWrapper } from '../../../Infrastructure/Screeps/Entity/SpawnWrapper';
+import { SpawnWrapper } from '../../../Infrastructure/Screeps/Wrapper/SpawnWrapper';
 import { GameMode } from '../../GameMode';
 import { CreepRole } from '../../CreepRole';
 

@@ -1,5 +1,5 @@
 import { QueryBase } from '../QueryBase';
-import { WrapperBase } from '../../../Entity/WrapperBase';
+import { WrapperBase } from '../../../Wrapper/WrapperBase';
 import { TemplateFilter } from '../Filter/TemplateFilter';
 
 /**

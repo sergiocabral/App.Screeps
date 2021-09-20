@@ -1,4 +1,4 @@
-import { SpawnWrapper } from '../../Entity/SpawnWrapper';
+import { SpawnWrapper } from '../../Wrapper/SpawnWrapper';
 import { QueryIdOrNameBase } from './QueryIdOrNameBase';
 import { FilterSpawn } from './Filter/FilterSpawn';
 import { GetById } from './GetBy/GetById';

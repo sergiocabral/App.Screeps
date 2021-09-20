@@ -1,6 +1,6 @@
 import { GetByBase } from './GetByBase';
 import { WithRoom } from '../../../../Type/WithRoom';
-import { WrapperBase } from '../../../Entity/WrapperBase';
+import { WrapperBase } from '../../../Wrapper/WrapperBase';
 import { TemplateFilterWithRoom } from '../Filter/TemplateFilterWithRoom';
 
 /**
