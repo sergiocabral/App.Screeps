@@ -75,7 +75,7 @@ export class Definition {
   > Game.{GameApplication}.query.creep.getByPropertyValues(property, ...values);
   > Game.{GameApplication}.query.creep.getWithoutPropertyValues(property, ...values);
   > Game.{GameApplication}.query.creep.getWithRoom(...rooms);
-  > Game.{GameApplication}.query.creep.getWithoutRoom(...rooms);
+  > Game.{GameApplication}.query.creep.getWithoutRoom(...rooms);  
 
   > Game.{GameApplication}.query.spawn.getAll();
   > Game.{GameApplication}.query.spawn.filter(filter, list);

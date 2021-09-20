@@ -35,41 +35,41 @@ export abstract class QueryIdOrNameBase<
   /**
    * Localiza uma entidade que possui uma ou mais ids.
    */
-  public getWithId(...ids: string[]): TWrapper | undefined {
+  public getWithId(...ids: string[]): TWrapper[] {
     const filter: TemplateFilterWithId = {
       withId: ids
     };
-    return this.filter(filter as TQueryFilter)[0];
+    return this.filter(filter as TQueryFilter);
   }
 
   /**
    * Localiza uma entidade que não possui uma ou mais ids.
    */
-  public getWithoutId(...ids: string[]): TWrapper | undefined {
+  public getWithoutId(...ids: string[]): TWrapper[] {
     const filter: TemplateFilterWithId = {
       withoutId: ids
     };
-    return this.filter(filter as TQueryFilter)[0];
+    return this.filter(filter as TQueryFilter);
   }
 
   /**
    * Localiza uma entidade que possui uma ou mais nomes.
    */
-  public getWithName(...names: string[]): TWrapper | undefined {
+  public getWithName(...names: string[]): TWrapper[] {
     const filter: TemplateFilterWithName = {
       withName: names
     };
-    return this.filter(filter as TQueryFilter)[0];
+    return this.filter(filter as TQueryFilter);
   }
 
   /**
    * Localiza uma entidade que não possui uma ou mais nomes.
    */
-  public getWithoutName(...names: string[]): TWrapper | undefined {
+  public getWithoutName(...names: string[]): TWrapper[] {
     const filter: TemplateFilterWithName = {
       withoutName: names
     };
-    return this.filter(filter as TQueryFilter)[0];
+    return this.filter(filter as TQueryFilter);
   }
 
   /**
