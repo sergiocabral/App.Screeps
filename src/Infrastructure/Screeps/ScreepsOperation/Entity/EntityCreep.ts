@@ -1,5 +1,4 @@
 import { CreepWrapper } from '../../Wrapper/CreepWrapper';
-import { SpawnWrapper } from '../../Wrapper/SpawnWrapper';
 import {
   BodyPart,
   BodyPartSet,
@@ -24,11 +23,11 @@ export class EntityCreep extends EntityBase {
    * @param spawn
    * @param bodyParts
    */
-  canCreate(spawn: SpawnWrapper, bodyParts: BodyPartSet): boolean {
-    const spawnEnergy = spawn.instance.store[RESOURCE_ENERGY];
+  canCreate(spawn: StructureSpawn, bodyParts: BodyPartSet): boolean {
+    const spawnEnergy = spawn.store[RESOURCE_ENERGY];
     return (
       BodyPart.calculateCost(BodyPart.toPartList(bodyParts)) <= spawnEnergy &&
-      spawn.instance.spawning === null
+      spawn.spawning === null
     );
   }
 
@@ -37,9 +36,9 @@ export class EntityCreep extends EntityBase {
    * @param spawn
    * @param bodyParts
    */
-  create(spawn: SpawnWrapper, bodyParts: BodyPartSet): CreepWrapper | null {
+  create(spawn: StructureSpawn, bodyParts: BodyPartSet): CreepWrapper | null {
     const creepName = NameGenerator.random();
-    const statusCode = spawn.instance.spawnCreep(
+    const statusCode = spawn.spawnCreep(
       BodyPart.toPartList(bodyParts),
       creepName
     );
@@ -48,7 +47,7 @@ export class EntityCreep extends EntityBase {
       Logger.post(
         'Spawn "{spawnName}" could not create a creep. Error code: {statusCode}',
         {
-          spawnName: spawn.instance.name,
+          spawnName: spawn.name,
           statusCode: Constant.format(statusCode)
         },
         LogLevel.Error,
@@ -62,7 +61,7 @@ export class EntityCreep extends EntityBase {
         'Spawn "{spawnName}" created the creep "{creepName}", but the creep was not found.',
         {
           creepName,
-          spawnName: spawn.instance.name
+          spawnName: spawn.name
         },
         LogLevel.Critical,
         EntityCreep.LoggerSection
@@ -77,7 +76,7 @@ export class EntityCreep extends EntityBase {
       () => {
         return {
           creepName,
-          spawnName: spawn.instance.name,
+          spawnName: spawn.name,
           json: HelperObject.toText(creep)
         };
       },
@@ -89,7 +88,7 @@ export class EntityCreep extends EntityBase {
       'Spawn "{spawnName}" created the Creep "{creepName}".',
       {
         creepName,
-        spawnName: spawn.instance.name
+        spawnName: spawn.name
       },
       LogLevel.Debug,
       EntityCreep.LoggerSection

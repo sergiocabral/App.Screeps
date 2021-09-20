@@ -61,34 +61,43 @@ export class Definition {
     help: `
 # A instância da aplicação está acessível em:
   Game.{GameApplication};
-  
-  > Game.{GameApplication}.query.creep.getAll();
-  > Game.{GameApplication}.query.creep.filter(filter, list);
-  > Game.{GameApplication}.query.creep.getById.with(...ids);
-  > Game.{GameApplication}.query.creep.getById.without(...ids);
-  > Game.{GameApplication}.query.creep.getByName.with(...names);
-  > Game.{GameApplication}.query.creep.getByName.without(...names);
-  > Game.{GameApplication}.query.creep.getByRoom.with(...rooms);
-  > Game.{GameApplication}.query.creep.getByRoom.without(...rooms);
-  > Game.{GameApplication}.query.creep.getByRole.with(...roles);
-  > Game.{GameApplication}.query.creep.getByRole.without(...roles);
-  > Game.{GameApplication}.query.creep.getByProperty.with(...properties);
-  > Game.{GameApplication}.query.creep.getByProperty.without(...properties);
-  > Game.{GameApplication}.query.creep.getByProperty.withValue(property, ...values);
-  > Game.{GameApplication}.query.creep.getByProperty.withoutValue(property, ...values);
 
-  > Game.{GameApplication}.query.spawn.getAll();
-  > Game.{GameApplication}.query.spawn.filter(filter, list);
-  > Game.{GameApplication}.query.spawn.getById.with(...ids);
-  > Game.{GameApplication}.query.spawn.getById.without(...ids);
-  > Game.{GameApplication}.query.spawn.getByName.with(...names);
-  > Game.{GameApplication}.query.spawn.getByName.without(...names);
-  > Game.{GameApplication}.query.spawn.getByRole.with(...roles);
-  > Game.{GameApplication}.query.spawn.getByRole.without(...roles);
-  > Game.{GameApplication}.query.spawn.getByProperty.with(...properties);
-  > Game.{GameApplication}.query.spawn.getByProperty.without(...properties);
-  > Game.{GameApplication}.query.spawn.getByProperty.withValue(property, ...values);
-  > Game.{GameApplication}.query.spawn.getByProperty.withoutValue(property, ...values);
+  Operações sobre entidades.
+  Creep:
+  > Game.{GameApplication}.entity.creep.canCreate(spawn, bodyParts)
+  > Game.{GameApplication}.entity.creep.create(spawn, bodyParts)
+  Flag:
+  > Game.{GameApplication}.entity.flag.create(name, room, x, y)
+
+  Consultas. Substitua [entity] pela entidade.
+  > Game.{GameApplication}.query.[entity].getAll()
+    - [entity] = creep, spawn, flag
+  > Game.{GameApplication}.query.[entity].filter(filter, list)
+    - [entity] = creep, spawn, flag
+  > Game.{GameApplication}.query.[entity].getById.with(...ids)
+    - [entity] = creep, spawn
+  > Game.{GameApplication}.query.[entity].getById.without(...ids)
+    - [entity] = creep, spawn
+  > Game.{GameApplication}.query.[entity].getByName.with(...names)
+    - [entity] = creep, spawn, flag
+  > Game.{GameApplication}.query.[entity].getByName.without(...names)
+    - [entity] = creep, spawn, flag
+  > Game.{GameApplication}.query.[entity].getByRoom.with(...rooms)
+    - [entity] = creep, flag
+  > Game.{GameApplication}.query.[entity].getByRoom.without(...rooms)
+    - [entity] = creep, flag
+  > Game.{GameApplication}.query.[entity].getByRole.with(...roles)
+    - [entity] = creep, spawn, flag
+  > Game.{GameApplication}.query.[entity].getByRole.without(...roles)
+    - [entity] = creep, spawn, flag
+  > Game.{GameApplication}.query.[entity].getByProperty.with(...properties)
+    - [entity] = creep, spawn, flag
+  > Game.{GameApplication}.query.[entity].getByProperty.without(...properties)
+    - [entity] = creep, spawn, flag
+  > Game.{GameApplication}.query.[entity].getByProperty.withValue(property, ...values)
+    - [entity] = creep, spawn, flag
+  > Game.{GameApplication}.query.[entity].getByProperty.withoutValue(property, ...values)
+    - [entity] = creep, spawn, flag
 
 # Lista de comandos através da atribuição:
   Memory.{MemoryConsoleCommand} = "comando";
