@@ -1,10 +1,10 @@
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
-import { WrapperNamedBase } from './WrapperNamedBase';
+import { WrapperRolesAndPropertiesBase } from './WrapperIdOrNamedBase';
 
 /**
  * Creep
  */
-export class CreepWrapper extends WrapperNamedBase<Creep> {
+export class CreepWrapper extends WrapperRolesAndPropertiesBase<Creep> {
   /**
    * Construtor.
    * @param instance Instância original no Screeps.

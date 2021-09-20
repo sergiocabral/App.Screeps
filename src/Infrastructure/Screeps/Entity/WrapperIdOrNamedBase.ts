@@ -8,8 +8,8 @@ import { WithId } from '../../Type/WithId';
 /**
  * Creep
  */
-export abstract class WrapperNamedBase<
-  TScreepsEntity extends WithName & WithId
+export abstract class WrapperRolesAndPropertiesBase<
+  TScreepsEntity extends WithName | WithId
 > extends WrapperBase<TScreepsEntity> {
   /**
    * Construtor.
@@ -99,6 +99,16 @@ export abstract class WrapperNamedBase<
   }
 
   /**
+   * Chave da instância para armazenar dados na memória.
+   * @private
+   */
+  private get instanceMemoryKey(): string {
+    const name = (this.instance as WithName).name;
+    const id = (this.instance as WithId).id;
+    return name ?? id;
+  }
+
+  /**
    * Retorna uma entrada da memória para esta instância
    * @param entryName Nome no objeto Memory
    * @param defaultValue Valor padrão se não existir.
@@ -111,7 +121,7 @@ export abstract class WrapperNamedBase<
     const memory = this.getMemory<TType>();
     const memoryEntry = memory[this.instanceMemoryEntry];
     if (memoryEntry !== undefined) {
-      const instanceEntry = memoryEntry[this.instance.name];
+      const instanceEntry = memoryEntry[this.instanceMemoryKey];
       if (instanceEntry !== undefined) {
         const value = instanceEntry[entryName];
         if (value !== undefined) {
@@ -132,14 +142,14 @@ export abstract class WrapperNamedBase<
     const memory = this.getMemory<TType>();
     let memoryEntry = memory[this.instanceMemoryEntry];
     let instanceEntry = memoryEntry
-      ? memoryEntry[this.instance.name]
+      ? memoryEntry[this.instanceMemoryKey]
       : undefined;
     if (value === undefined) {
       if (memoryEntry !== undefined) {
         if (instanceEntry !== undefined) {
           delete instanceEntry[entryName];
           if (Object.keys(instanceEntry).length === 0) {
-            delete memoryEntry[this.instance.name];
+            delete memoryEntry[this.instanceMemoryKey];
           }
         }
         if (Object.keys(memoryEntry).length === 0) {
@@ -151,7 +161,7 @@ export abstract class WrapperNamedBase<
         memory[this.instanceMemoryEntry] = memoryEntry = {};
       }
       if (instanceEntry === undefined) {
-        memoryEntry[this.instance.name] = instanceEntry = {};
+        memoryEntry[this.instanceMemoryKey] = instanceEntry = {};
       }
       instanceEntry[entryName] = value;
     }
@@ -161,6 +171,6 @@ export abstract class WrapperNamedBase<
    * Override para toString().
    */
   public override readonly toString = (): string => {
-    return this.instance.name;
+    return this.instanceMemoryKey;
   };
 }

@@ -1,16 +1,16 @@
 import { KeyValue, ShouldNeverHappenError } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { WrapperBase } from '../../Entity/WrapperBase';
-import { Filter } from './Filter';
-import { WithId } from '../../../Type/WithId';
+import { TemplateFilter } from './Filter/TemplateFilter';
+import { IFilterMatch } from './FilterMatch/IFilterMatch';
 
 /**
  * Classe para consultar de entidades.
  */
 export abstract class QueryBase<
-  TScreeps extends WithId,
+  TScreeps,
   TWrapper extends WrapperBase<TScreeps>,
-  TQueryFilter extends Filter
+  TQueryFilter extends TemplateFilter
 > {
   /**
    * Construtor.
@@ -61,18 +61,23 @@ export abstract class QueryBase<
   }
 
   /**
+   * Lista de filtros.
+   * @protected
+   */
+  protected readonly filters: IFilterMatch<TScreeps, TWrapper, TQueryFilter>[] =
+    [];
+
+  /**
    * Verifica se um filtro correponde a uma entidade.
    * @param entity
    * @param filter
    * @protected
    */
-  protected match(entity: TWrapper, filter: TQueryFilter): boolean {
-    return (
-      (!filter.withId?.length ||
-        filter.withId.includes(String(entity.instance.id))) &&
-      (!filter.withoutId?.length ||
-        !filter.withoutId.includes(String(entity.instance.id)))
-    );
+  private fail(entity: TWrapper, filter: TQueryFilter): boolean {
+    for (const filterTest of this.filters) {
+      if (filterTest.fail(entity, filter)) return true;
+    }
+    return false;
   }
 
   /**
@@ -81,6 +86,6 @@ export abstract class QueryBase<
    * @param list
    */
   public filter(filter: TQueryFilter, list?: TWrapper[]): TWrapper[] {
-    return (list ?? this.getAll()).filter(entity => this.match(entity, filter));
+    return (list ?? this.getAll()).filter(entity => !this.fail(entity, filter));
   }
 }

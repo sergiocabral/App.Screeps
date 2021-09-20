@@ -73,10 +73,10 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
    * Executa a aplicação.
    */
   public run(): Application {
-    void new BeginExecutionEvent(this).send();
+    void new BeginExecutionEvent().send();
     this.garbageCollector.recycle();
     this.gameExecutor.loop(this);
-    void new EndExecutionEvent(this).send();
+    void new EndExecutionEvent().send();
 
     this.clockTime.setCurrentExecutionDuration(
       new Date().getTime() - Application.executionStarted

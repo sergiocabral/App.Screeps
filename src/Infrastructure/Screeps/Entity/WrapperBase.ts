@@ -1,10 +1,9 @@
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
-import { WithId } from '../../Type/WithId';
 
 /**
  * Creep
  */
-export abstract class WrapperBase<TScreepsEntity extends WithId> {
+export abstract class WrapperBase<TScreepsEntity> {
   /**
    * Construtor.
    * @param instance Instância original no Screeps.

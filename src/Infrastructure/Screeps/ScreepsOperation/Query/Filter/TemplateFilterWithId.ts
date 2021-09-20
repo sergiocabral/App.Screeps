@@ -1,7 +1,7 @@
 /**
- * Filtro para consulta de entidade.
+ * Filtro para consulta de entidade: com id
  */
-export type Filter = {
+export type TemplateFilterWithId = {
   /**
    * Com o id.
    */

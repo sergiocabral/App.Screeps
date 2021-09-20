@@ -1,19 +1,7 @@
-import { Filter } from './Filter';
-
 /**
- * Filtro para consulta de entidade: com nome
+ * Filtro para consulta de entidade: com roles e propriedades
  */
-export type FilterNamed = Filter & {
-  /**
-   * Com o nome.
-   */
-  withName?: string[];
-
-  /**
-   * Sem o nome.
-   */
-  withoutName?: string[];
-
+export type TemplateFilterWithRolesAndProperties = {
   /**
    * Com uma ou mais roles.
    */

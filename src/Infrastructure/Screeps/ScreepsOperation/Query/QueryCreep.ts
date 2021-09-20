@@ -1,15 +1,26 @@
 import { CreepWrapper } from '../../Entity/CreepWrapper';
-import { FilterCreep } from './FilterCreep';
-import { QueryNamedBase } from './QueryNamedBase';
+import { FilterCreep } from './Filter/FilterCreep';
+import { QueryIdOrNameBase } from './QueryIdOrNameBase';
+import { IScreepsEnvironment } from '../../IScreepsEnvironment';
+import { FilterMatchRoom } from './FilterMatch/FilterMatchRoom';
 
 /**
  * Classe para consultar de entidades: Creeps
  */
-export class QueryCreep extends QueryNamedBase<
+export class QueryCreep extends QueryIdOrNameBase<
   Creep,
   CreepWrapper,
   FilterCreep
 > {
+  /**
+   * Construtor.
+   * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
+   */
+  public constructor(screepsEnvironment: IScreepsEnvironment) {
+    super(screepsEnvironment);
+    this.filters.push(new FilterMatchRoom<Creep, CreepWrapper, FilterCreep>());
+  }
+
   /**
    * Lista de instâncias do Screeps.
    * @protected
@@ -21,24 +32,4 @@ export class QueryCreep extends QueryNamedBase<
    * @protected
    */
   protected override readonly wrapperConstructor = CreepWrapper;
-
-  /**
-   * Verifica se um filtro correponde a uma entidade.
-   * @param entity
-   * @param filter
-   * @protected
-   */
-  protected override match(entity: CreepWrapper, filter: FilterCreep): boolean {
-    return (
-      super.match(entity, filter) &&
-      (!filter.withSpawn?.length ||
-        filter.withSpawn.find(
-          e => e.instance.room.name === entity.instance.room.name
-        ) !== undefined) &&
-      (!filter.withoutSpawn?.length ||
-        filter.withoutSpawn.find(
-          e => e.instance.room.name === entity.instance.room.name
-        ) === undefined)
-    );
-  }
 }
