@@ -35,7 +35,7 @@ export class DisposeMissingObject {
           'Discarded {bytes} bytes of memory from Creep "{creepName}" dead:\n{json}',
           () => {
             const json = HelperObject.toText(Memory.creeps[creepName]);
-            const bytes = json.length;
+            const bytes = JSON.stringify(Memory.creeps[creepName]).length;
             totalBytes += bytes;
             return { bytes: bytes.format({ digits: 0 }), creepName, json };
           },

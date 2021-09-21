@@ -61,7 +61,7 @@ export abstract class MemoryHandler<T> {
           'Discarded {bytes} bytes of memory from Memory["{memoryName}"]["{key}"] memory:\n{json}',
           () => {
             const json = HelperObject.toText(current[key]);
-            const bytes = json.length;
+            const bytes = JSON.stringify(current[key]).length;
             totalBytes += bytes;
             return {
               key,

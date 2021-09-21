@@ -2,6 +2,7 @@ import { QueryIdOrNameBase } from './QueryIdOrNameBase';
 import { GetByName } from './GetBy/GetByName';
 import { FlagWrapper } from '../../Wrapper/FlagWrapper';
 import { FilterFlag } from './Filter/FilterFlag';
+import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 
 /**
  * Classe para consultar de entidades: Flag
@@ -11,6 +12,15 @@ export class QueryFlag extends QueryIdOrNameBase<
   FlagWrapper,
   FilterFlag
 > {
+  /**
+   * Construtor.
+   * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
+   */
+  public constructor(screepsEnvironment: IScreepsEnvironment) {
+    super(screepsEnvironment);
+    this.memoryEntryForGarbageCollector = 'flags';
+  }
+
   /**
    * Lista de instâncias do Screeps.
    * @protected

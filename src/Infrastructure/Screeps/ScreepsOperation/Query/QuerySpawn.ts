@@ -3,6 +3,7 @@ import { QueryIdOrNameBase } from './QueryIdOrNameBase';
 import { FilterSpawn } from './Filter/FilterSpawn';
 import { GetById } from './GetBy/GetById';
 import { GetByName } from './GetBy/GetByName';
+import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 
 /**
  * Classe para consultar de entidades: Spawn
@@ -12,6 +13,15 @@ export class QuerySpawn extends QueryIdOrNameBase<
   SpawnWrapper,
   FilterSpawn
 > {
+  /**
+   * Construtor.
+   * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
+   */
+  public constructor(screepsEnvironment: IScreepsEnvironment) {
+    super(screepsEnvironment);
+    this.memoryEntryForGarbageCollector = 'spawns';
+  }
+
   /**
    * Lista de instâncias do Screeps.
    * @protected

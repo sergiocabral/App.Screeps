@@ -22,6 +22,7 @@ export class QueryCreep extends QueryIdOrNameBase<
   public constructor(screepsEnvironment: IScreepsEnvironment) {
     super(screepsEnvironment);
     this.filters.push(new FilterMatchRoom<Creep, CreepWrapper, FilterCreep>());
+    this.memoryEntryForGarbageCollector = 'creeps';
   }
 
   /**
