@@ -4,6 +4,7 @@ import { FilterSpawn } from './Filter/FilterSpawn';
 import { GetById } from './GetBy/GetById';
 import { GetByName } from './GetBy/GetByName';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
+import { GetByRoom } from './GetBy/GetByRoom';
 
 /**
  * Classe para consultar de entidades: Spawn
@@ -43,4 +44,9 @@ export class QuerySpawn extends QueryIdOrNameBase<
    * Consulta por: nome
    */
   public readonly getByName = new GetByName(this);
+
+  /**
+   * Consulta por: room
+   */
+  public readonly getByRoom = new GetByRoom(this);
 }

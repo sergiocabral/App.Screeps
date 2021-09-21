@@ -1,4 +1,5 @@
 import { GameExecutor } from '../../Core/GameExecutor';
+import { CreepRole } from '../../Screeps/Creep/CreepRole';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
@@ -14,6 +15,15 @@ export class Laboratory extends GameExecutor {
    * @private
    */
   protected override do(): void {
-    // TODO:
+    const rooms = this.screepsOperation.query.room.getSpawned();
+    for (const room of rooms) {
+      const spawns = this.screepsOperation.query.spawn.getByRoom.with(
+        room.instance
+      );
+      for (const spawn of spawns) {
+        this.factoryCreep.create(spawn.instance, CreepRole.BasicHarvest);
+        //TODO: Continuar aqui
+      }
+    }
   }
 }

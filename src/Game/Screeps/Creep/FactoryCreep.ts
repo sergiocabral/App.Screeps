@@ -1,6 +1,5 @@
 import { IScreepsOperation } from '../../../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
 import { CreepWrapper } from '../../../Infrastructure/Screeps/Wrapper/CreepWrapper';
-import { SpawnWrapper } from '../../../Infrastructure/Screeps/Wrapper/SpawnWrapper';
 import { BodyPartSet } from '@sergiocabral/screeps';
 import { CreepRole } from './CreepRole';
 import {
@@ -123,7 +122,7 @@ export class FactoryCreep {
    * @param spawn
    * @param role
    */
-  public create(spawn: SpawnWrapper, role: CreepRole): CreepWrapper | null {
+  public create(spawn: StructureSpawn, role: CreepRole): CreepWrapper | null {
     for (const roleBodySet of this._roleBodySet) {
       if (roleBodySet.roles.includes(role)) {
         return this._createCreep(
@@ -144,15 +143,13 @@ export class FactoryCreep {
    * @private
    */
   private _createCreep(
-    spawn: SpawnWrapper,
+    spawn: StructureSpawn,
     bodyPartSet: BodyPartSet,
     ...roles: CreepRole[]
   ): CreepWrapper | null {
-    if (
-      this.screepsOperation.control.creep.canCreate(spawn.instance, bodyPartSet)
-    ) {
+    if (this.screepsOperation.control.creep.canCreate(spawn, bodyPartSet)) {
       const creep = this.screepsOperation.control.creep.create(
-        spawn.instance,
+        spawn,
         bodyPartSet
       );
       creep?.roles.add(...roles);
