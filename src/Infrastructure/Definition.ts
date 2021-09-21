@@ -50,7 +50,7 @@ export class Definition {
   /**
    * Intervalo entre coleta de lixo.
    */
-  public static readonly IntervalInMinutesToGarbageCollector = 30;
+  public static readonly IntervalInMinutesToGarbageCollector = 60;
 
   /**
    * Lista dos tipos de mensagens que podem ser agendadas.
