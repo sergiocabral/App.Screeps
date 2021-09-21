@@ -37,4 +37,18 @@ export class QueryRoom extends QueryIdOrNameBase<
    * Consulta por: nome
    */
   public readonly getByName = new GetByName(this);
+
+  /**
+   * Retorna a lista de sala que possua um ou mais spawn.
+   */
+  public getSpawned(): RoomWrapper[] {
+    const map = new Map<string, RoomWrapper>();
+    Object.values(this.screepsEnvironment.game.spawns).forEach(spawn =>
+      map.set(
+        spawn.room.name,
+        new RoomWrapper(spawn.room, this.screepsEnvironment)
+      )
+    );
+    return Array.from(map.values());
+  }
 }
