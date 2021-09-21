@@ -1,7 +1,7 @@
 import { IListOfScheduledMessagesType } from './Schedule/IListOfScheduledMessagesType';
 import { ShowDebugToConsole } from './Console/Message/ShowDebugToConsole';
 import { IConsoleHelpCommands } from './Console/IConsoleHelpCommands';
-import { RunGarbageCollector } from './Screeps/ScreepsOperation/Message/RunGarbageCollector';
+import { RunGarbageCollector } from './Core/Message/RunGarbageCollector';
 
 /**
  * Conjunto de definições configuráveis

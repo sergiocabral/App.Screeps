@@ -1,23 +1,25 @@
+import { HelperObject, Logger, LogLevel, Message } from '@sergiocabral/helper';
+import { CreepDiedEvent } from './Message/CreepDiedEvent';
+import { RunGarbageCollector } from '../../Core/Message/RunGarbageCollector';
+
 /**
  * Responsável por limpar o lixo da memoria.
  */
-import { HelperObject, Logger, LogLevel, Message } from '@sergiocabral/helper';
-import { CreepDiedEvent } from './Message/CreepDiedEvent';
-import { RunGarbageCollector } from './Message/RunGarbageCollector';
-
-export class GarbageCollector {
+export class DisposeMissingObject {
   /**
    * Seção identificador do log.
    * @private
    */
-  private static LoggerSection = 'GarbageCollector';
+  private static LoggerSection = 'DisposeMissingObject';
 
   /**
    * Construtor.
    * @param memory Memória.
    */
   constructor(private memory: Memory) {
-    Message.subscribe(RunGarbageCollector, () => this.recycle());
+    Message.subscribe(RunGarbageCollector, () =>
+      this.deleteMemoryOfMissingCreeps()
+    );
   }
 
   /**
@@ -37,7 +39,7 @@ export class GarbageCollector {
             return { bytes: bytes.format({ digits: 0 }), creepName, json };
           },
           LogLevel.Verbose,
-          GarbageCollector.LoggerSection
+          DisposeMissingObject.LoggerSection
         );
 
         const data = Memory.creeps[creepName];
@@ -53,16 +55,8 @@ export class GarbageCollector {
         'A total of {totalBytes} bytes were discarded.',
         { totalBytes: totalBytes.format({ digits: 0 }) },
         LogLevel.Debug,
-        GarbageCollector.LoggerSection
+        DisposeMissingObject.LoggerSection
       );
     }
-  }
-
-  /**
-   * Faz a reciclagem da memória para liberar o que não está em uso.
-   */
-  public recycle(): void {
-    console.log('garbage collector');
-    this.deleteMemoryOfMissingCreeps();
   }
 }

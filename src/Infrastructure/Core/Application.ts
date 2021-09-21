@@ -14,12 +14,12 @@ import { Scheduler } from '../Schedule/Scheduler';
 import { IGame } from './IGame';
 import { ClockTime } from '../Schedule/ClockTime';
 import { Entities } from '../Screeps/ScreepsOperation/Entity/Entities';
-import { GarbageCollector } from '../Screeps/ScreepsOperation/GarbageCollector';
+import { DisposeMissingObject } from '../Screeps/ScreepsOperation/DisposeMissingObject';
 import { ConsoleCommandHandler } from '../Screeps/ConsoleCommandHandler';
 import { VersionManager } from './VersionManager';
 import { ToText } from '../Helper/ToText';
 import { ScheduleMessage } from '../Schedule/Message/ScheduleMessage';
-import { RunGarbageCollector } from '../Screeps/ScreepsOperation/Message/RunGarbageCollector';
+import { RunGarbageCollector } from './Message/RunGarbageCollector';
 
 /**
  * Classe principal da aplicação.
@@ -63,8 +63,8 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
       .loadMessageTypes(Definition.ListOfScheduledMessagesType)
       .loadMessageTypes(executor);
 
-    void new GarbageCollector(this.memory);
     void new ConsoleCommandHandler(this);
+    void new DisposeMissingObject(this.memory);
 
     this.query = new Queries(this);
     this.entity = new Entities(this);
