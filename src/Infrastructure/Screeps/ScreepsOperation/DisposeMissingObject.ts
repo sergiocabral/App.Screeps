@@ -27,6 +27,7 @@ export class DisposeMissingObject {
    * @private
    */
   private deleteMemoryOfMissingCreeps(): void {
+    let creepsCount = 0;
     let totalBytes = 0;
     for (const creepName in this.memory.creeps) {
       if (!(creepName in Game.creeps)) {
@@ -45,15 +46,30 @@ export class DisposeMissingObject {
         const data = Memory.creeps[creepName];
 
         delete Memory.creeps[creepName];
+        creepsCount++;
 
         if (data) void new CreepDiedEvent(creepName, data).send();
       }
     }
 
-    if (totalBytes > 0) {
+    if (creepsCount > 0) {
       Logger.post(
-        'A total of {totalBytes} bytes were discarded.',
-        { totalBytes: totalBytes.format({ digits: 0 }) },
+        'A total of {totalBytes} bytes were discarded by dead creeps.',
+        () => {
+          return {
+            totalBytes: totalBytes.format({ digits: 0 })
+          };
+        },
+        LogLevel.Verbose,
+        DisposeMissingObject.LoggerSection
+      );
+      Logger.post(
+        'A total of {creepsCount} creeps had their memories discarded.',
+        () => {
+          return {
+            creepsCount: creepsCount.format({ digits: 0 })
+          };
+        },
         LogLevel.Debug,
         DisposeMissingObject.LoggerSection
       );

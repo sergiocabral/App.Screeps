@@ -37,7 +37,7 @@ export class FactoryCreep {
       Logger.post(
         'There are no creeps to be redefined.',
         undefined,
-        LogLevel.Information,
+        LogLevel.Debug,
         FactoryCreep.LoggerSection
       );
       return;

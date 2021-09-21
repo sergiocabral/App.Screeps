@@ -82,7 +82,7 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
   private static handleEndExecutionEvent() {
     new ScheduleMessage(
       RunGarbageCollector,
-      HelperDate.addMinutes(Definition.IntervalInMinutesToGarbageCollector)
+      HelperDate.addSeconds(Definition.IntervalInMinutesToGarbageCollector)
     ).send();
   }
 

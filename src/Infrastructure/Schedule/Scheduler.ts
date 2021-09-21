@@ -21,6 +21,7 @@ export class Scheduler
     super(memory, propertyName, () => {
       return {};
     });
+    this.useGarbageCollector = false;
     Message.subscribe(ScheduleMessage, this.handleScheduleMessage.bind(this));
     Message.subscribe(EndExecutionEvent, () => this.dispatchExpiredMessages());
   }
