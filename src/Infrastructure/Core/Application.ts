@@ -1,4 +1,8 @@
-import { InvalidExecutionError } from '@sergiocabral/helper';
+import {
+  HelperDate,
+  InvalidExecutionError,
+  Message
+} from '@sergiocabral/helper';
 import { IScreepsOperation } from '../Screeps/ScreepsOperation/IScreepsOperation';
 import { Queries } from '../Screeps/ScreepsOperation/Query/Queries';
 import { IScreepsEnvironment } from '../Screeps/IScreepsEnvironment';
@@ -14,6 +18,8 @@ import { GarbageCollector } from '../Screeps/ScreepsOperation/GarbageCollector';
 import { ConsoleCommandHandler } from '../Screeps/ConsoleCommandHandler';
 import { VersionManager } from './VersionManager';
 import { ToText } from '../Helper/ToText';
+import { ScheduleMessage } from '../Schedule/Message/ScheduleMessage';
+import { RunGarbageCollector } from '../Screeps/ScreepsOperation/Message/RunGarbageCollector';
 
 /**
  * Classe principal da aplicação.
@@ -57,11 +63,27 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
       .loadMessageTypes(Definition.ListOfScheduledMessagesType)
       .loadMessageTypes(executor);
 
+    void new GarbageCollector(this.memory);
     void new ConsoleCommandHandler(this);
 
     this.query = new Queries(this);
     this.entity = new Entities(this);
-    this.garbageCollector = new GarbageCollector(this.memory);
+
+    Message.subscribe(
+      EndExecutionEvent,
+      Application.handleEndExecutionEvent.bind(this)
+    );
+  }
+
+  /**
+   * Mensagem: EndExecutionEvent
+   * @private
+   */
+  private static handleEndExecutionEvent() {
+    new ScheduleMessage(
+      RunGarbageCollector,
+      HelperDate.addMinutes(Definition.IntervalInMinutesToGarbageCollector)
+    ).send();
   }
 
   /**
@@ -75,7 +97,6 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
    */
   public run(): Application {
     void new BeginExecutionEvent().send();
-    this.garbageCollector.recycle();
     this.executor.loop(this);
     void new EndExecutionEvent().send();
 
@@ -121,11 +142,6 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
    * Entidades do jogo.
    */
   public readonly entity: Entities;
-
-  /**
-   * Responsável por limpar o lixo da memoria
-   */
-  public readonly garbageCollector: GarbageCollector;
 
   /**
    * Override para toString().

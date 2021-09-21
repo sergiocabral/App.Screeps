@@ -1,6 +1,7 @@
 import { IListOfScheduledMessagesType } from './Schedule/IListOfScheduledMessagesType';
 import { ShowDebugToConsole } from './Console/Message/ShowDebugToConsole';
 import { IConsoleHelpCommands } from './Console/IConsoleHelpCommands';
+import { RunGarbageCollector } from './Screeps/ScreepsOperation/Message/RunGarbageCollector';
 
 /**
  * Conjunto de definições configuráveis
@@ -47,11 +48,16 @@ export class Definition {
   public static readonly IntervalInMinutesToShowDebug = 10;
 
   /**
+   * Intervalo entre coleta de lixo.
+   */
+  public static readonly IntervalInMinutesToGarbageCollector = 30;
+
+  /**
    * Lista dos tipos de mensagens que podem ser agendadas.
    */
   public static readonly ListOfScheduledMessagesType: IListOfScheduledMessagesType =
     {
-      scheduledMessageTypes: [ShowDebugToConsole]
+      scheduledMessageTypes: [ShowDebugToConsole, RunGarbageCollector]
     };
 
   /**

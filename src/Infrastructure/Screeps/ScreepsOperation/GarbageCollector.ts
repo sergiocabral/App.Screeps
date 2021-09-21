@@ -1,8 +1,9 @@
 /**
  * Responsável por limpar o lixo da memoria.
  */
-import { HelperObject, Logger, LogLevel } from '@sergiocabral/helper';
+import { HelperObject, Logger, LogLevel, Message } from '@sergiocabral/helper';
 import { CreepDiedEvent } from './Message/CreepDiedEvent';
+import { RunGarbageCollector } from './Message/RunGarbageCollector';
 
 export class GarbageCollector {
   /**
@@ -15,7 +16,9 @@ export class GarbageCollector {
    * Construtor.
    * @param memory Memória.
    */
-  constructor(private memory: Memory) {}
+  constructor(private memory: Memory) {
+    Message.subscribe(RunGarbageCollector, () => this.recycle());
+  }
 
   /**
    * Limpa as memórias de creeps que já morreram.
@@ -59,6 +62,7 @@ export class GarbageCollector {
    * Faz a reciclagem da memória para liberar o que não está em uso.
    */
   public recycle(): void {
+    console.log('garbage collector');
     this.deleteMemoryOfMissingCreeps();
   }
 }
