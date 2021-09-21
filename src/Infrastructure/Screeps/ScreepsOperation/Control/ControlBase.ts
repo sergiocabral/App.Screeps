@@ -2,9 +2,9 @@ import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { ToText } from '../../../Helper/ToText';
 
 /**
- * Base para entidades do jogo
+ * Base para controlar entidades do jogo
  */
-export abstract class EntityBase {
+export abstract class ControlBase {
   /**
    * Construtor.
    * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps

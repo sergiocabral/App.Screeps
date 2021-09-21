@@ -1,5 +1,5 @@
 import { Queries } from './Query/Queries';
-import { Entities } from './Entity/Entities';
+import { Controls } from './Control/Controls';
 
 /**
  * Responsável por operar o Screeps.
@@ -11,7 +11,7 @@ export interface IScreepsOperation {
   readonly query: Queries;
 
   /**
-   * Entidades do jogo.
+   * Controlador de entidades do jogo.
    */
-  readonly entity: Entities;
+  readonly control: Controls;
 }

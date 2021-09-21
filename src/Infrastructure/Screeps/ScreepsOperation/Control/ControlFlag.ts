@@ -1,12 +1,12 @@
 import { Constant } from '@sergiocabral/screeps';
 import { HelperObject, Logger, LogLevel } from '@sergiocabral/helper';
-import { EntityBase } from './EntityBase';
+import { ControlBase } from './ControlBase';
 import { FlagWrapper } from '../../Wrapper/FlagWrapper';
 
 /**
- * Entidades do jogo: Flag
+ * Controlar entidades do jogo: Flag
  */
-export class EntityFlag extends EntityBase {
+export class ControlFlag extends ControlBase {
   /**
    * Seção identificador do log.
    * @private
@@ -29,7 +29,7 @@ export class EntityFlag extends EntityBase {
         'Flag "{flagName}" cannot be created. Error code: {statusCode}',
         { flagName, statusCode: Constant.format(statusCode) },
         LogLevel.Error,
-        EntityFlag.LoggerSection
+        ControlFlag.LoggerSection
       );
       return null;
     }
@@ -39,7 +39,7 @@ export class EntityFlag extends EntityBase {
         'The flag "{flagName}" was created, but the flag was not found.',
         { flagName },
         LogLevel.Critical,
-        EntityFlag.LoggerSection
+        ControlFlag.LoggerSection
       );
       return null;
     }
@@ -55,14 +55,14 @@ export class EntityFlag extends EntityBase {
         };
       },
       LogLevel.Verbose,
-      EntityFlag.LoggerSection
+      ControlFlag.LoggerSection
     );
 
     Logger.post(
       'The flag "{flagName}" was created in the {roomName} room at coordinates x={x} and y={y}.',
       { flagName, roomName, x, y },
       LogLevel.Debug,
-      EntityFlag.LoggerSection
+      ControlFlag.LoggerSection
     );
 
     return flagWrapper;

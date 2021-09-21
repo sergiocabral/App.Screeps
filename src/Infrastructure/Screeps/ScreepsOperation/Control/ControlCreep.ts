@@ -6,12 +6,12 @@ import {
   NameGenerator
 } from '@sergiocabral/screeps';
 import { HelperObject, Logger, LogLevel } from '@sergiocabral/helper';
-import { EntityBase } from './EntityBase';
+import { ControlBase } from './ControlBase';
 
 /**
- * Entidades do jogo: Creep
+ * Controlar entidades do jogo: Creep
  */
-export class EntityCreep extends EntityBase {
+export class ControlCreep extends ControlBase {
   /**
    * Seção identificador do log.
    * @private
@@ -51,7 +51,7 @@ export class EntityCreep extends EntityBase {
           statusCode: Constant.format(statusCode)
         },
         LogLevel.Error,
-        EntityCreep.LoggerSection
+        ControlCreep.LoggerSection
       );
       return null;
     }
@@ -64,7 +64,7 @@ export class EntityCreep extends EntityBase {
           spawnName: spawn.name
         },
         LogLevel.Critical,
-        EntityCreep.LoggerSection
+        ControlCreep.LoggerSection
       );
       return null;
     }
@@ -81,7 +81,7 @@ export class EntityCreep extends EntityBase {
         };
       },
       LogLevel.Verbose,
-      EntityCreep.LoggerSection
+      ControlCreep.LoggerSection
     );
 
     Logger.post(
@@ -91,7 +91,7 @@ export class EntityCreep extends EntityBase {
         spawnName: spawn.name
       },
       LogLevel.Debug,
-      EntityCreep.LoggerSection
+      ControlCreep.LoggerSection
     );
 
     return creepWrapper;

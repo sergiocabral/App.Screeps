@@ -149,9 +149,9 @@ export class FactoryCreep {
     ...roles: CreepRole[]
   ): CreepWrapper | null {
     if (
-      this.screepsOperation.entity.creep.canCreate(spawn.instance, bodyPartSet)
+      this.screepsOperation.control.creep.canCreate(spawn.instance, bodyPartSet)
     ) {
-      const creep = this.screepsOperation.entity.creep.create(
+      const creep = this.screepsOperation.control.creep.create(
         spawn.instance,
         bodyPartSet
       );

@@ -13,7 +13,7 @@ import { EndExecutionEvent } from './Message/EndExecutionEvent';
 import { Scheduler } from '../Schedule/Scheduler';
 import { IGame } from './IGame';
 import { ClockTime } from '../Schedule/ClockTime';
-import { Entities } from '../Screeps/ScreepsOperation/Entity/Entities';
+import { Controls } from '../Screeps/ScreepsOperation/Control/Controls';
 import { DisposeMissingObject } from '../Screeps/ScreepsOperation/DisposeMissingObject';
 import { ConsoleCommandHandler } from '../Screeps/ConsoleCommandHandler';
 import { VersionManager } from './VersionManager';
@@ -67,7 +67,7 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
     void new DisposeMissingObject(this.memory);
 
     this.query = new Queries(this);
-    this.entity = new Entities(this);
+    this.control = new Controls(this);
 
     Message.subscribe(
       EndExecutionEvent,
@@ -141,12 +141,12 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
   /**
    * Entidades do jogo.
    */
-  public readonly entity: Entities;
+  public readonly control: Controls;
 
   /**
    * Override para toString().
    */
   public readonly toString = (): string => {
-    return ToText.instance(this, [], ['query', 'entity', 'executor']);
+    return ToText.instance(this, [], ['query', 'control', 'executor']);
   };
 }

@@ -1,30 +1,30 @@
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
-import { EntityCreep } from './EntityCreep';
-import { EntityFlag } from './EntityFlag';
+import { ControlCreep } from './ControlCreep';
+import { ControlFlag } from './ControlFlag';
 import { ToText } from '../../../Helper/ToText';
 
 /**
- * Entidades do jogo.
+ * Controladores de entidades do jogo.
  */
-export class Entities {
+export class Controls {
   /**
    * Construtor.
    * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
    */
   constructor(screepsEnvironment: IScreepsEnvironment) {
-    this.creep = new EntityCreep(screepsEnvironment);
-    this.flag = new EntityFlag(screepsEnvironment);
+    this.creep = new ControlCreep(screepsEnvironment);
+    this.flag = new ControlFlag(screepsEnvironment);
   }
 
   /**
    * Creeps.
    */
-  public readonly creep: EntityCreep;
+  public readonly creep: ControlCreep;
 
   /**
    * Flag
    */
-  public readonly flag: EntityFlag;
+  public readonly flag: ControlFlag;
 
   /**
    * Override para toString().
