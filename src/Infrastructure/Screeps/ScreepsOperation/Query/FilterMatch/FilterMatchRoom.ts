@@ -21,10 +21,12 @@ export class FilterMatchRoom<
   public fail(entity: TWrapper, filter: TQueryFilter): boolean {
     return !(
       (!filter.withRoom?.length ||
-        filter.withRoom.find(e => e.name === entity.instance.room.name) !==
-          undefined) &&
+        (entity.instance.room &&
+          filter.withRoom.find(e => e.name === entity.instance.room?.name) !==
+            undefined)) &&
       (!filter.withoutRoom?.length ||
-        filter.withoutRoom.find(e => e.name === entity.instance.room.name) ===
+        !entity.instance.room ||
+        filter.withoutRoom.find(e => e.name === entity.instance.room?.name) ===
           undefined)
     );
   }

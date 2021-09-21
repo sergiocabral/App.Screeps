@@ -6,6 +6,7 @@ import { IScreepsOperation } from '../../Infrastructure/Screeps/ScreepsOperation
 import { IGameExecutor } from './IGameExecutor';
 import { Message } from '@sergiocabral/helper';
 import { VersionReleasedEvent } from '../../Infrastructure/Core/Message/VersionReleasedEvent';
+import { DebugStepByStep } from '../../Infrastructure/Type/DebugStepByStep';
 
 /**
  * Classe base para os modos de operação.
@@ -13,9 +14,10 @@ import { VersionReleasedEvent } from '../../Infrastructure/Core/Message/VersionR
 export abstract class GameExecutor extends GameBase implements IGameExecutor {
   /**
    * Construtor.
+   * @param debug Modo de debug durante o loop.
    */
-  public constructor() {
-    super();
+  public constructor(debug?: DebugStepByStep) {
+    super(debug);
     Message.subscribe(
       VersionReleasedEvent,
       this._handleVersionReleasedEvent.bind(this)

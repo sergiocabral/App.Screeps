@@ -1,13 +1,22 @@
-import { EmptyError } from '@sergiocabral/helper';
+import { EmptyError, Logger, LogLevel } from '@sergiocabral/helper';
 import { IScreepsOperation } from '../Screeps/ScreepsOperation/IScreepsOperation';
 import { IGame } from './IGame';
 import { ScheduledMessage } from '../Schedule/Message/ScheduledMessage';
 import { ToText } from '../Helper/ToText';
+import { DebugStepByStep } from '../Type/DebugStepByStep';
 
 /**
  * Estrutura base para modos de jogo.
  */
 export abstract class GameBase implements IGame {
+  /**
+   * Construtor.
+   * @param debug Modo de debug durante o loop.
+   */
+  public constructor(debug?: DebugStepByStep) {
+    this.debugEnabled = Boolean(debug);
+  }
+
   /**
    * Lista dos tipos de mensagens que podem ser agendadas.
    */
@@ -18,6 +27,23 @@ export abstract class GameBase implements IGame {
    */
   public get help(): string[] | string {
     return [];
+  }
+
+  /**
+   * Ativa a saída da função debug.
+   * @protected
+   */
+  protected debugEnabled = false;
+
+  /**
+   * Exibe mensagem de debug.
+   * @param message
+   * @param values
+   * @private
+   */
+  protected debug(message: string, values?: unknown): void {
+    if (this.debugEnabled)
+      Logger.post(message, values, LogLevel.Verbose, 'STEP-BY-STEP');
   }
 
   /**
@@ -52,7 +78,9 @@ export abstract class GameBase implements IGame {
    */
   public loop(screepsOperation: IScreepsOperation): void {
     this.initialize(screepsOperation);
+    this.debug('LOOP START >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     this.do();
+    this.debug('LOOP END <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
   }
 
   /**
@@ -65,6 +93,12 @@ export abstract class GameBase implements IGame {
    * Override para toString().
    */
   public readonly toString = (): string => {
-    return ToText.instance(this, ['do', 'loop', 'help']);
+    return ToText.instance(this, [
+      'do',
+      'loop',
+      'help',
+      'debugEnabled',
+      'debug'
+    ]);
   };
 }

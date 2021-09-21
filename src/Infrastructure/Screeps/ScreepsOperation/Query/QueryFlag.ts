@@ -3,6 +3,7 @@ import { GetByName } from './GetBy/GetByName';
 import { FlagWrapper } from '../../Wrapper/FlagWrapper';
 import { FilterFlag } from './Filter/FilterFlag';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
+import { GetByRoom } from './GetBy/GetByRoom';
 
 /**
  * Classe para consultar de entidades: Flag
@@ -37,4 +38,9 @@ export class QueryFlag extends QueryIdOrNameBase<
    * Consulta por: nome
    */
   public readonly getByName = new GetByName(this);
+
+  /**
+   * Consulta por: room
+   */
+  public readonly getByRoom = new GetByRoom(this);
 }

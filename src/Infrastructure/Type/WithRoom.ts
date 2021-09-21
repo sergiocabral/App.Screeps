@@ -5,5 +5,5 @@ export interface WithRoom {
   /**
    * Nome.
    */
-  room: Room;
+  room: Room | undefined;
 }
