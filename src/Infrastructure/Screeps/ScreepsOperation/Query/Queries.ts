@@ -6,6 +6,7 @@ import { QueryCreep } from './QueryCreep';
 import { QuerySpawn } from './QuerySpawn';
 import { QueryFlag } from './QueryFlag';
 import { ToText } from '../../../Helper/ToText';
+import { QueryRoom } from './QueryRoom';
 
 /**
  * Consulta informações do jogo.
@@ -19,6 +20,7 @@ export class Queries {
     this.creep = new QueryCreep(screepsEnvironment);
     this.spawn = new QuerySpawn(screepsEnvironment);
     this.flag = new QueryFlag(screepsEnvironment);
+    this.room = new QueryRoom(screepsEnvironment);
 
     Message.subscribe(BeginExecutionEvent, () => this.sendDebugToConsole());
   }
@@ -55,6 +57,11 @@ export class Queries {
    * Spawn.
    */
   public readonly flag: QueryFlag;
+
+  /**
+   * Room.
+   */
+  public readonly room: QueryRoom;
 
   /**
    * Override para toString().
