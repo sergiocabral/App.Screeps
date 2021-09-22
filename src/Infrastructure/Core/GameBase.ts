@@ -4,16 +4,23 @@ import { IGame } from './IGame';
 import { ScheduledMessage } from '../Schedule/Message/ScheduledMessage';
 import { ToText } from '../Helper/ToText';
 import { DebugStepByStep } from '../Type/DebugStepByStep';
+import { MemoryHandler } from './MemoryHandler';
 
 /**
  * Estrutura base para modos de jogo.
  */
-export abstract class GameBase implements IGame {
+export abstract class GameBase
+  extends MemoryHandler<Record<string, unknown>>
+  implements IGame
+{
   /**
    * Construtor.
    * @param debug Modo de debug durante o loop.
    */
   public constructor(debug?: DebugStepByStep) {
+    super(Memory, 'executor', () => {
+      return {};
+    });
     this.debugEnabled = Boolean(debug);
   }
 
@@ -92,13 +99,15 @@ export abstract class GameBase implements IGame {
   /**
    * Override para toString().
    */
-  public readonly toString = (): string => {
+  public override readonly toString = (): string => {
     return ToText.instance(this, [
       'do',
       'loop',
       'help',
       'debugEnabled',
-      'debug'
+      'debug',
+      'memory',
+      'useGarbageCollector'
     ]);
   };
 }

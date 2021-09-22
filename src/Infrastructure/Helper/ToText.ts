@@ -29,6 +29,7 @@ export class ToText {
       /^sendDebugToConsole$/,
       /^scheduledMessageTypes$/,
       /^LoggerSection$/,
+      /^handle/,
       /Value$/,
       /^_/
     ];
