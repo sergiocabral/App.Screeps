@@ -20,20 +20,42 @@ export class FilterMatchProperties<
    * @private
    */
   public fail(entity: TWrapper, filter: TQueryFilter): boolean {
-    return !(
-      (filter.withEmptyProperties === undefined ||
-        (filter.withEmptyProperties &&
-          Object.keys(entity.properties.dataset).length === 0) ||
-        (!filter.withEmptyProperties &&
-          Object.keys(entity.properties.dataset).length > 0)) &&
-      (!filter.withProperties?.length ||
-        entity.properties.has(...(filter.withProperties ?? []))) &&
-      (!filter.withoutProperties?.length ||
-        !entity.properties.has(...(filter.withoutProperties ?? []))) &&
-      (!filter.withPropertyValues?.length ||
-        entity.properties.match(filter.withPropertyValues)) &&
-      (!filter.withoutPropertyValues?.length ||
-        !entity.properties.match(filter.withoutPropertyValues))
-    );
+    if (
+      filter.withEmptyProperties === true &&
+      Object.keys(entity.properties.dataset).length > 0
+    )
+      return true;
+
+    if (
+      filter.withEmptyProperties === false &&
+      Object.keys(entity.properties.dataset).length === 0
+    )
+      return true;
+
+    if (
+      filter.withProperties?.length &&
+      !entity.properties.has(...filter.withProperties)
+    )
+      return true;
+
+    if (
+      filter.withoutProperties?.length &&
+      entity.properties.has(...filter.withoutProperties)
+    )
+      return true;
+
+    if (
+      filter.withPropertyValues?.length &&
+      !entity.properties.match(filter.withPropertyValues)
+    )
+      return true;
+
+    if (
+      filter.withoutPropertyValues?.length &&
+      entity.properties.match(filter.withoutPropertyValues)
+    )
+      return true;
+
+    return false;
   }
 }

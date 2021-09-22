@@ -20,7 +20,7 @@ export class QuerySpawn extends QueryIdOrNameBase<
    */
   public constructor(screepsEnvironment: IScreepsEnvironment) {
     super(screepsEnvironment);
-    this.memoryEntryForGarbageCollector = 'spawns';
+    this.memoryEntryForGarbageCollector.push('spawns');
   }
 
   /**

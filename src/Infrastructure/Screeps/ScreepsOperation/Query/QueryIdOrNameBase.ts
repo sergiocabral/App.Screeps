@@ -55,95 +55,97 @@ export abstract class QueryIdOrNameBase<
    * Nome da entrada na memória para a limpeza de lixo.
    * @protected
    */
-  protected memoryEntryForGarbageCollector = '';
+  protected memoryEntryForGarbageCollector = Array<string>();
 
   /**
    * Mensagem: RunGarbageCollector
    * @private
    */
   private handleRunGarbageCollector() {
-    const entryName = this.memoryEntryForGarbageCollector;
-    if (!entryName) return;
+    if (this.memoryEntryForGarbageCollector.length === 0) return;
+    for (const entryName of this.memoryEntryForGarbageCollector) {
+      const getRecord = (
+        source: unknown
+      ): Record<string, unknown> | undefined => {
+        const instances = (source as Record<string, Record<string, unknown>>)[
+          entryName
+        ];
+        return typeof instances === 'object' && instances
+          ? instances
+          : undefined;
+      };
 
-    const getRecord = (
-      source: unknown
-    ): Record<string, unknown> | undefined => {
-      const instances = (source as Record<string, Record<string, unknown>>)[
-        entryName
-      ];
-      return typeof instances === 'object' && instances ? instances : undefined;
-    };
+      const source = getRecord(this.screepsEnvironment.game);
+      const memory = getRecord(this.screepsEnvironment.memory);
 
-    const source = getRecord(this.screepsEnvironment.game);
-    const memory = getRecord(this.screepsEnvironment.memory);
+      if (!source || !memory) return;
 
-    if (!source || !memory) return;
+      const sourceKeys = Object.keys(source);
 
-    const sourceKeys = Object.keys(source);
+      const disposeKeys = Array<string>();
+      let totalBytes = 0;
+      for (const memoryKey of Object.keys(memory)) {
+        if (sourceKeys.includes(memoryKey)) continue;
 
-    const disposeKeys = Array<string>();
-    let totalBytes = 0;
-    for (const memoryKey of Object.keys(memory)) {
-      if (sourceKeys.includes(memoryKey)) continue;
+        Logger.post(
+          'Discarded {bytes} bytes of entry in Memory["{entryName}"]["{memoryKey}"]:\n{json}',
+          () => {
+            const data: Record<string, unknown> = {};
+            data[memoryKey] = memory[memoryKey];
+            const json = HelperObject.toText(data);
+            const bytes = JSON.stringify(data).length;
+            totalBytes += bytes;
+            return {
+              bytes: bytes.format({ digits: 0 }),
+              entryName,
+              memoryKey,
+              json
+            };
+          },
+          LogLevel.Verbose,
+          QueryIdOrNameBase.loggerSection
+        );
+        delete memory[memoryKey];
+        disposeKeys.push(memoryKey);
+      }
 
-      Logger.post(
-        'Discarded {bytes} bytes of entry in Memory["{entryName}"]["{memoryKey}"]:\n{json}',
-        () => {
-          const data: Record<string, unknown> = {};
-          data[memoryKey] = memory[memoryKey];
-          const json = HelperObject.toText(data);
-          const bytes = JSON.stringify(data).length;
-          totalBytes += bytes;
-          return {
-            bytes: bytes.format({ digits: 0 }),
+      if (disposeKeys.length > 0) {
+        Logger.post(
+          'A total of {totalBytes} bytes were discarded by entry in Memory["{entryName}"].',
+          () => {
+            return {
+              totalBytes: totalBytes.format({ digits: 0 }),
+              entryName
+            };
+          },
+          LogLevel.Verbose,
+          QueryIdOrNameBase.loggerSection
+        );
+
+        Logger.post(
+          '{disposeKeysCount} entry(ies) discarded in Memory["{entryName}"]: {disposeKeys}',
+          {
+            disposeKeysCount: disposeKeys.length,
             entryName,
-            memoryKey,
-            json
-          };
-        },
-        LogLevel.Verbose,
-        QueryIdOrNameBase.loggerSection
-      );
-      delete memory[memoryKey];
-      disposeKeys.push(memoryKey);
-    }
+            disposeKeys: disposeKeys.map(key => `"${key}"`).join(', ')
+          },
+          LogLevel.Debug,
+          QueryIdOrNameBase.loggerSection
+        );
+      }
 
-    if (disposeKeys.length > 0) {
-      Logger.post(
-        'A total of {totalBytes} bytes were discarded by entry in Memory["{entryName}"].',
-        () => {
-          return {
-            totalBytes: totalBytes.format({ digits: 0 }),
-            entryName
-          };
-        },
-        LogLevel.Verbose,
-        QueryIdOrNameBase.loggerSection
-      );
+      if (Object.keys(memory).length === 0) {
+        Logger.post(
+          'Discard empty entry in Memory["{entryName}"].',
+          { entryName },
+          LogLevel.Debug,
+          QueryIdOrNameBase.loggerSection
+        );
 
-      Logger.post(
-        '{disposeKeysCount} entry(ies) discarded in Memory["{entryName}"]: {disposeKeys}',
-        {
-          disposeKeysCount: disposeKeys.length,
-          entryName,
-          disposeKeys: disposeKeys.map(key => `"${key}"`).join(', ')
-        },
-        LogLevel.Debug,
-        QueryIdOrNameBase.loggerSection
-      );
-    }
-
-    if (Object.keys(memory).length === 0) {
-      Logger.post(
-        'Discard empty entry in Memory["{entryName}"].',
-        { entryName },
-        LogLevel.Debug,
-        QueryIdOrNameBase.loggerSection
-      );
-
-      delete (
-        this.screepsEnvironment.memory as unknown as Record<string, unknown>
-      )[entryName];
+        delete (
+          this.screepsEnvironment.memory as unknown as Record<string, unknown>
+        )[entryName];
+      }
     }
   }
 

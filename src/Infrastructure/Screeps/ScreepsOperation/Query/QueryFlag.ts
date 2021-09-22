@@ -19,7 +19,7 @@ export class QueryFlag extends QueryIdOrNameBase<
    */
   public constructor(screepsEnvironment: IScreepsEnvironment) {
     super(screepsEnvironment);
-    this.memoryEntryForGarbageCollector = 'flags';
+    this.memoryEntryForGarbageCollector.push('flags');
   }
 
   /**

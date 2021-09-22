@@ -30,7 +30,6 @@ export class ToText {
       /^scheduledMessageTypes$/,
       /^LoggerSection$/,
       /^handle/,
-      /Value$/,
       /^_/
     ];
     const filter = (name: string): boolean => {

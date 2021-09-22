@@ -3,6 +3,7 @@ import { GetByName } from './GetBy/GetByName';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { FilterRoom } from './Filter/FilterRoom';
 import { RoomWrapper } from '../../Wrapper/RoomWrapper';
+import { SourceWrapper } from '../../Wrapper/SourceWrapper';
 
 /**
  * Classe para consultar de entidades: Room
@@ -18,7 +19,8 @@ export class QueryRoom extends QueryIdOrNameBase<
    */
   public constructor(screepsEnvironment: IScreepsEnvironment) {
     super(screepsEnvironment);
-    this.memoryEntryForGarbageCollector = 'rooms';
+    this.memoryEntryForGarbageCollector.push('rooms');
+    this.memoryEntryForGarbageCollector.push('sources');
   }
 
   /**
@@ -50,5 +52,17 @@ export class QueryRoom extends QueryIdOrNameBase<
       )
     );
     return Array.from(map.values());
+  }
+
+  /**
+   * Retorna a lista de fontes de energia na sala.
+   */
+  public getSources(
+    room: Room,
+    mode: 'all' | 'active' = 'active'
+  ): SourceWrapper[] {
+    return room
+      .find(mode === 'all' ? FIND_SOURCES : FIND_SOURCES_ACTIVE)
+      .map(source => new SourceWrapper(source, room, this.screepsEnvironment));
   }
 }

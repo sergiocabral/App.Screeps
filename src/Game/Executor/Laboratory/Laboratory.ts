@@ -1,8 +1,9 @@
 import { GameExecutor } from '../../Core/GameExecutor';
-import { HelperNumeric } from '@sergiocabral/helper';
+import { HelperList, HelperNumeric } from '@sergiocabral/helper';
 import { CreepRole } from '../../Screeps/Creep/CreepRole';
 import { RoomWrapper } from '../../../Infrastructure/Screeps/Wrapper/RoomWrapper';
 import { Action } from './Action';
+import { Constant } from '@sergiocabral/screeps';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
@@ -20,10 +21,16 @@ export class Laboratory extends GameExecutor {
   private readonly _defaultCreepsCountLimit = 5;
 
   /**
-   * Nome da propriedade action.
+   * Nome da propriedade: action, ação em curso.
    * @private
    */
   private readonly _propertyAction = 'action';
+
+  /**
+   * Nome da propriedade: destination, para onde ele vai andar
+   * @private
+   */
+  private readonly _propertyDestination = 'walkingTo';
 
   /**
    * Retorna o limite de creep por sala.
@@ -178,31 +185,93 @@ export class Laboratory extends GameExecutor {
     this.debug('Reset creeps have been adjusted.');
   }
 
-  /**
-   * Ajusta novos creeps
-   * @private
-   */
-  private _adjustNewCreeps(): void {
-    const creeps = this.screepsOperation.query.creep.getByProperty.empty();
+  private _assignWorkToAwayCreeps() {
+    const creeps = this.screepsOperation.query.creep.getByProperty.without(
+      this._propertyAction
+    );
     if (creeps.length === 0) {
-      this.debug('No new creeps detected.');
+      this.debug('No away creeps detected.');
       return;
     }
 
-    this.debug('New creeps detected: {creepsCount}, {creeps}', () => {
-      return {
-        creepsCount: creeps.length,
-        creeps: creeps.map(creep => `"${creep.instance.name}"`).join(', ')
-      };
-    });
-
-    const action = Action.Nothing;
     for (const creep of creeps) {
-      creep.properties.set(this._propertyAction, action);
-      this.debug('Assigned action "{action}" to creep "{creep}".', {
-        creep,
-        action
-      });
+      if (creep.instance.store.getUsedCapacity() === 0) {
+        const source = HelperList.getRandom(
+          this.screepsOperation.query.room.getSources(creep.instance.room)
+        );
+
+        if (!source) {
+          this.debug('No source found for creep "{creep}".', {
+            creep: creep.instance.name
+          });
+          continue;
+        }
+
+        creep.properties.set(this._propertyAction, Action.Harvesting);
+        creep.properties.set(
+          this._propertyDestination,
+          `${source.instance.pos.x},${source.instance.pos.y}`
+        );
+
+        this.debug(
+          'Randomly defined energy source {source} for away creep "{creep}".',
+          {
+            source: source.instance.id,
+            creep: creep.instance.name
+          }
+        );
+      }
+    }
+  }
+
+  private _moveToHarvest() {
+    const creeps = this.screepsOperation.query.creep.getByProperty.withValue(
+      this._propertyAction,
+      Action.Harvesting
+    );
+    if (creeps.length === 0) {
+      this.debug('No walking creeps detected.');
+      return;
+    }
+
+    for (const creep of creeps) {
+      const destination = creep.properties.get(this._propertyDestination);
+      const [x, y] = (destination ?? '').split(',').map(p => Number(p)) as [
+        number,
+        number
+      ];
+      if (!(x >= 0 && y >= 0)) {
+        this.debug(
+          'Invalid "{destination}" target position for creep "{creep}". Releasing him from work.',
+          {
+            destination,
+            creep: creep.instance.name
+          }
+        );
+        creep.properties.remove(this._propertyAction);
+      }
+
+      if (creep.instance.pos.x === x && creep.instance.pos.y === y) {
+        this.debug('The creep "{creep}" reached the destination {x},{y}.', {
+          x,
+          y,
+          creep: creep.instance.name
+        });
+        continue;
+      }
+
+      const statusCode = creep.instance.moveTo(x, y);
+      this.debug(
+        'Creep "{creep}" moving from {x0},{y0} to {x},{y}. Status code: {statusCode}',
+        {
+          x0: creep.instance.pos.x,
+          y0: creep.instance.pos.y,
+          x,
+          y,
+          creep: creep.instance.name,
+          statusCode: Constant.format(statusCode)
+        }
+      );
     }
   }
 
@@ -213,7 +282,9 @@ export class Laboratory extends GameExecutor {
   protected override do(): void {
     this._getRoomsSpawned().forEach(room => this._createCreep(room.instance));
     this._adjustResetCreeps();
-    this._adjustNewCreeps();
+    this._assignWorkToAwayCreeps();
+    this._moveToHarvest();
+
     /**
      * TODO:
      * carga livre > designar energia > coletar
