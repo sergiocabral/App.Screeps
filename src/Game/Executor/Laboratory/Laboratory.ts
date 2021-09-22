@@ -2,6 +2,7 @@ import { GameExecutor } from '../../Core/GameExecutor';
 import { HelperNumeric } from '@sergiocabral/helper';
 import { CreepRole } from '../../Screeps/Creep/CreepRole';
 import { RoomWrapper } from '../../../Infrastructure/Screeps/Wrapper/RoomWrapper';
+import { Action } from './Action';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
@@ -17,6 +18,12 @@ export class Laboratory extends GameExecutor {
    * @private
    */
   private readonly _defaultCreepsCountLimit = 5;
+
+  /**
+   * Nome da propriedade action.
+   * @private
+   */
+  private readonly _propertyAction = 'action';
 
   /**
    * Retorna o limite de creep por sala.
@@ -149,11 +156,54 @@ export class Laboratory extends GameExecutor {
   }
 
   /**
-   * Atribuir trabalho aos creeps.
+   * Ajusta creeps sem definição.
    * @private
    */
-  private _assignWorkToCreeps(): void {
-    //TODO: atribuir trabalho.
+  private _adjustResetCreeps(): void {
+    const creeps = this.screepsOperation.query.creep.getByRole.empty();
+    if (creeps.length === 0) {
+      this.debug('No reset creeps detected.');
+      return;
+    }
+
+    this.debug('New reset detected: {creepsCount}, {creeps}', () => {
+      return {
+        creepsCount: creeps.length,
+        creeps: creeps.map(creep => `"${creep.instance.name}"`).join(', ')
+      };
+    });
+
+    this.factoryCreep.redefine(...creeps);
+
+    this.debug('Reset creeps have been adjusted.');
+  }
+
+  /**
+   * Ajusta novos creeps
+   * @private
+   */
+  private _adjustNewCreeps(): void {
+    const creeps = this.screepsOperation.query.creep.getByProperty.empty();
+    if (creeps.length === 0) {
+      this.debug('No new creeps detected.');
+      return;
+    }
+
+    this.debug('New creeps detected: {creepsCount}, {creeps}', () => {
+      return {
+        creepsCount: creeps.length,
+        creeps: creeps.map(creep => `"${creep.instance.name}"`).join(', ')
+      };
+    });
+
+    const action = Action.Nothing;
+    for (const creep of creeps) {
+      creep.properties.set(this._propertyAction, action);
+      this.debug('Assigned action "{action}" to creep "{creep}".', {
+        creep,
+        action
+      });
+    }
   }
 
   /**
@@ -162,6 +212,12 @@ export class Laboratory extends GameExecutor {
    */
   protected override do(): void {
     this._getRoomsSpawned().forEach(room => this._createCreep(room.instance));
-    this._assignWorkToCreeps();
+    this._adjustResetCreeps();
+    this._adjustNewCreeps();
+    /**
+     * TODO:
+     * carga livre > designar energia > coletar
+     * carga completa > ir para spawn/controller encher metade/metade
+     */
   }
 }
