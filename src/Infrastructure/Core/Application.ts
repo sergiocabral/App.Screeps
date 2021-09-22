@@ -51,15 +51,15 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
    * @param executor Modo operacional do jogo.
    */
   private constructor(private executor: IGame) {
-    void new VersionManager(this.memory, Definition.MemoryVersionManager);
+    void new VersionManager(Definition.MemoryVersionManager);
 
-    void new Console(this.memory, Definition.MemoryConsoleCommand)
+    void new Console(Definition.MemoryConsoleCommand)
       .addConsoleHelpCommands(Definition.ConsoleHelpCommand)
       .addConsoleHelpCommands(executor);
 
-    this.clockTime = new ClockTime(this.memory, Definition.MemoryClockTime);
+    this.clockTime = new ClockTime(Definition.MemoryClockTime);
 
-    new Scheduler(this.memory, Definition.MemoryScheduler)
+    new Scheduler(Definition.MemoryScheduler)
       .loadMessageTypes(Definition.ListOfScheduledMessagesType)
       .loadMessageTypes(executor);
 

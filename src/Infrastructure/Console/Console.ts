@@ -30,13 +30,12 @@ export class Console
 
   /**
    * Construtor.
-   * @param memory Objeto que servirá de fonte de dados.
    * @param propertyName Nome da propriedade que será ouvida.
    */
-  public constructor(memory: Memory, propertyName: string) {
-    super(memory, propertyName, () => '');
+  public constructor(propertyName: string) {
+    super(propertyName, () => '');
 
-    this.consoleLogger = new ConsoleLogger(memory, Definition.MemoryLogger);
+    this.consoleLogger = new ConsoleLogger(Definition.MemoryLogger);
 
     this.args = HelperText.getCommandArguments(this.source);
     this.command = this.args.shift();

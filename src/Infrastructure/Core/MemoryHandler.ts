@@ -20,14 +20,14 @@ export abstract class MemoryHandler<T> {
 
   /**
    * Construtor.
-   * @param memory Objeto que servirá de fonte de dados.
    * @param propertyName Nome da propriedade que será ouvida.
    * @param defaultValue Constrói o valor padrão se não existir.
+   * @param memory Objeto que servirá de fonte de dados.
    */
   protected constructor(
-    memory: Memory,
     protected readonly propertyName: string,
-    private defaultValue: () => T
+    private defaultValue: () => T,
+    memory: Memory = Memory
   ) {
     this.memory = memory as unknown as KeyValue;
     if (this.source === undefined) {

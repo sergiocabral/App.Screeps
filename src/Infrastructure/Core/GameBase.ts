@@ -18,7 +18,7 @@ export abstract class GameBase
    * @param debug Modo de debug durante o loop.
    */
   public constructor(debug?: DebugStepByStep) {
-    super(Memory, 'executor', () => {
+    super('executor', () => {
       return {};
     });
     this.debugEnabled = Boolean(debug);

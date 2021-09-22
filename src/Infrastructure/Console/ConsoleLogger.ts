@@ -24,11 +24,10 @@ export class ConsoleLogger extends MemoryHandler<ConsoleLoggerData> {
 
   /**
    * Construtor.
-   * @param memory Objeto que servirá de fonte de dados.
    * @param propertyName Nome da propriedade que será ouvida.
    */
-  public constructor(memory: Memory, propertyName: string) {
-    super(memory, propertyName, () => {
+  public constructor(propertyName: string) {
+    super(propertyName, () => {
       return {
         minimumLevel: LogLevel[ConsoleLogger.defaultMinimumLevel] as string
       };

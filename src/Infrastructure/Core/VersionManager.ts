@@ -22,11 +22,10 @@ export class VersionManager
 
   /**
    * Construtor.
-   * @param memory Objeto que servirá de fonte de dados.
    * @param propertyName Nome da propriedade que será ouvida.
    */
-  public constructor(memory: Memory, propertyName: string) {
-    super(memory, propertyName, () => {
+  public constructor(propertyName: string) {
+    super(propertyName, () => {
       return {
         major: 0,
         build: 0,
