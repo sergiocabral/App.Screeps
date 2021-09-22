@@ -21,6 +21,9 @@ export class FilterMatchRoles<
    */
   public fail(entity: TWrapper, filter: TQueryFilter): boolean {
     return !(
+      (filter.withEmptyRoles === undefined ||
+        (filter.withEmptyRoles && entity.roles.list.length === 0) ||
+        (!filter.withEmptyRoles && entity.roles.list.length > 0)) &&
       (!filter.withRoles?.length ||
         entity.roles.has(...(filter.withRoles ?? []))) &&
       (!filter.withoutRoles?.length ||

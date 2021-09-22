@@ -21,6 +21,11 @@ export class FilterMatchProperties<
    */
   public fail(entity: TWrapper, filter: TQueryFilter): boolean {
     return !(
+      (filter.withEmptyProperties === undefined ||
+        (filter.withEmptyProperties &&
+          Object.keys(entity.properties.dataset).length === 0) ||
+        (!filter.withEmptyProperties &&
+          Object.keys(entity.properties.dataset).length > 0)) &&
       (!filter.withProperties?.length ||
         entity.properties.has(...(filter.withProperties ?? []))) &&
       (!filter.withoutProperties?.length ||

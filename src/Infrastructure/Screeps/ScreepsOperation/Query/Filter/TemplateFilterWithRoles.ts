@@ -3,6 +3,11 @@
  */
 export type TemplateFilterWithRoles = {
   /**
+   * Com zero ou alguma role.
+   */
+  withEmptyRoles?: boolean;
+
+  /**
    * Com uma ou mais roles.
    */
   withRoles?: string[];

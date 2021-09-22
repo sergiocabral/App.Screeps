@@ -13,6 +13,16 @@ export class GetByProperty<
   TQueryFilter extends TemplateFilterWithProperties
 > extends GetByBase<TScreeps, TWrapper, TQueryFilter> {
   /**
+   * Localiza uma entidade que possui zero ou alguma propriedades
+   * @param empty
+   */
+  public empty(empty = true): TWrapper[] {
+    return this.query.filter({
+      withEmptyProperties: empty
+    } as TQueryFilter);
+  }
+
+  /**
    * Localiza uma entidade que possui uma ou mais propriedades.
    */
   public with(...properties: string[]): TWrapper[] {

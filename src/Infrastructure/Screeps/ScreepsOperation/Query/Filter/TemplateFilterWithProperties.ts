@@ -3,6 +3,11 @@
  */
 export type TemplateFilterWithProperties = {
   /**
+   * Com zero ou alguma propriedade.
+   */
+  withEmptyProperties?: boolean;
+
+  /**
    * Com uma ou mais propriedades definidas.
    */
   withProperties?: string[];
