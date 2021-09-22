@@ -164,11 +164,7 @@ export class FactoryCreep {
    */
   private readonly _roleBodySet: CreepRoleBodySet[] = [
     {
-      roles: [
-        CreepRole.BasicHarvest,
-        CreepRole.BasicUpgrader,
-        CreepRole.BasicBuilder
-      ],
+      roles: [CreepRole.BasicHarvest],
       bodyParts: {
         move: 1,
         work: 1,

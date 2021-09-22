@@ -149,12 +149,19 @@ export class Laboratory extends GameExecutor {
   }
 
   /**
+   * Atribuir trabalho aos creeps.
+   * @private
+   */
+  private _assignWorkToCreeps(): void {
+    //TODO: atribuir trabalho.
+  }
+
+  /**
    * Executa o loop de fato.
    * @private
    */
   protected override do(): void {
-    this._getRoomsSpawned().forEach(room => {
-      this._createCreep(room.instance);
-    });
+    this._getRoomsSpawned().forEach(room => this._createCreep(room.instance));
+    this._assignWorkToCreeps();
   }
 }
