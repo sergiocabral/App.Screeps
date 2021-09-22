@@ -27,6 +27,12 @@ export class Laboratory extends GameExecutor {
   private readonly _propertyAction = 'action';
 
   /**
+   * Nome da propriedade: source, fonte de energia para onde vai
+   * @private
+   */
+  private readonly _propertySource = 'source';
+
+  /**
    * Nome da propriedade: destination, para onde ele vai andar
    * @private
    */
@@ -208,6 +214,7 @@ export class Laboratory extends GameExecutor {
         }
 
         creep.properties.set(this._propertyAction, Action.Harvesting);
+        creep.properties.set(this._propertySource, source.instance.id);
         creep.properties.set(
           this._propertyDestination,
           `${source.instance.pos.x},${source.instance.pos.y}`
