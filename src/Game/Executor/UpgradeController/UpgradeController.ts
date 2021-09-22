@@ -50,7 +50,7 @@ export class UpgradeController extends GameExecutor {
    * @private
    */
   private tryCreateCreep(): void {
-    const creepsLimit = 25;
+    const creepsLimit = 50;
     if (this.screepsOperation.query.creep.getAll().length >= creepsLimit)
       return;
 
