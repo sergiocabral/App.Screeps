@@ -121,7 +121,7 @@ export abstract class MemoryHandler<T> {
    * @private
    */
   protected get source(): T {
-    return this.memory ? (this.memory[this.propertyName] as T) : ({} as T);
+    return this.memory[this.propertyName] as T;
   }
 
   /**
