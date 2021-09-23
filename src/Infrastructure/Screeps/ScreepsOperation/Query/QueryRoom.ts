@@ -57,10 +57,7 @@ export class QueryRoom extends QueryIdOrNameBase<
   /**
    * Retorna a lista de fontes de energia na sala.
    */
-  public getSources(
-    room: Room,
-    mode: 'all' | 'active' = 'active'
-  ): SourceWrapper[] {
+  public getSources(room: Room, mode: 'all' | 'active'): SourceWrapper[] {
     return room
       .find(mode === 'all' ? FIND_SOURCES : FIND_SOURCES_ACTIVE)
       .map(source => new SourceWrapper(source, room, this.screepsEnvironment));

@@ -1,8 +1,8 @@
 /**
  * O que um creep pode estar fazendo.
  */
-export enum Action {
+export enum Work {
   Harvesting = 'Harvesting',
   TransferringEnergy = 'TransferringEnergy',
-  UpgradeController = 'UpgradeController'
+  UpgradingController = 'UpgradingController'
 }

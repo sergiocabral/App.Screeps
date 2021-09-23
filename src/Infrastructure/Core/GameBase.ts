@@ -43,14 +43,22 @@ export abstract class GameBase
   protected debugEnabled = false;
 
   /**
+   * Sinaliza se alguma mensagem de debug foi exibida.
+   * @private
+   */
+  private debugShowed = false;
+
+  /**
    * Exibe mensagem de debug.
    * @param message
    * @param values
    * @private
    */
   protected debug(message: string, values?: unknown): void {
-    if (this.debugEnabled)
+    if (this.debugEnabled) {
       Logger.post(message, values, LogLevel.Verbose, 'STEP-BY-STEP');
+      this.debugShowed = true;
+    }
   }
 
   /**
@@ -85,9 +93,8 @@ export abstract class GameBase
    */
   public loop(screepsOperation: IScreepsOperation): void {
     this.initialize(screepsOperation);
-    this.debug('LOOP START >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     this.do();
-    this.debug('LOOP END <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+    if (this.debugShowed) console.log(' ');
   }
 
   /**

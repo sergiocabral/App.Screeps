@@ -4,11 +4,18 @@ import { Definition } from './Definition';
 import { ConsoleCommandHandler } from './ConsoleCommandHandler';
 import { IScreepsOperation } from '../../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
 import { IGameExecutor } from './IGameExecutor';
+import { ParameterByFlag } from '../Screeps/Flag/ParameterByFlag';
 
 /**
  * Classe base para os modos de operação.
  */
 export abstract class GameExecutor extends GameBase implements IGameExecutor {
+  /**
+   * Contexto do log.
+   * @private
+   */
+  protected loggerContext = 'GameExecutor';
+
   /**
    * Inicializa a classe.
    * @param screepsOperation
@@ -34,6 +41,23 @@ export abstract class GameExecutor extends GameBase implements IGameExecutor {
       this.factoryCreepValue = new FactoryCreep(this.screepsOperation);
     }
     return this.factoryCreepValue;
+  }
+
+  /**
+   * Leitura de parâmetros através das flags.
+   * @private
+   */
+  private parameterByFlagValue: ParameterByFlag | undefined = undefined;
+
+  /**
+   * Leitura de parâmetros através das flags.
+   * @protected
+   */
+  public get parameterByFlag(): ParameterByFlag {
+    if (this.parameterByFlagValue === undefined) {
+      this.parameterByFlagValue = new ParameterByFlag(this.screepsOperation);
+    }
+    return this.parameterByFlagValue;
   }
 
   /**

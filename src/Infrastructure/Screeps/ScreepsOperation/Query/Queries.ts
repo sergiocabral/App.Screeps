@@ -16,7 +16,7 @@ export class Queries {
    * Construtor.
    * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
    */
-  constructor(screepsEnvironment: IScreepsEnvironment) {
+  constructor(private screepsEnvironment: IScreepsEnvironment) {
     this.creep = new QueryCreep(screepsEnvironment);
     this.spawn = new QuerySpawn(screepsEnvironment);
     this.flag = new QueryFlag(screepsEnvironment);
@@ -41,6 +41,15 @@ export class Queries {
       () => [this.creep.getAll().length],
       section
     ).send();
+  }
+
+  /**
+   * Retorna uma objeto pelo id e fas o cast.
+   * @param id
+   */
+  public getById<T>(id?: Id<T> | string): T | null | undefined {
+    if (id === undefined) return undefined;
+    return this.screepsEnvironment.game.getObjectById(id);
   }
 
   /**
