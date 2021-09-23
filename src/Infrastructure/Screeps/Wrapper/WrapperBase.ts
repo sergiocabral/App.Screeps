@@ -1,4 +1,5 @@
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
+import { ToText } from '../../Helper/ToText';
 
 /**
  * Creep
@@ -18,6 +19,8 @@ export abstract class WrapperBase<TScreepsEntity> {
    * Override para toString().
    */
   public readonly toString = (): string => {
-    return String(this.instance);
+    return `${this.constructor.name}: ${String(
+      this.instance
+    )}\n${ToText.instance(this)}`;
   };
 }

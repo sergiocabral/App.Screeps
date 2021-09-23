@@ -13,4 +13,22 @@ export class CreepWrapper extends WrapperRolesAndPropertiesBase<Creep> {
   public constructor(instance: Creep, screepsEnvironment: IScreepsEnvironment) {
     super(instance, screepsEnvironment, 'creeps');
   }
+
+  /**
+   * Percentual de energia disponível.
+   */
+  public get availableEnergy(): number {
+    return (
+      this.instance.store.getUsedCapacity() / this.instance.store.getCapacity()
+    );
+  }
+
+  /**
+   * Percentual de energia consumida.
+   */
+  public get consumedEnergy(): number {
+    return (
+      this.instance.store.getFreeCapacity() / this.instance.store.getCapacity()
+    );
+  }
 }

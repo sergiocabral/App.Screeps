@@ -56,9 +56,10 @@ export class Laboratory extends GameExecutor {
   }
 
   private _harvest(): void {
-    const creeps = this.screepsOperation.query.creep.getByProperty
-      .withValue(Property.Work, Work.Harvesting)
-      .filter(creep => !creep.instance.spawning);
+    const creeps = this.screepsOperation.query.creep.getByProperty.withValue(
+      Property.Work,
+      Work.Harvesting
+    );
     if (creeps.length === 0) return;
 
     for (const creep of creeps) {
@@ -79,9 +80,18 @@ export class Laboratory extends GameExecutor {
       const returnCode = creep.instance.harvest(source);
       if (returnCode === OK) {
         if (creep.instance.store.getFreeCapacity() === 0) {
-          creep.properties.set(Property.Work, Work.UpgradingController);
-          creep.properties.remove(Property.Target);
-          creep.instance.say('Upgrade');
+          const constructionSite = HelperList.getRandom(
+            creep.instance.room.find(FIND_MY_CONSTRUCTION_SITES)
+          );
+          if (constructionSite) {
+            creep.properties.set(Property.Work, Work.Building);
+            creep.properties.set(Property.Target, constructionSite.id);
+            creep.instance.say('Build');
+          } else {
+            creep.properties.set(Property.Work, Work.UpgradingController);
+            creep.properties.remove(Property.Target);
+            creep.instance.say('Upgrade');
+          }
         }
       } else if (returnCode === ERR_NOT_IN_RANGE) {
         creep.instance.moveTo(source);
@@ -100,10 +110,61 @@ export class Laboratory extends GameExecutor {
     }
   }
 
+  private _build(): void {
+    const creeps = this.screepsOperation.query.creep.getByProperty.withValue(
+      Property.Work,
+      Work.Building
+    );
+    if (creeps.length === 0) return;
+
+    for (const creep of creeps) {
+      const constructionSiteId = creep.properties.get(Property.Target);
+      const constructionSite =
+        this.screepsOperation.query.getById<ConstructionSite>(
+          constructionSiteId
+        );
+      if (!constructionSite) {
+        creep.instance.say('No Construct!');
+        creep.properties.set(Property.Work, Work.UpgradingController);
+        creep.properties.remove(Property.Target);
+        Logger.post(
+          'Construction site "{constructionSite}" was not found by creep "{creep}".',
+          { creep: creep.instance.name, constructionSite: constructionSiteId },
+          LogLevel.Error,
+          this.loggerContext
+        );
+        continue;
+      }
+
+      const returnCode = creep.instance.build(constructionSite);
+      if (returnCode === OK) {
+        if (creep.consumedEnergy >= 0.33) {
+          creep.properties.set(Property.Work, Work.UpgradingController);
+          creep.properties.remove(Property.Target);
+          creep.instance.say('Upgrade');
+        }
+      } else if (returnCode === ERR_NOT_IN_RANGE) {
+        creep.instance.moveTo(constructionSite);
+      } else {
+        Logger.post(
+          'Unexpected code when creep "{creep}" builds the construction site "{constructionSite}": {returnCode}',
+          {
+            creep: creep.instance.name,
+            constructionSite: constructionSite.id,
+            returnCode: Constant.format(returnCode)
+          },
+          LogLevel.Error,
+          this.loggerContext
+        );
+      }
+    }
+  }
+
   private _upgrade(): void {
-    const creeps = this.screepsOperation.query.creep.getByProperty
-      .withValue(Property.Work, Work.UpgradingController)
-      .filter(creep => !creep.instance.spawning);
+    const creeps = this.screepsOperation.query.creep.getByProperty.withValue(
+      Property.Work,
+      Work.UpgradingController
+    );
     if (creeps.length === 0) return;
 
     for (const creep of creeps) {
@@ -113,10 +174,7 @@ export class Laboratory extends GameExecutor {
         creep.instance.room.controller
       );
       if (returnCode === OK) {
-        const percentLimit = 0.5;
-        const totalEnergy = creep.instance.store.getCapacity();
-        const consumedEnergy = creep.instance.store.getFreeCapacity();
-        if (consumedEnergy / totalEnergy >= percentLimit) {
+        if (creep.consumedEnergy >= 0.66) {
           creep.properties.set(Property.Work, Work.TransferringEnergy);
           creep.properties.set(
             Property.Target,
@@ -146,9 +204,10 @@ export class Laboratory extends GameExecutor {
   }
 
   private _transferEnergy(): void {
-    const creeps = this.screepsOperation.query.creep.getByProperty
-      .withValue(Property.Work, Work.TransferringEnergy)
-      .filter(creep => !creep.instance.spawning);
+    const creeps = this.screepsOperation.query.creep.getByProperty.withValue(
+      Property.Work,
+      Work.TransferringEnergy
+    );
     if (creeps.length === 0) return;
 
     for (const creep of creeps) {
@@ -198,6 +257,7 @@ export class Laboratory extends GameExecutor {
     this._getRooms().forEach(room => this._createCreep(room.instance));
     this._assignWorkToAwayCreeps();
     this._harvest();
+    this._build();
     this._upgrade();
     this._transferEnergy();
   }
