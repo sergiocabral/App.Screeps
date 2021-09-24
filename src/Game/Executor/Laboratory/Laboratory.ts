@@ -10,6 +10,7 @@ import { RoomWrapper } from '../../../Infrastructure/Screeps/Wrapper/RoomWrapper
 import { Work } from './Work';
 import { Property } from './Property';
 import { Constant } from '@sergiocabral/screeps';
+import { WithId } from '../../../Infrastructure/Type/WithId';
 
 /**
  * Jogo no funcionamento de fazer upgrade do controller.
@@ -85,14 +86,29 @@ export class Laboratory extends GameExecutor {
       const returnCode = creep.instance.harvest(source);
       if (returnCode === OK) {
         if (creep.instance.store.getFreeCapacity() === 0) {
-          const constructionSite = creep.instance.room
-            .find(FIND_MY_CONSTRUCTION_SITES)
-            .sort((a: ConstructionSite, b: ConstructionSite) =>
-              HelperNumeric.reverseCompare(a.progress, b.progress)
-            )[0];
-          if (constructionSite) {
+          const constructions = Array<WithId>();
+          constructions.push(
+            ...creep.instance.room
+              .find(FIND_MY_CONSTRUCTION_SITES)
+              .sort((a: ConstructionSite, b: ConstructionSite) =>
+                HelperNumeric.reverseCompare(a.progress, b.progress)
+              )
+          );
+          constructions.push(
+            ...creep.instance.room
+              .find(FIND_STRUCTURES)
+              .filter(structure => structure.hits < structure.hitsMax)
+              .sort((a: Structure, b: Structure) =>
+                HelperNumeric.reverseCompare(
+                  a.hitsMax - a.hits,
+                  b.hitsMax - b.hits
+                )
+              )
+          );
+          const construction = constructions[0];
+          if (construction) {
             creep.properties.set(Property.Work, Work.Building);
-            creep.properties.set(Property.Target, constructionSite.id);
+            creep.properties.set(Property.Target, construction.id);
             creep.instance.say('Build');
           } else {
             creep.properties.set(Property.Work, Work.UpgradingController);
@@ -125,39 +141,40 @@ export class Laboratory extends GameExecutor {
     if (creeps.length === 0) return;
 
     for (const creep of creeps) {
-      const constructionSiteId = creep.properties.get(Property.Target);
-      const constructionSite =
-        this.screepsOperation.query.getById<ConstructionSite>(
-          constructionSiteId
-        );
-      if (!constructionSite) {
-        creep.instance.say('No Site!');
+      const constructionId = creep.properties.get(Property.Target);
+      const construction =
+        this.screepsOperation.query.getById<WithId>(constructionId);
+      if (!construction) {
+        creep.instance.say('No Build!');
         creep.properties.set(Property.Work, Work.UpgradingController);
         creep.properties.remove(Property.Target);
         Logger.post(
-          'Construction site "{constructionSite}" was not found by creep "{creep}".',
-          { creep: creep.instance.name, constructionSite: constructionSiteId },
+          'Construction "{construction}" was not found by creep "{creep}".',
+          { creep: creep.instance.name, construction: constructionId },
           LogLevel.Error,
           this.loggerContext
         );
         continue;
       }
 
-      const returnCode = creep.instance.build(constructionSite);
+      const isRepair = construction instanceof Structure;
+      const returnCode = isRepair
+        ? creep.instance.repair(construction)
+        : creep.instance.build(construction as ConstructionSite);
       if (returnCode === OK) {
-        if (creep.consumedEnergy >= 0.33) {
+        if (creep.consumedEnergy >= 0.33 || isRepair) {
           creep.properties.set(Property.Work, Work.UpgradingController);
           creep.properties.remove(Property.Target);
           creep.instance.say('Upgrade');
         }
       } else if (returnCode === ERR_NOT_IN_RANGE) {
-        creep.instance.moveTo(constructionSite);
+        creep.instance.moveTo(construction as unknown as { pos: RoomPosition });
       } else {
         Logger.post(
-          'Unexpected code when creep "{creep}" builds the construction site "{constructionSite}": {returnCode}',
+          'Unexpected code when creep "{creep}" builds the construction "{construction}": {returnCode}',
           {
             creep: creep.instance.name,
-            constructionSite: constructionSite.id,
+            construction: construction.id,
             returnCode: Constant.format(returnCode)
           },
           LogLevel.Error,
@@ -238,12 +255,13 @@ export class Laboratory extends GameExecutor {
         RESOURCE_ENERGY
       );
       if (returnCode === OK || returnCode === ERR_FULL) {
-        const tombstone = HelperList.getRandom(
-          creep.instance.room.find(FIND_TOMBSTONES)
-        );
-        if (tombstone) {
+        const resources = Array<WithId>();
+        resources.push(...creep.instance.room.find(FIND_TOMBSTONES));
+        resources.push(...creep.instance.room.find(FIND_DROPPED_RESOURCES));
+        const resource = HelperList.getRandom(resources);
+        if (resource) {
           creep.properties.set(Property.Work, Work.Withdrawing);
-          creep.properties.set(Property.Target, tombstone.id);
+          creep.properties.set(Property.Target, resource.id);
           creep.instance.say('Withdraw');
         } else {
           creep.properties.remove(Property.Work);
@@ -274,23 +292,25 @@ export class Laboratory extends GameExecutor {
     if (creeps.length === 0) return;
 
     for (const creep of creeps) {
-      const tombstoneId = creep.properties.get(Property.Target);
-      const tombstone =
-        this.screepsOperation.query.getById<Tombstone>(tombstoneId);
-      if (!tombstone) {
+      const resourceId = creep.properties.get(Property.Target);
+      const resource = this.screepsOperation.query.getById<WithId>(resourceId);
+      if (!resource) {
         creep.instance.say('No Tomb!');
         creep.properties.remove(Property.Work);
         creep.properties.remove(Property.Target);
         Logger.post(
-          'Tombstone "{tombstone}" was not found by creep "{creep}".',
-          { creep: creep.instance.name, tombstone: tombstoneId },
+          'Resource energy "{resource}" was not found by creep "{creep}".',
+          { creep: creep.instance.name, resource: resourceId },
           LogLevel.Error,
           this.loggerContext
         );
         continue;
       }
 
-      const returnCode = creep.instance.withdraw(tombstone, RESOURCE_ENERGY);
+      const isTombstone = Boolean((resource as unknown as Tombstone).creep);
+      const returnCode = isTombstone
+        ? creep.instance.withdraw(resource as Tombstone, RESOURCE_ENERGY)
+        : creep.instance.pickup(resource as Resource);
       if (returnCode === OK) {
         if (creep.instance.store.getFreeCapacity() === 0) {
           creep.properties.set(Property.Work, Work.UpgradingController);
@@ -301,13 +321,13 @@ export class Laboratory extends GameExecutor {
           creep.instance.say('Finished');
         }
       } else if (returnCode === ERR_NOT_IN_RANGE) {
-        creep.instance.moveTo(tombstone);
+        creep.instance.moveTo(resource as unknown as { pos: RoomPosition });
       } else {
         Logger.post(
-          'Unexpected code when creep "{creep}" withdrawn energy from tombstone "{tombstone}": {returnCode}',
+          'Unexpected code when creep "{creep}" withdrawn energy from tombstone/resource "{resource}": {returnCode}',
           {
             creep: creep.instance.name,
-            tombstone: tombstone.creep.name,
+            resource: resource.id,
             returnCode: Constant.format(returnCode)
           },
           LogLevel.Error,
