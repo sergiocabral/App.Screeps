@@ -5,5 +5,6 @@ export enum Work {
   Harvesting = 'Harvesting',
   Building = 'Building',
   UpgradingController = 'UpgradingController',
-  TransferringEnergy = 'TransferringEnergy'
+  TransferringEnergy = 'TransferringEnergy',
+  Withdrawing = 'Withdrawing'
 }

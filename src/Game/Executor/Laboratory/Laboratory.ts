@@ -1,5 +1,10 @@
 import { GameExecutor } from '../../Core/GameExecutor';
-import { HelperList, Logger, LogLevel } from '@sergiocabral/helper';
+import {
+  HelperList,
+  HelperNumeric,
+  Logger,
+  LogLevel
+} from '@sergiocabral/helper';
 import { CreepRole } from '../../Screeps/Creep/CreepRole';
 import { RoomWrapper } from '../../../Infrastructure/Screeps/Wrapper/RoomWrapper';
 import { Work } from './Work';
@@ -80,9 +85,11 @@ export class Laboratory extends GameExecutor {
       const returnCode = creep.instance.harvest(source);
       if (returnCode === OK) {
         if (creep.instance.store.getFreeCapacity() === 0) {
-          const constructionSite = HelperList.getRandom(
-            creep.instance.room.find(FIND_MY_CONSTRUCTION_SITES)
-          );
+          const constructionSite = creep.instance.room
+            .find(FIND_MY_CONSTRUCTION_SITES)
+            .sort((a: ConstructionSite, b: ConstructionSite) =>
+              HelperNumeric.reverseCompare(a.progress, b.progress)
+            )[0];
           if (constructionSite) {
             creep.properties.set(Property.Work, Work.Building);
             creep.properties.set(Property.Target, constructionSite.id);
@@ -124,7 +131,7 @@ export class Laboratory extends GameExecutor {
           constructionSiteId
         );
       if (!constructionSite) {
-        creep.instance.say('No Construct!');
+        creep.instance.say('No Site!');
         creep.properties.set(Property.Work, Work.UpgradingController);
         creep.properties.remove(Property.Target);
         Logger.post(
@@ -231,7 +238,17 @@ export class Laboratory extends GameExecutor {
         RESOURCE_ENERGY
       );
       if (returnCode === OK || returnCode === ERR_FULL) {
-        creep.properties.remove(Property.Work);
+        const tombstone = HelperList.getRandom(
+          creep.instance.room.find(FIND_TOMBSTONES)
+        );
+        if (tombstone) {
+          creep.properties.set(Property.Work, Work.Withdrawing);
+          creep.properties.set(Property.Target, tombstone.id);
+          creep.instance.say('Withdraw');
+        } else {
+          creep.properties.remove(Property.Work);
+          creep.instance.say('Finished');
+        }
       } else if (returnCode === ERR_NOT_IN_RANGE) {
         creep.instance.moveTo(spawn.instance);
       } else {
@@ -240,6 +257,57 @@ export class Laboratory extends GameExecutor {
           {
             creep: creep.instance.name,
             spawn: spawn.instance.name,
+            returnCode: Constant.format(returnCode)
+          },
+          LogLevel.Error,
+          this.loggerContext
+        );
+      }
+    }
+  }
+
+  private _withdraw(): void {
+    const creeps = this.screepsOperation.query.creep.getByProperty.withValue(
+      Property.Work,
+      Work.Withdrawing
+    );
+    if (creeps.length === 0) return;
+
+    for (const creep of creeps) {
+      const tombstoneId = creep.properties.get(Property.Target);
+      const tombstone =
+        this.screepsOperation.query.getById<Tombstone>(tombstoneId);
+      if (!tombstone) {
+        creep.instance.say('No Tomb!');
+        creep.properties.remove(Property.Work);
+        creep.properties.remove(Property.Target);
+        Logger.post(
+          'Tombstone "{tombstone}" was not found by creep "{creep}".',
+          { creep: creep.instance.name, tombstone: tombstoneId },
+          LogLevel.Error,
+          this.loggerContext
+        );
+        continue;
+      }
+
+      const returnCode = creep.instance.withdraw(tombstone, RESOURCE_ENERGY);
+      if (returnCode === OK) {
+        if (creep.instance.store.getFreeCapacity() === 0) {
+          creep.properties.set(Property.Work, Work.UpgradingController);
+          creep.properties.remove(Property.Target);
+          creep.instance.say('Upgrade');
+        } else {
+          creep.properties.remove(Property.Work);
+          creep.instance.say('Finished');
+        }
+      } else if (returnCode === ERR_NOT_IN_RANGE) {
+        creep.instance.moveTo(tombstone);
+      } else {
+        Logger.post(
+          'Unexpected code when creep "{creep}" withdrawn energy from tombstone "{tombstone}": {returnCode}',
+          {
+            creep: creep.instance.name,
+            tombstone: tombstone.creep.name,
             returnCode: Constant.format(returnCode)
           },
           LogLevel.Error,
@@ -260,5 +328,6 @@ export class Laboratory extends GameExecutor {
     this._build();
     this._upgrade();
     this._transferEnergy();
+    this._withdraw();
   }
 }
