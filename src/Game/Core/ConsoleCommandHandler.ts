@@ -30,17 +30,17 @@ export class ConsoleCommandHandler {
   private handleReceivedConsoleCommand(message: ReceivedConsoleCommand): void {
     switch (message.command) {
       case 'redefine':
-      case 'kill':
-        if (message.args.length === 1 && message.args[0] === 'creeps') {
-          this.redefineCreeps();
-          message.processed = true;
-        }
+        this.redefineCreeps(...message.args);
+        message.processed = true;
         break;
     }
   }
 
-  private redefineCreeps(): void {
-    const creeps = this.screepsOperation.query.creep.getAll();
+  private redefineCreeps(...creepsName: string[]): void {
+    const creeps =
+      creepsName.length > 0
+        ? this.screepsOperation.query.creep.getByName.with(...creepsName)
+        : this.screepsOperation.query.creep.getAll();
     this.gameMode.factoryCreep.redefine(...creeps);
   }
 }

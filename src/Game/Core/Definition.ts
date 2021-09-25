@@ -11,11 +11,12 @@ export class Definition {
     help: `
 # Comandos do modo de jogo em execução:
   
-  > redefine [configuration]
+  > redefine [configuration] [arg1]
   Redefine configurações com valores padrão.
   Valores válidos para [configuration]:
     - "creeps" : Ajusta as roles de todos os creeps e
                  remove as propriedades.
+        [arg1] : Nome do creep. Se não informado aplica para todos.
 
 `
   };

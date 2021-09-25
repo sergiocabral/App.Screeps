@@ -2,6 +2,7 @@ import { Logger, LogLevel, Message } from '@sergiocabral/helper';
 import { ReceivedConsoleCommand } from '../Console/Message/ReceivedConsoleCommand';
 import { TerrainMap } from '@sergiocabral/screeps';
 import { IScreepsOperation } from './ScreepsOperation/IScreepsOperation';
+import { RunGarbageCollector } from '../Core/Message/RunGarbageCollector';
 
 /**
  * Trata comandos recebidos pelo console.
@@ -37,9 +38,17 @@ export class ConsoleCommandHandler {
           message.processed = true;
         }
         break;
+      case 'gc':
+        if (message.args.length === 0) {
+          new RunGarbageCollector().send();
+          message.processed = true;
+        }
+        break;
       case 'kill':
-        if (message.args.length === 1 && message.args[0] === 'creeps') {
-          this.killCreeps();
+        if (message.args.length >= 1 && message.args[0] === 'creeps') {
+          const creepsName = Array<string>().concat(message.args);
+          creepsName.splice(0, 1);
+          this.killCreeps(...creepsName);
           message.processed = true;
         }
         break;
@@ -77,8 +86,11 @@ export class ConsoleCommandHandler {
     }
   }
 
-  private killCreeps(): void {
-    const creeps = this.screepsOperation.query.creep.getAll();
+  private killCreeps(...creepsName: string[]): void {
+    const creeps =
+      creepsName.length === 0
+        ? this.screepsOperation.query.creep.getAll()
+        : this.screepsOperation.query.creep.getByName.with(...creepsName);
     if (creeps.length > 0) {
       for (const creep of creeps) {
         Logger.post(
