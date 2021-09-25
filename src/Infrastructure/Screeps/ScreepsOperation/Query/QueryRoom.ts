@@ -3,7 +3,7 @@ import { GetByName } from './GetBy/GetByName';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { FilterRoom } from './Filter/FilterRoom';
 import { RoomWrapper } from '../../Wrapper/RoomWrapper';
-import { SourceWrapper } from '../../Wrapper/SourceWrapper';
+import { KeyValue } from '@sergiocabral/helper';
 
 /**
  * Classe para consultar de entidades: Room
@@ -20,20 +20,21 @@ export class QueryRoom extends QueryIdOrNameBase<
   public constructor(screepsEnvironment: IScreepsEnvironment) {
     super(screepsEnvironment);
     this.memoryEntryForGarbageCollector.push('rooms');
-    this.memoryEntryForGarbageCollector.push('sources');
   }
 
   /**
    * Lista de instâncias do Screeps.
    * @protected
    */
-  protected override readonly instances = this.screepsEnvironment.game.rooms;
+  protected override getInstances(): KeyValue<Room> {
+    return this.screepsEnvironment.game.rooms;
+  }
 
   /**
    * Construtor para o wrapper.
    * @protected
    */
-  protected override readonly wrapperConstructor = RoomWrapper;
+  protected override readonly createWrapper = RoomWrapper;
 
   /**
    * Consulta por: nome
@@ -52,14 +53,5 @@ export class QueryRoom extends QueryIdOrNameBase<
       )
     );
     return Array.from(map.values());
-  }
-
-  /**
-   * Retorna a lista de fontes de energia na sala.
-   */
-  public getSources(room: Room, mode: 'all' | 'active'): SourceWrapper[] {
-    return room
-      .find(mode === 'all' ? FIND_SOURCES : FIND_SOURCES_ACTIVE)
-      .map(source => new SourceWrapper(source, room, this.screepsEnvironment));
   }
 }

@@ -6,6 +6,7 @@ import { FilterMatchRoom } from './FilterMatch/FilterMatchRoom';
 import { GetById } from './GetBy/GetById';
 import { GetByName } from './GetBy/GetByName';
 import { GetByRoom } from './GetBy/GetByRoom';
+import { KeyValue } from '@sergiocabral/helper';
 
 /**
  * Classe para consultar de entidades: Creeps
@@ -29,13 +30,15 @@ export class QueryCreep extends QueryIdOrNameBase<
    * Lista de instâncias do Screeps.
    * @protected
    */
-  protected override readonly instances = this.screepsEnvironment.game.creeps;
+  protected override getInstances(): KeyValue<Creep> {
+    return this.screepsEnvironment.game.creeps;
+  }
 
   /**
    * Construtor para o wrapper.
    * @protected
    */
-  protected override readonly wrapperConstructor = CreepWrapper;
+  protected override readonly createWrapper = CreepWrapper;
 
   /**
    * Consulta por: id

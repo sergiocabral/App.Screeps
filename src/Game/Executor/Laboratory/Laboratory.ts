@@ -47,15 +47,17 @@ export class Laboratory extends GameExecutor {
     if (creeps.length === 0) return;
 
     for (const creep of creeps) {
-      const sources = this.screepsOperation.query.room.getSources(
-        creep.instance.room,
-        'active'
-      );
+      const sources = this.screepsOperation.query.source
+        .preFilter({
+          room: creep.instance.room,
+          onlyActives: true
+        })
+        .getAll();
       if (sources.length === 0) continue;
       creep.properties.set(Property.Work, Work.Harvesting);
       creep.properties.set(
         Property.Target,
-        HelperList.getRandom(sources).instance.id
+        HelperList.getRandom(sources)?.instance.id
       );
       creep.instance.say('Harvest');
     }

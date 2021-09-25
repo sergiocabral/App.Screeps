@@ -1,4 +1,4 @@
-import { KeyValue, ShouldNeverHappenError } from '@sergiocabral/helper';
+import { InvalidExecutionError, KeyValue } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { WrapperBase } from '../../Wrapper/WrapperBase';
 import { TemplateFilter } from './Filter/TemplateFilter';
@@ -11,7 +11,8 @@ import { ToText } from '../../../Helper/ToText';
 export abstract class QueryBase<
   TScreeps,
   TWrapper extends WrapperBase<TScreeps>,
-  TQueryFilter extends TemplateFilter
+  TQueryFilter extends TemplateFilter,
+  TPreFilter = undefined
 > {
   /**
    * Construtor.
@@ -20,45 +21,82 @@ export abstract class QueryBase<
   public constructor(protected screepsEnvironment: IScreepsEnvironment) {}
 
   /**
+   * Obriga utilizar um pré-filtro antes de qualquer chamada.
+   * @protected
+   */
+  protected preFilterEnabled = false;
+
+  /**
+   * Determina se o pré-filtro foi chamado.
+   * @private
+   */
+  private preFilterCalled = false;
+
+  /**
+   * Valor do pré-filtro definido.
+   * @private
+   */
+  private preFilterDefinedValue: TPreFilter =
+    undefined as unknown as TPreFilter;
+
+  /**
+   * Valor do pré-filtro definido.
+   * @private
+   */
+  private get preFilterDefined(): TPreFilter {
+    if (!this.preFilterCalled) {
+      throw new InvalidExecutionError(
+        'Call preFilter() is mandatory for {0}'.querystring(
+          this.constructor.name
+        )
+      );
+    }
+    this.preFilterCalled = false;
+    return this.preFilterDefinedValue;
+  }
+
+  /**
+   * Define um pré-filtro que determina o conjunto de instâncias disponíveis para consulta.
+   * @param preFilter
+   * @protected
+   */
+  public preFilter(preFilter: TPreFilter): this {
+    this.preFilterDefinedValue = preFilter;
+    this.preFilterCalled = true;
+    return this;
+  }
+
+  /**
    * Lista de instâncias do Screeps.
    * @protected
    */
-  protected abstract get instances(): KeyValue<TScreeps>;
+  protected abstract getInstances(
+    preFilter: TPreFilter
+  ): KeyValue<TScreeps> | TScreeps[];
 
   /**
    * Construtor para o wrapper.
    * @protected
    */
-  protected abstract get wrapperConstructor(): new (
+  protected abstract get createWrapper(): new (
     instance: TScreeps,
     screepsEnvironment: IScreepsEnvironment
   ) => TWrapper;
 
   /**
-   * Retorna a lista das entidades existentes.
-   * @param instances Lista de instâncias do Screeps.
-   * @param ctor Constrói um wrapper para a instâncias do Screeps
-   * @private
-   */
-  protected getEntities(
-    instances: KeyValue<TScreeps>,
-    ctor: new (
-      instance: TScreeps,
-      screepsEnvironment: IScreepsEnvironment
-    ) => TWrapper
-  ): TWrapper[] {
-    return Object.keys(instances).map(name => {
-      const entity = instances[name];
-      if (entity === undefined) throw new ShouldNeverHappenError();
-      return new ctor(entity, this.screepsEnvironment);
-    });
-  }
-
-  /**
    * Retorna a lista de entidade existentes.
    */
   public getAll(): TWrapper[] {
-    return this.getEntities(this.instances, this.wrapperConstructor);
+    const preFilter = this.preFilterEnabled
+      ? this.preFilterDefined
+      : (undefined as unknown as TPreFilter);
+    const instances = this.getInstances(preFilter);
+    const entities = !Array.isArray(instances)
+      ? Object.values(instances)
+      : instances;
+    return entities.map(
+      entity => new this.createWrapper(entity, this.screepsEnvironment)
+    );
   }
 
   /**
@@ -95,11 +133,16 @@ export abstract class QueryBase<
    */
   public readonly toString = (): string => {
     return ToText.instance(this, [
-      'instances',
       'filters',
       'fail',
+      'getInstances',
       'getEntities',
-      'wrapperConstructor'
+      'createWrapper',
+      'preFilterEnabled',
+      'preFilterCalled',
+      'preFilterDefined',
+      'preFilterDefinedValue',
+      'memoryEntryForGarbageCollector'
     ]);
   };
 }

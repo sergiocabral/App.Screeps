@@ -10,8 +10,9 @@ import { TemplateFilterWithProperties } from '../Filter/TemplateFilterWithProper
 export class GetByProperty<
   TScreeps extends WithId | WithName,
   TWrapper extends WrapperRolesAndPropertiesBase<TScreeps>,
-  TQueryFilter extends TemplateFilterWithProperties
-> extends GetByBase<TScreeps, TWrapper, TQueryFilter> {
+  TQueryFilter extends TemplateFilterWithProperties,
+  TPreFilter
+> extends GetByBase<TScreeps, TWrapper, TQueryFilter, TPreFilter> {
   /**
    * Localiza uma entidade que possui zero ou alguma propriedades
    * @param empty

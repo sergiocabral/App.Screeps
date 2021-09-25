@@ -9,8 +9,9 @@ import { TemplateFilterWithName } from '../Filter/TemplateFilterWithName';
 export class GetByName<
   TScreeps extends WithName,
   TWrapper extends WrapperRolesAndPropertiesBase<TScreeps>,
-  TQueryFilter extends TemplateFilterWithName
-> extends GetByBase<TScreeps, TWrapper, TQueryFilter> {
+  TQueryFilter extends TemplateFilterWithName,
+  TPreFilter
+> extends GetByBase<TScreeps, TWrapper, TQueryFilter, TPreFilter> {
   /**
    * Localiza uma entidade que possui uma ou mais nomes.
    */

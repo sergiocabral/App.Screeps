@@ -9,8 +9,9 @@ import { WrapperRolesAndPropertiesBase } from '../../../Wrapper/WrapperIdOrNamed
 export class GetById<
   TScreeps extends WithId,
   TWrapper extends WrapperRolesAndPropertiesBase<TScreeps>,
-  TQueryFilter extends TemplateFilterWithId
-> extends GetByBase<TScreeps, TWrapper, TQueryFilter> {
+  TQueryFilter extends TemplateFilterWithId,
+  TPreFilter
+> extends GetByBase<TScreeps, TWrapper, TQueryFilter, TPreFilter> {
   /**
    * Localiza uma entidade que possui uma ou mais ids.
    */

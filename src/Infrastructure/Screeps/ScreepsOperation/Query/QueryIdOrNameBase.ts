@@ -23,8 +23,9 @@ export abstract class QueryIdOrNameBase<
   TWrapper extends WrapperRolesAndPropertiesBase<TScreeps>,
   TQueryFilter extends (TemplateFilterWithId | TemplateFilterWithName) &
     TemplateFilterWithRoles &
-    TemplateFilterWithProperties
-> extends QueryBase<TScreeps, TWrapper, TQueryFilter> {
+    TemplateFilterWithProperties,
+  TPreFilter = undefined
+> extends QueryBase<TScreeps, TWrapper, TQueryFilter, TPreFilter> {
   /**
    * Seção do log.
    * @private

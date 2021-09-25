@@ -10,8 +10,9 @@ import { TemplateFilterWithRoles } from '../Filter/TemplateFilterWithRoles';
 export class GetByRole<
   TScreeps extends WithId | WithName,
   TWrapper extends WrapperRolesAndPropertiesBase<TScreeps>,
-  TQueryFilter extends TemplateFilterWithRoles
-> extends GetByBase<TScreeps, TWrapper, TQueryFilter> {
+  TQueryFilter extends TemplateFilterWithRoles,
+  TPreFilter
+> extends GetByBase<TScreeps, TWrapper, TQueryFilter, TPreFilter> {
   /**
    * Localiza uma entidade que possui zero ou alguma role
    * @param empty

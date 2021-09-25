@@ -5,6 +5,7 @@ import { GetById } from './GetBy/GetById';
 import { GetByName } from './GetBy/GetByName';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { GetByRoom } from './GetBy/GetByRoom';
+import { KeyValue } from '@sergiocabral/helper';
 
 /**
  * Classe para consultar de entidades: Spawn
@@ -27,13 +28,15 @@ export class QuerySpawn extends QueryIdOrNameBase<
    * Lista de instâncias do Screeps.
    * @protected
    */
-  protected override readonly instances = this.screepsEnvironment.game.spawns;
+  protected override getInstances(): KeyValue<StructureSpawn> {
+    return this.screepsEnvironment.game.spawns;
+  }
 
   /**
    * Construtor para o wrapper.
    * @protected
    */
-  protected override readonly wrapperConstructor = SpawnWrapper;
+  protected override readonly createWrapper = SpawnWrapper;
 
   /**
    * Consulta por: id

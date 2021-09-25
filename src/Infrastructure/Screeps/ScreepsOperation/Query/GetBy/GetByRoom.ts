@@ -9,8 +9,9 @@ import { TemplateFilterWithRoom } from '../Filter/TemplateFilterWithRoom';
 export class GetByRoom<
   TScreeps extends WithRoom,
   TWrapper extends WrapperBase<TScreeps>,
-  TQueryFilter extends TemplateFilterWithRoom
-> extends GetByBase<TScreeps, TWrapper, TQueryFilter> {
+  TQueryFilter extends TemplateFilterWithRoom,
+  TPreFilter
+> extends GetByBase<TScreeps, TWrapper, TQueryFilter, TPreFilter> {
   /**
    * Localiza uma entidade que possui uma ou mais salas.
    */

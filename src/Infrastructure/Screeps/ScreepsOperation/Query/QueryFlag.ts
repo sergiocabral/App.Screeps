@@ -4,6 +4,7 @@ import { FlagWrapper } from '../../Wrapper/FlagWrapper';
 import { FilterFlag } from './Filter/FilterFlag';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { GetByRoom } from './GetBy/GetByRoom';
+import { KeyValue } from '@sergiocabral/helper';
 
 /**
  * Classe para consultar de entidades: Flag
@@ -26,13 +27,15 @@ export class QueryFlag extends QueryIdOrNameBase<
    * Lista de instâncias do Screeps.
    * @protected
    */
-  protected override readonly instances = this.screepsEnvironment.game.flags;
+  protected override getInstances(): KeyValue<Flag> {
+    return this.screepsEnvironment.game.flags;
+  }
 
   /**
    * Construtor para o wrapper.
    * @protected
    */
-  protected override readonly wrapperConstructor = FlagWrapper;
+  protected override readonly createWrapper = FlagWrapper;
 
   /**
    * Consulta por: nome

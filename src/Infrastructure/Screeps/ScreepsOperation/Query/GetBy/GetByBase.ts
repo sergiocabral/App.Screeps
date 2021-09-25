@@ -9,14 +9,15 @@ import { ToText } from '../../../../Helper/ToText';
 export abstract class GetByBase<
   TScreeps,
   TWrapper extends WrapperBase<TScreeps>,
-  TQueryFilter extends TemplateFilter
+  TQueryFilter extends TemplateFilter,
+  TPreFilter
 > {
   /**
    * Construtor.
    * @param query Instância da query.
    */
   public constructor(
-    protected query: QueryBase<TScreeps, TWrapper, TQueryFilter>
+    protected query: QueryBase<TScreeps, TWrapper, TQueryFilter, TPreFilter>
   ) {}
 
   /**
