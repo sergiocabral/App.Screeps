@@ -5,6 +5,7 @@ import { ConsoleCommandHandler } from './ConsoleCommandHandler';
 import { IScreepsOperation } from '../../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
 import { IGameExecutor } from './IGameExecutor';
 import { ParameterByFlag } from '../Screeps/Flag/ParameterByFlag';
+import { Jobs } from '../Screeps/Job/Jobs';
 
 /**
  * Classe base para os modos de operação.
@@ -58,6 +59,23 @@ export abstract class GameExecutor extends GameBase implements IGameExecutor {
       this.parameterByFlagValue = new ParameterByFlag(this.screepsOperation);
     }
     return this.parameterByFlagValue;
+  }
+
+  /**
+   * Ofertas de serviços.
+   * @private
+   */
+  private jobsValue: Jobs | undefined = undefined;
+
+  /**
+   * Ofertas de serviços.
+   * @protected
+   */
+  public get jobs(): Jobs {
+    if (this.jobsValue === undefined) {
+      this.jobsValue = new Jobs(this.screepsOperation);
+    }
+    return this.jobsValue;
   }
 
   /**

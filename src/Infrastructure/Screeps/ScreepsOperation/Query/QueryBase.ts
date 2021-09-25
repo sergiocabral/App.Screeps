@@ -1,9 +1,10 @@
-import { InvalidExecutionError, KeyValue } from '@sergiocabral/helper';
+import { KeyValue } from '@sergiocabral/helper';
 import { IScreepsEnvironment } from '../../IScreepsEnvironment';
 import { WrapperBase } from '../../Wrapper/WrapperBase';
 import { TemplateFilter } from './Filter/TemplateFilter';
 import { IFilterMatch } from './FilterMatch/IFilterMatch';
 import { ToText } from '../../../Helper/ToText';
+import { PreFilter } from '../../../Data/PreFilter';
 
 /**
  * Classe para consultar de entidades.
@@ -13,57 +14,14 @@ export abstract class QueryBase<
   TWrapper extends WrapperBase<TScreeps>,
   TQueryFilter extends TemplateFilter,
   TPreFilter = undefined
-> {
+> extends PreFilter<TPreFilter> {
   /**
    * Construtor.
    * @param screepsEnvironment Disponibiliza objetos do ambiente do Screeps
    */
-  public constructor(protected screepsEnvironment: IScreepsEnvironment) {}
-
-  /**
-   * Obriga utilizar um pré-filtro antes de qualquer chamada.
-   * @protected
-   */
-  protected preFilterEnabled = false;
-
-  /**
-   * Determina se o pré-filtro foi chamado.
-   * @private
-   */
-  private preFilterCalled = false;
-
-  /**
-   * Valor do pré-filtro definido.
-   * @private
-   */
-  private preFilterDefinedValue: TPreFilter =
-    undefined as unknown as TPreFilter;
-
-  /**
-   * Valor do pré-filtro definido.
-   * @private
-   */
-  private get preFilterDefined(): TPreFilter {
-    if (!this.preFilterCalled) {
-      throw new InvalidExecutionError(
-        'Call preFilter() is mandatory for {0}'.querystring(
-          this.constructor.name
-        )
-      );
-    }
-    this.preFilterCalled = false;
-    return this.preFilterDefinedValue;
-  }
-
-  /**
-   * Define um pré-filtro que determina o conjunto de instâncias disponíveis para consulta.
-   * @param preFilter
-   * @protected
-   */
-  public preFilter(preFilter: TPreFilter): this {
-    this.preFilterDefinedValue = preFilter;
-    this.preFilterCalled = true;
-    return this;
+  public constructor(protected screepsEnvironment: IScreepsEnvironment) {
+    super();
+    this.preFilterEnabled = false;
   }
 
   /**
@@ -87,10 +45,7 @@ export abstract class QueryBase<
    * Retorna a lista de entidade existentes.
    */
   public getAll(): TWrapper[] {
-    const preFilter = this.preFilterEnabled
-      ? this.preFilterDefined
-      : (undefined as unknown as TPreFilter);
-    const instances = this.getInstances(preFilter);
+    const instances = this.getInstances(this.preFilterValue);
     const entities = !Array.isArray(instances)
       ? Object.values(instances)
       : instances;
@@ -131,7 +86,7 @@ export abstract class QueryBase<
   /**
    * Override para toString().
    */
-  public readonly toString = (): string => {
+  public override readonly toString = (): string => {
     return ToText.instance(this, [
       'filters',
       'fail',
