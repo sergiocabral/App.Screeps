@@ -1,10 +1,16 @@
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
 import { WrapperRolesAndPropertiesBase } from './WrapperIdOrNamedBase';
+import { Energy } from './Energy/Energy';
+import { IHasEnergy } from './Energy/IHasEnergy';
+import { IEnergy } from './Energy/IEnergy';
 
 /**
  * Spawn
  */
-export class SpawnWrapper extends WrapperRolesAndPropertiesBase<StructureSpawn> {
+export class SpawnWrapper
+  extends WrapperRolesAndPropertiesBase<StructureSpawn>
+  implements IHasEnergy
+{
   /**
    * Construtor.
    * @param instance Instância original no Screeps.
@@ -18,20 +24,12 @@ export class SpawnWrapper extends WrapperRolesAndPropertiesBase<StructureSpawn> 
   }
 
   /**
-   * Percentual de energia disponível.
+   * Quantificação de energia.
    */
-  public get availableEnergy(): number {
-    const usedCapacity = this.instance.store.getUsedCapacity(RESOURCE_ENERGY);
-    const capacity = this.instance.store.getCapacity(RESOURCE_ENERGY);
-    return usedCapacity / capacity;
-  }
-
-  /**
-   * Percentual de energia consumida.
-   */
-  public get consumedEnergy(): number {
-    const freeCapacity = this.instance.store.getFreeCapacity(RESOURCE_ENERGY);
-    const capacity = this.instance.store.getCapacity(RESOURCE_ENERGY);
-    return freeCapacity / capacity;
-  }
+  public energy: IEnergy = new Energy(
+    () => this.instance.store.getCapacity(RESOURCE_ENERGY),
+    () =>
+      this.instance.store.getCapacity(RESOURCE_ENERGY) -
+      this.instance.store[RESOURCE_ENERGY]
+  );
 }

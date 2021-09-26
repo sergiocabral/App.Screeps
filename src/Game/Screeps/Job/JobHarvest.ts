@@ -27,7 +27,11 @@ export class JobHarvest extends JobBase {
    * Total de vagas.
    */
   public override get totalCount(): number {
-    return 0;
+    return this.screepsOperation.query.source
+      .preFilter({ onlyActives: true })
+      .getAll()
+      .map(source => source.energy.used)
+      .reduce((sum, missingEnergy) => sum + missingEnergy);
   }
 
   /**

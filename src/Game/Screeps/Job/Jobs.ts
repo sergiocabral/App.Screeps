@@ -14,6 +14,7 @@ export class Jobs {
    * @param screepsOperation
    */
   public constructor(screepsOperation: IScreepsOperation) {
+    //TODO: Continuar daqui: Definir unidades de trabalho para os itens abaixo. Depois fazer o creep ingressar em uma oferta de trabalho.
     this._offersValue.push(new JobHarvest(screepsOperation, 1));
     this._offersValue.push(new JobUpgrade(screepsOperation, 2));
     this._offersValue.push(new JobTransferEnergyToSpawn(screepsOperation, 3));
