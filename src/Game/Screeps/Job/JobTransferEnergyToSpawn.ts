@@ -3,9 +3,9 @@ import { IScreepsOperation } from '../../../Infrastructure/Screeps/ScreepsOperat
 import { BodyPartSet } from '@sergiocabral/screeps';
 
 /**
- * Upgrade no controller.
+ * Transferir energia para spawn.
  */
-export class JobUpgrade extends JobBase {
+export class JobTransferEnergyToSpawn extends JobBase {
   /**
    * Constructor
    * @param screepsOperation Responsável por operar o Screeps.
@@ -15,7 +15,7 @@ export class JobUpgrade extends JobBase {
     screepsOperation: IScreepsOperation,
     public override readonly priority: number
   ) {
-    super(screepsOperation, priority, 'Upgrade');
+    super(screepsOperation, priority, 'TransferEnergyToSpawn');
   }
 
   /**
@@ -26,7 +26,9 @@ export class JobUpgrade extends JobBase {
   /**
    * Total de vagas.
    */
-  public override readonly totalCount: number = Number.MAX_SAFE_INTEGER;
+  public override get totalCount(): number {
+    return 0;
+  }
 
   /**
    * Total de vagas alocadas.

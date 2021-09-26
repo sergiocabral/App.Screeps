@@ -1,7 +1,7 @@
 import { IScreepsOperation } from '../../../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
 import { ToText } from '../../../Infrastructure/Helper/ToText';
 import { JobHarvest } from './JobHarvest';
-import { JobTransferEnergy } from './JobTransferEnergy';
+import { JobTransferEnergyToSpawn } from './JobTransferEnergyToSpawn';
 import { JobUpgrade } from './JobUpgrade';
 import { IJob } from './IJob';
 
@@ -14,9 +14,9 @@ export class Jobs {
    * @param screepsOperation
    */
   public constructor(screepsOperation: IScreepsOperation) {
-    this._offersValue.push(new JobHarvest(screepsOperation));
-    this._offersValue.push(new JobUpgrade(screepsOperation));
-    this._offersValue.push(new JobTransferEnergy(screepsOperation));
+    this._offersValue.push(new JobHarvest(screepsOperation, 1));
+    this._offersValue.push(new JobUpgrade(screepsOperation, 2));
+    this._offersValue.push(new JobTransferEnergyToSpawn(screepsOperation, 3));
   }
 
   /**
@@ -27,15 +27,8 @@ export class Jobs {
   /**
    * Lista de trabalhos.
    */
-  public getAll(): IJob[] {
+  public getOffers(): IJob[] {
     return Array<IJob>().concat(this._offersValue);
-  }
-
-  /**
-   * Lista de trabalhos com ofertas disponíveis.
-   */
-  public getAvailable(room: Room, creep: Creep): IJob[] {
-    return this.getAll().filter(job => job.isAvailable(room, creep));
   }
 
   /**

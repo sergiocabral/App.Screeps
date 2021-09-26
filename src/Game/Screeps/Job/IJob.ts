@@ -1,9 +1,41 @@
+import { BodyPartSet } from '@sergiocabral/screeps';
+
 /**
  * Trabalho disponível para ser realizado.
  */
 export interface IJob {
   /**
-   * Verifica se tem trabalho para um creep em uma sala.
+   * Nome único da vaga.
    */
-  isAvailable(room: Room, creep: Creep): boolean;
+  get name(): string;
+
+  /**
+   * Exige energia para desempenhar o trabalho.
+   */
+  get needEnergy(): boolean;
+
+  /**
+   * Total de vagas.
+   */
+  get totalCount(): number;
+
+  /**
+   * Total de vagas alocadas.
+   */
+  get allocateCount(): number;
+
+  /**
+   * Prioridade em relação a outros serviços.
+   */
+  get priority(): number;
+
+  /**
+   * Quantidade mínima de partes do corpo exigida para o trabalho.
+   */
+  get minimumBodyCount(): BodyPartSet;
+
+  /**
+   * Percentual mínima de partes do corpo exigida para o trabalho.
+   */
+  get optimumBodyPercent(): BodyPartSet;
 }

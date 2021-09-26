@@ -1,18 +1,61 @@
 import { JobBase } from './JobBase';
+import { BodyPartSet } from '@sergiocabral/screeps';
+import { IScreepsOperation } from '../../../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
 
 /**
  * Coletar energia.
  */
 export class JobHarvest extends JobBase {
   /**
-   * Verifica se tem trabalho para um creep em uma sala.
+   * Constructor
+   * @param screepsOperation Responsável por operar o Screeps.
+   * @param priority Prioridade em relação a outros serviços.
    */
-  public override isAvailable(room: Room, creep: Creep): boolean {
-    creep;
-    return (
-      this.screepsOperation.query.source
-        .preFilter({ room: room, onlyActives: true })
-        .getAll().length > 0
-    );
+  public constructor(
+    screepsOperation: IScreepsOperation,
+    public override readonly priority: number
+  ) {
+    super(screepsOperation, priority, 'Harvest');
+  }
+
+  /**
+   * Exige energia para desempenhar o trabalho.
+   */
+  public override readonly needEnergy = false;
+
+  /**
+   * Total de vagas.
+   */
+  public override get totalCount(): number {
+    return 0;
+  }
+
+  /**
+   * Total de vagas alocadas.
+   */
+  public override get allocateCount(): number {
+    return 0;
+  }
+
+  /**
+   * Quantidade mínima de partes do corpo exigida para o trabalho.
+   */
+  public override get minimumBodyCount(): BodyPartSet {
+    return {
+      work: 1,
+      move: 1,
+      carry: 1
+    };
+  }
+
+  /**
+   * Percentual mínima de partes do corpo exigida para o trabalho.
+   */
+  public override get optimumBodyPercent(): BodyPartSet {
+    return {
+      work: 1 / 3,
+      move: 1 / 3,
+      carry: 1 / 3
+    };
   }
 }
