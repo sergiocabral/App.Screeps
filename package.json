@@ -15,7 +15,8 @@
     "test": "jest --passWithNoTests",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"output/**/*.js\"",
     "lint": "eslint \"src/**/*.ts\"",
-    "format+lint": "npm run format && npm run lint"
+    "format+lint": "npm run format && npm run lint",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
