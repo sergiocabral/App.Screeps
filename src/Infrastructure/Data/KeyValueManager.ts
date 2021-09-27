@@ -104,6 +104,8 @@ export class KeyValueManager {
    * Override para toString().
    */
   public readonly toString = (): string => {
-    return Object.keys(this.dataset).join(', ');
+    return Object.entries(this.dataset)
+      .map(value => `${value[0]}="${String(value[1])}"`)
+      .join(', ');
   };
 }
