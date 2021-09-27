@@ -14,7 +14,6 @@ function showEnvironmentDetails(configFile) {
   try {
     const json = JSON.parse(fs.readFileSync(configFile));
     console.info(` - hostname: ${json.protocol}://${json.hostname}:${json.port}/`);
-    console.info(` - username: ${json.email}`);
     console.info(` - path:     /${json.branch}${json.path}`);
   } catch (error) {
     console.error('Content is not valid JSON: ' + error);
