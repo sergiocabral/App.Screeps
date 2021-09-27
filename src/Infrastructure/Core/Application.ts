@@ -20,6 +20,7 @@ import { VersionManager } from './VersionManager';
 import { ToText } from '../Helper/ToText';
 import { ScheduleMessage } from '../Schedule/Message/ScheduleMessage';
 import { RunGarbageCollector } from './Message/RunGarbageCollector';
+import { Util } from './Util';
 
 /**
  * Classe principal da aplicação.
@@ -144,9 +145,14 @@ export class Application implements IScreepsOperation, IScreepsEnvironment {
   public readonly control: Controls;
 
   /**
+   * Disponibilização de utilitários me geral.
+   */
+  public readonly util = new Util();
+
+  /**
    * Override para toString().
    */
   public readonly toString = (): string => {
-    return ToText.instance(this, [], ['query', 'control', 'executor']);
+    return ToText.instance(this, [], ['query', 'control', 'executor', 'util']);
   };
 }
