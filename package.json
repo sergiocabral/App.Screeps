@@ -32,8 +32,8 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.2",
     "@rollup/plugin-node-resolve": "^13.0.5",
-    "@sergiocabral/helper": "^1.29.13",
-    "@sergiocabral/screeps": "^1.6.9",
+    "@sergiocabral/helper": "^1.29.14",
+    "@sergiocabral/screeps": "^1.6.10",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.174",
     "@types/screeps": "^3.2.4",
