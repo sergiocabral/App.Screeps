@@ -216,12 +216,22 @@ export class ClockTime
     ).send();
     new SendDebugToConsole(
       () => 'Execution statistics, shorter duration: {0}',
-      () => [this.shorterExecutionDuration.format({ suffix: ' milliseconds' })],
+      () => [
+        this.shorterExecutionDuration.format({
+          digits: 0,
+          suffix: ' milliseconds'
+        })
+      ],
       section
     ).send();
     new SendDebugToConsole(
       () => 'Execution statistics, longer duration: {0}',
-      () => [this.longerExecutionDuration.format({ suffix: ' milliseconds' })],
+      () => [
+        this.longerExecutionDuration.format({
+          digits: 0,
+          suffix: ' milliseconds'
+        })
+      ],
       section
     ).send();
     new SendDebugToConsole(
