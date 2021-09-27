@@ -15,7 +15,7 @@ export abstract class JobBase implements IJob {
    */
   public constructor(
     protected readonly screepsOperation: IScreepsOperation,
-    public readonly priority: number,
+    public priority: number,
     public readonly name: string
   ) {}
 

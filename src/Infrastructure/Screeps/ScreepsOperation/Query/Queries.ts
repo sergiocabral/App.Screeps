@@ -8,6 +8,7 @@ import { QueryFlag } from './QueryFlag';
 import { ToText } from '../../../Helper/ToText';
 import { QueryRoom } from './QueryRoom';
 import { QuerySource } from './QuerySource';
+import { QueryController } from './QueryController';
 
 /**
  * Consulta informações do jogo.
@@ -23,6 +24,7 @@ export class Queries {
     this.flag = new QueryFlag(screepsEnvironment);
     this.room = new QueryRoom(screepsEnvironment);
     this.source = new QuerySource(screepsEnvironment);
+    this.controller = new QueryController(screepsEnvironment);
 
     Message.subscribe(BeginExecutionEvent, () => this.sendDebugToConsole());
   }
@@ -39,13 +41,18 @@ export class Queries {
       section
     ).send();
     new SendDebugToConsole(
+      () => 'Count, controllers: {0}',
+      () => [this.controller.preFilter(undefined).getAll().length],
+      section
+    ).send();
+    new SendDebugToConsole(
       () => 'Count, spawns: {0}',
       () => [this.spawn.getAll().length],
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Count, creeps: {0}',
-      () => [this.creep.getAll().length],
+      () => 'Count, sources: {0}',
+      () => [this.source.preFilter(undefined).getAll().length],
       section
     ).send();
     new SendDebugToConsole(
@@ -54,8 +61,8 @@ export class Queries {
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Count, sources: {0}',
-      () => [this.source.preFilter(undefined).getAll().length],
+      () => 'Count, creeps: {0}',
+      () => [this.creep.getAll().length],
       section
     ).send();
   }
@@ -93,6 +100,11 @@ export class Queries {
    * Source.
    */
   public readonly source: QuerySource;
+
+  /**
+   * Controller
+   */
+  public readonly controller: QueryController;
 
   /**
    * Override para toString().
