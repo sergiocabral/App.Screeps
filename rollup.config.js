@@ -10,12 +10,12 @@ import * as fs from 'fs';
 const configFile = process.env.auth ?? './screeps.json';
 
 function showEnvironmentDetails(configFile) {
-  console.log(`Auth file: ${configFile}`);
+  console.info(`Auth file: ${configFile}`);
   try {
     const json = JSON.parse(fs.readFileSync(configFile));
-    console.log(` - hostname: ${json.protocol}://${json.hostname}:${json.port}/`);
-    console.log(` - username: ${json.email}`);
-    console.log(` - path:     /${json.branch}${json.path}`);
+    console.info(` - hostname: ${json.protocol}://${json.hostname}:${json.port}/`);
+    console.info(` - username: ${json.email}`);
+    console.info(` - path:     /${json.branch}${json.path}`);
   } catch (error) {
     console.error('Content is not valid JSON: ' + error);
   }
@@ -106,17 +106,17 @@ const applyVersionInfo = () => {
     const hash = md5(inputCode);
 
     if (hash !== buildHash) {
-      console.log('Previous Build Number:', buildNumber);
-      console.log('Previous Build Hash:', buildHash);
-      console.log('Updating version data.');
+      console.info('Previous Build Number:', buildNumber);
+      console.info('Previous Build Hash:', buildHash);
+      console.info('Updating version data.');
 
       setVersion(++buildNumber, buildHash = hash);
     }
 
-    console.log('Build Number:', buildNumber);
-    console.log('Build Hash:', buildHash);
-    console.log('Build Nonce:', buildNonce);
-    console.log('Applying into source-code.');
+    console.info('Build Number:', buildNumber);
+    console.info('Build Hash:', buildHash);
+    console.info('Build Nonce:', buildNonce);
+    console.info('Applying into source-code.');
 
     return inputCode
       .replace(new RegExp(sourceMarkBuildNumber, 'g'), buildNumber)
