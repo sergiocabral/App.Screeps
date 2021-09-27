@@ -87,7 +87,7 @@ export abstract class QueryBase<
    * Override para toString().
    */
   public override readonly toString = (): string => {
-    return ToText.instance(this, [
+    const exclude: string[] = [
       'filters',
       'fail',
       'getInstances',
@@ -98,6 +98,8 @@ export abstract class QueryBase<
       'preFilterDefined',
       'preFilterDefinedValue',
       'memoryEntryForGarbageCollector'
-    ]);
+    ];
+    if (!this.preFilterEnabled) exclude.push('preFilter');
+    return ToText.instance(this, exclude);
   };
 }
