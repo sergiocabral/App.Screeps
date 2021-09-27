@@ -27,12 +27,12 @@ export class JobUpgrade extends JobBase {
    * Total de vagas.
    * Sempre deve ser possível fazer upgrade controller.
    */
-  public override readonly totalCount: number = Number.MAX_SAFE_INTEGER;
+  public override readonly count: number = Number.MAX_SAFE_INTEGER;
 
   /**
    * Total de vagas alocadas.
    */
-  public override get allocateCount(): number {
+  public override get allocated(): number {
     return 0;
   }
 

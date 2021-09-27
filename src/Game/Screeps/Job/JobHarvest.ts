@@ -26,7 +26,7 @@ export class JobHarvest extends JobBase {
   /**
    * Total de vagas.
    */
-  public override get totalCount(): number {
+  public override get count(): number {
     return this.screepsOperation.query.source
       .preFilter({ onlyActives: true })
       .getAll()
@@ -37,7 +37,7 @@ export class JobHarvest extends JobBase {
   /**
    * Total de vagas alocadas.
    */
-  public override get allocateCount(): number {
+  public override get allocated(): number {
     return 0;
   }
 

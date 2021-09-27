@@ -26,7 +26,7 @@ export class JobTransferEnergyToSpawn extends JobBase {
   /**
    * Total de vagas.
    */
-  public override get totalCount(): number {
+  public override get count(): number {
     this.screepsOperation.query.spawn
       .getAll()
       .map(spawn => spawn.energy.used)
@@ -37,7 +37,7 @@ export class JobTransferEnergyToSpawn extends JobBase {
   /**
    * Total de vagas alocadas.
    */
-  public override get allocateCount(): number {
+  public override get allocated(): number {
     return 0;
   }
 

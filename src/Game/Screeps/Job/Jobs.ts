@@ -14,9 +14,12 @@ export class Jobs {
    * @param screepsOperation
    */
   public constructor(screepsOperation: IScreepsOperation) {
-    this._offersValue.push(new JobHarvest(screepsOperation, 1));
-    this._offersValue.push(new JobUpgrade(screepsOperation, 2));
-    this._offersValue.push(new JobTransferEnergyToSpawn(screepsOperation, 3));
+    let priority = 0;
+    this._offersValue.push(
+      new JobTransferEnergyToSpawn(screepsOperation, ++priority)
+    );
+    this._offersValue.push(new JobUpgrade(screepsOperation, ++priority));
+    this._offersValue.push(new JobHarvest(screepsOperation, ++priority));
   }
 
   /**

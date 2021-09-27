@@ -1,6 +1,7 @@
 import { BodyPartSet } from '@sergiocabral/screeps';
 import { IJob } from './IJob';
 import { IScreepsOperation } from '../../../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
+import { ToText } from '../../../Infrastructure/Helper/ToText';
 
 /**
  * Trabalho disponível para ser realizado.
@@ -26,12 +27,12 @@ export abstract class JobBase implements IJob {
   /**
    * Total de vagas.
    */
-  public abstract get totalCount(): number;
+  public abstract get count(): number;
 
   /**
    * Total de vagas alocadas.
    */
-  public abstract get allocateCount(): number;
+  public abstract get allocated(): number;
 
   /**
    * Quantidade mínima de partes do corpo exigida para o trabalho.
@@ -42,4 +43,11 @@ export abstract class JobBase implements IJob {
    * Percentual mínima de partes do corpo exigida para o trabalho.
    */
   public abstract get optimumBodyPercent(): BodyPartSet;
+
+  /**
+   * Override para toString().
+   */
+  public readonly toString = (): string => {
+    return ToText.instance(this);
+  };
 }

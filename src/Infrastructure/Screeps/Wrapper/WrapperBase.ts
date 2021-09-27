@@ -19,8 +19,6 @@ export abstract class WrapperBase<TScreepsEntity> {
    * Override para toString().
    */
   public readonly toString = (): string => {
-    return `${this.constructor.name}: ${String(
-      this.instance
-    )}\n${ToText.instance(this)}`;
+    return ToText.instance(this, []);
   };
 }

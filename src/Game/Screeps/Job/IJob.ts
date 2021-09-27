@@ -17,12 +17,12 @@ export interface IJob {
   /**
    * Total de vagas.
    */
-  get totalCount(): number;
+  get count(): number;
 
   /**
    * Total de vagas alocadas.
    */
-  get allocateCount(): number;
+  get allocated(): number;
 
   /**
    * Prioridade em relação a outros serviços.

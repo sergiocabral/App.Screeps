@@ -29,6 +29,7 @@ export class ToText {
       /sendDebugToConsole/,
       /scheduledMessageTypes/,
       /loggerSection/i,
+      /^on[A-Z]/,
       /^handle/,
       /^_/
     ];
@@ -39,8 +40,15 @@ export class ToText {
         !regexExclude.find(regex => regex.test(name))
       );
     };
+    const type = (instance as ToText).constructor?.name ?? '';
+    const name = (instance as Record<string, string>)['name'] ?? '';
+    let prefix = type && name ? `${type}, "${name}"` : `${type}${name}`;
+    if (prefix) prefix = `[${prefix}]\n`;
     const deep = true;
     const includeObjectMembers = false;
-    return HelperObject.describe(instance, deep, includeObjectMembers, filter);
+    return (
+      prefix +
+      HelperObject.describe(instance, deep, includeObjectMembers, filter)
+    );
   }
 }

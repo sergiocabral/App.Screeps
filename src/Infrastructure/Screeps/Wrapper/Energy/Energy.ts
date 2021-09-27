@@ -2,6 +2,7 @@
  * Quantificação de energia.
  */
 import { IEnergy } from './IEnergy';
+import { ToText } from '../../../Helper/ToText';
 
 export class Energy implements IEnergy {
   /**
@@ -48,4 +49,11 @@ export class Energy implements IEnergy {
   public get usedAsPercent(): number {
     return this.used / this.total;
   }
+
+  /**
+   * Override para toString().
+   */
+  public readonly toString = (): string => {
+    return ToText.instance(this, []);
+  };
 }
