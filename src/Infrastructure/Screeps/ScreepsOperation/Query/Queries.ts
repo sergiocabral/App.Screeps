@@ -34,6 +34,11 @@ export class Queries {
   private sendDebugToConsole(): void {
     const section = 'Screeps';
     new SendDebugToConsole(
+      () => 'Count, rooms: {0}',
+      () => [this.room.getAll().length],
+      section
+    ).send();
+    new SendDebugToConsole(
       () => 'Count, spawns: {0}',
       () => [this.spawn.getAll().length],
       section
@@ -41,6 +46,16 @@ export class Queries {
     new SendDebugToConsole(
       () => 'Count, creeps: {0}',
       () => [this.creep.getAll().length],
+      section
+    ).send();
+    new SendDebugToConsole(
+      () => 'Count, flags: {0}',
+      () => [this.flag.getAll().length],
+      section
+    ).send();
+    new SendDebugToConsole(
+      () => 'Count, sources: {0}',
+      () => [this.source.preFilter(undefined).getAll().length],
       section
     ).send();
   }
