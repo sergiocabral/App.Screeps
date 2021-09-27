@@ -11,10 +11,7 @@ export class JobTransferEnergyToSpawn extends JobBase {
    * @param screepsOperation Responsável por operar o Screeps.
    * @param priority Prioridade em relação a outros serviços.
    */
-  public constructor(
-    screepsOperation: IScreepsOperation,
-    public override readonly priority: number
-  ) {
+  public constructor(screepsOperation: IScreepsOperation, priority: number) {
     super(screepsOperation, priority, 'TransferEnergyToSpawn');
   }
 
