@@ -7,19 +7,21 @@ import { ToText } from '../../../Helper/ToText';
 export class Energy implements IEnergy {
   /**
    * Construtor.
-   * @param calculateTotal Usada para calcular o total.
-   * @param calculateUsed Usada para calcular o uso.
+   * @param _calculateTotal Usada para calcular o total.
+   * @param _calculateUsed Usada para calcular o uso.
    */
   public constructor(
-    private readonly calculateTotal: () => number,
-    private readonly calculateUsed: () => number
+    private readonly _calculateTotal: number | (() => number),
+    private readonly _calculateUsed: number | (() => number)
   ) {}
 
   /**
    * Capacidade total de energia.
    */
   public get total(): number {
-    return this.calculateTotal();
+    return typeof this._calculateTotal === 'number'
+      ? this._calculateTotal
+      : this._calculateTotal();
   }
 
   /**
@@ -40,7 +42,9 @@ export class Energy implements IEnergy {
    * Utilização de energia.
    */
   public get used(): number {
-    return this.calculateUsed();
+    return typeof this._calculateUsed === 'number'
+      ? this._calculateUsed
+      : this._calculateUsed();
   }
 
   /**
