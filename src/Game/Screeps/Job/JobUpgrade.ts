@@ -13,6 +13,14 @@ export class JobUpgrade extends JobBase {
    */
   public constructor(screepsOperation: IScreepsOperation, priority: number) {
     super(screepsOperation, priority, 'Upgrade');
+    if (
+      this.screepsOperation.query.controller
+        .preFilter({})
+        .getAll()
+        .find(controller => controller.instance.level === 1)
+    ) {
+      this.priority = 0;
+    }
   }
 
   /**
