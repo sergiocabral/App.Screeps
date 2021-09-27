@@ -101,6 +101,12 @@ export class Definition {
   > gc
   Executa o Garbage Collector para remover o lixo da memória.
 
+  > redefine [configuration]
+  Redefine configurações com valores padrão.
+  Valores válidos para [configuration]:
+    - "statistics" : Apaga os valores de menor e maior tempo
+                     de execução da aplicação.
+
 `
   };
 }

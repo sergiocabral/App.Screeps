@@ -14,6 +14,7 @@ import { Definition } from '../Definition';
 import { EndExecutionEvent } from '../Core/Message/EndExecutionEvent';
 import { IConsoleHelpCommands } from './IConsoleHelpCommands';
 import { ConsoleLogger } from './ConsoleLogger';
+import { ClearStatisticsMessage } from '../Schedule/Message/ClearStatisticsMessage';
 
 /**
  * Configuração do console como entrada de comandos.
@@ -164,6 +165,12 @@ export class Console
       case 'debug':
         if (message.args.length === 0) {
           new ShowDebugToConsole().send();
+          message.processed = true;
+        }
+        break;
+      case 'redefine':
+        if (message.args.length === 1 && message.args[0] === 'statistics') {
+          new ClearStatisticsMessage().send();
           message.processed = true;
         }
         break;

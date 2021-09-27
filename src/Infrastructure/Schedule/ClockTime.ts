@@ -1,8 +1,14 @@
 import { MemoryHandler } from '../Core/MemoryHandler';
 import { ClockTimeData } from './ClockTimeData';
-import { InvalidExecutionError, Message } from '@sergiocabral/helper';
+import {
+  InvalidExecutionError,
+  Logger,
+  LogLevel,
+  Message
+} from '@sergiocabral/helper';
 import { SendDebugToConsole } from '../Console/Message/SendDebugToConsole';
 import { BeginExecutionEvent } from '../Core/Message/BeginExecutionEvent';
+import { ClearStatisticsMessage } from './Message/ClearStatisticsMessage';
 
 /**
  * Informações do momento (time) de execução.
@@ -11,6 +17,12 @@ export class ClockTime
   extends MemoryHandler<ClockTimeData>
   implements ClockTimeData
 {
+  /**
+   * Contexto para log.
+   * @private
+   */
+  private static readonly loggerContext = 'ClockTime';
+
   /**
    * Construtor.
    * @param propertyName Nome da propriedade que será ouvida.
@@ -41,6 +53,7 @@ export class ClockTime
     this.source.lastExecutionTime = this.currentTime;
 
     Message.subscribe(BeginExecutionEvent, () => this.sendDebugToConsole());
+    Message.subscribe(ClearStatisticsMessage, () => this.clearStatistics());
   }
 
   /**
@@ -152,6 +165,20 @@ export class ClockTime
   }
 
   /**
+   * Limpa as estatísticas de execução.
+   */
+  public clearStatistics(): void {
+    this.source.shorterExecutionDuration = 0;
+    this.source.longerExecutionDuration = 0;
+    Logger.post(
+      'Shorter and longer execution duration was cleared.',
+      undefined,
+      LogLevel.Information,
+      ClockTime.loggerContext
+    );
+  }
+
+  /**
    * Envia uma mensagem de log tipo debug para o console.
    * @private
    */
@@ -178,23 +205,23 @@ export class ClockTime
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Execution, shorter duration: {0}',
-      () => [this.shorterExecutionDuration.format({ suffix: ' milliseconds' })],
-      section
-    ).send();
-    new SendDebugToConsole(
       () => 'Execution, average duration: {0}',
       () => [this.averageExecutionDuration.format({ suffix: ' milliseconds' })],
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Execution, longer duration: {0}',
-      () => [this.longerExecutionDuration.format({ suffix: ' milliseconds' })],
+      () => 'Execution, total duration: {0}',
+      () => [new Date(this.totalExecutionDuration).format({ mask: 'running' })],
       section
     ).send();
     new SendDebugToConsole(
-      () => 'Execution, total duration: {0}',
-      () => [new Date(this.totalExecutionDuration).format({ mask: 'running' })],
+      () => 'Execution statistics, shorter duration: {0}',
+      () => [this.shorterExecutionDuration.format({ suffix: ' milliseconds' })],
+      section
+    ).send();
+    new SendDebugToConsole(
+      () => 'Execution statistics, longer duration: {0}',
+      () => [this.longerExecutionDuration.format({ suffix: ' milliseconds' })],
       section
     ).send();
     new SendDebugToConsole(

@@ -31,8 +31,10 @@ export class ConsoleCommandHandler {
     const exceptFirstArg = Array<string>().concat(message.args).splice(1);
     switch (message.command) {
       case 'redefine':
-        this.redefineCreeps(...exceptFirstArg);
-        message.processed = true;
+        if (message.args.length > 0 && message.args[0] === 'creeps') {
+          this.redefineCreeps(...exceptFirstArg);
+          message.processed = true;
+        }
         break;
     }
   }
