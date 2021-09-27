@@ -166,9 +166,9 @@ export class FactoryCreep {
     {
       roles: [CreepRole.BasicHarvest],
       bodyParts: {
-        move: 1,
+        carry: 1,
         work: 1,
-        carry: 1
+        move: 1
       }
     }
   ];
