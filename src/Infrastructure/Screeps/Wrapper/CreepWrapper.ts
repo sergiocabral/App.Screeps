@@ -1,7 +1,7 @@
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
 import { WrapperRolesAndPropertiesBase } from './WrapperIdOrNamedBase';
-import { IEnergy } from './Energy/IEnergy';
-import { Energy } from './Energy/Energy';
+import { IEnergyInformation } from './Energy/IEnergyInformation';
+import { EnergyInformation } from './Energy/EnergyInformation';
 
 /**
  * Creep
@@ -19,7 +19,7 @@ export class CreepWrapper extends WrapperRolesAndPropertiesBase<Creep> {
   /**
    * Quantificação de energia.
    */
-  public energy: IEnergy = new Energy(
+  public energy: IEnergyInformation = new EnergyInformation(
     () => this.instance.store.getCapacity(RESOURCE_ENERGY),
     () =>
       this.instance.store.getCapacity(RESOURCE_ENERGY) -

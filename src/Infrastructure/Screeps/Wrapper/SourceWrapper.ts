@@ -1,8 +1,8 @@
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
 import { WrapperRolesAndPropertiesBase } from './WrapperIdOrNamedBase';
-import { Energy } from './Energy/Energy';
+import { EnergyInformation } from './Energy/EnergyInformation';
 import { IHasEnergy } from './Energy/IHasEnergy';
-import { IEnergy } from './Energy/IEnergy';
+import { IEnergyInformation } from './Energy/IEnergyInformation';
 
 /**
  * Source
@@ -26,7 +26,7 @@ export class SourceWrapper
   /**
    * Quantificação de energia.
    */
-  public energy: IEnergy = new Energy(
+  public energy: IEnergyInformation = new EnergyInformation(
     () => this.instance.energyCapacity,
     () => this.instance.energyCapacity - this.instance.energy
   );

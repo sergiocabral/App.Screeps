@@ -1,8 +1,8 @@
 import { IScreepsEnvironment } from '../IScreepsEnvironment';
 import { WrapperRolesAndPropertiesBase } from './WrapperIdOrNamedBase';
-import { Energy } from './Energy/Energy';
+import { EnergyInformation } from './Energy/EnergyInformation';
 import { IHasEnergy } from './Energy/IHasEnergy';
-import { IEnergy } from './Energy/IEnergy';
+import { IEnergyInformation } from './Energy/IEnergyInformation';
 import { ControllerData } from '@sergiocabral/screeps/js/Database/ControllerData';
 import { InvalidDataError } from '@sergiocabral/helper';
 import { ControllerLevel } from '@sergiocabral/screeps/js/Type/ControllerLevel';
@@ -42,7 +42,7 @@ export class ControllerWrapper
   /**
    * Quantificação de energia.
    */
-  public energy: IEnergy = new Energy(
+  public energy: IEnergyInformation = new EnergyInformation(
     ControllerWrapper.level7.progressTotal,
     () => ControllerWrapper.level7.progressTotal - this.instance.progress
   );

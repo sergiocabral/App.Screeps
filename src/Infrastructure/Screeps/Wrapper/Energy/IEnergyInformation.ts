@@ -1,7 +1,7 @@
 /**
  * Quantificação de energia.
  */
-export interface IEnergy {
+export interface IEnergyInformation {
   /**
    * Capacidade total de energia.
    */
