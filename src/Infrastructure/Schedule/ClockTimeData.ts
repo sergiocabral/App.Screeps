@@ -26,4 +26,14 @@ export interface ClockTimeData {
    * Duração da última execução da aplicação.
    */
   lastExecutionDuration: number;
+
+  /**
+   * Menor tempo de execução da aplicação.
+   */
+  shorterExecutionDuration: number;
+
+  /**
+   * Maior tempo de execução da aplicação.
+   */
+  longerExecutionDuration: number;
 }

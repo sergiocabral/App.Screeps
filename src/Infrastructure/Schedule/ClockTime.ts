@@ -22,7 +22,9 @@ export class ClockTime
         firstExecutionTime: 0,
         lastExecutionTime: 0,
         totalExecutionDuration: 0,
-        lastExecutionDuration: 0
+        lastExecutionDuration: 0,
+        shorterExecutionDuration: 0,
+        longerExecutionDuration: 0
       };
     });
     this.source.tickCount++;
@@ -89,6 +91,20 @@ export class ClockTime
   }
 
   /**
+   * Menor tempo de execução da aplicação.
+   */
+  public get shorterExecutionDuration(): number {
+    return this.source.shorterExecutionDuration;
+  }
+
+  /**
+   * Menor tempo de execução da aplicação.
+   */
+  public get longerExecutionDuration(): number {
+    return this.source.longerExecutionDuration;
+  }
+
+  /**
    * Duração média de cada execução da aplicação.
    */
   public get averageExecutionDuration(): number {
@@ -121,6 +137,18 @@ export class ClockTime
     this.runtimeElapsedAlreadyDefined = true;
     this.source.totalExecutionDuration += currentExecutionDuration;
     this.source.lastExecutionDuration = currentExecutionDuration;
+    if (
+      this.shorterExecutionDuration === 0 ||
+      currentExecutionDuration < this.shorterExecutionDuration
+    ) {
+      this.source.shorterExecutionDuration = currentExecutionDuration;
+    }
+    if (
+      this.longerExecutionDuration === 0 ||
+      currentExecutionDuration > this.longerExecutionDuration
+    ) {
+      this.source.longerExecutionDuration = currentExecutionDuration;
+    }
   }
 
   /**
@@ -150,8 +178,18 @@ export class ClockTime
       section
     ).send();
     new SendDebugToConsole(
+      () => 'Execution, shorter duration: {0}',
+      () => [this.shorterExecutionDuration.format({ suffix: ' milliseconds' })],
+      section
+    ).send();
+    new SendDebugToConsole(
       () => 'Execution, average duration: {0}',
       () => [this.averageExecutionDuration.format({ suffix: ' milliseconds' })],
+      section
+    ).send();
+    new SendDebugToConsole(
+      () => 'Execution, longer duration: {0}',
+      () => [this.longerExecutionDuration.format({ suffix: ' milliseconds' })],
       section
     ).send();
     new SendDebugToConsole(
