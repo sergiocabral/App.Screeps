@@ -55,7 +55,7 @@ export class FactoryCreep {
       Logger.post(
         'The "{creep}" creep will have its current roles ({roles}) and properties ({properties}) redefined.',
         {
-          creep,
+          creep: creep.instance.name,
           roles: HelperObject.toText(creep.roles.list),
           properties: HelperObject.toText(creep.properties.dataset)
         },
@@ -88,14 +88,14 @@ export class FactoryCreep {
           creep.roles.add(...roleBodySet.roles);
           Logger.post(
             'The "{creep}" creep had its properties erased and roles updated: {roles}',
-            { creep, roles: creep.roles },
+            { creep: creep.instance.name, roles: creep.roles },
             LogLevel.Debug,
             FactoryCreep.LoggerSection
           );
         } else {
           Logger.post(
             'The "{creep}" creep had its properties erased but already had its roles updated: {roles}',
-            { creep, roles: creep.roles },
+            { creep: creep.instance.name, roles: creep.roles },
             LogLevel.Debug,
             FactoryCreep.LoggerSection
           );

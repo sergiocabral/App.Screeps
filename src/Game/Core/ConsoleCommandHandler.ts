@@ -28,9 +28,10 @@ export class ConsoleCommandHandler {
    * @private
    */
   private handleReceivedConsoleCommand(message: ReceivedConsoleCommand): void {
+    const exceptFirstArg = Array<string>().concat(message.args).splice(1);
     switch (message.command) {
       case 'redefine':
-        this.redefineCreeps(...message.args);
+        this.redefineCreeps(...exceptFirstArg);
         message.processed = true;
         break;
     }
