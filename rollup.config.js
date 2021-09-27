@@ -8,7 +8,19 @@ import md5 from 'md5';
 import * as fs from 'fs';
 
 const configFile = process.env.auth ?? './screeps.json';
-console.log(`Auth file: ${configFile}`);
+
+function showEnvironmentDetails(configFile) {
+  console.log(`Auth file: ${configFile}`);
+  try {
+    const json = JSON.parse(fs.readFileSync(configFile));
+    console.log(` - hostname: ${json.protocol}://${json.hostname}:${json.port}/`);
+    console.log(` - username: ${json.email}`);
+    console.log(` - path:     /${json.branch}${json.path}`);
+  } catch (error) {
+    console.error('Content is not valid JSON: ' + error);
+  }
+}
+showEnvironmentDetails(configFile);
 
 /**
  * Plugin para o rollup
