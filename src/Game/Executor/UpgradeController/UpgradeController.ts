@@ -164,7 +164,7 @@ export class UpgradeController extends GameExecutor {
         ? creep.instance.repair(construction)
         : creep.instance.build(construction as ConstructionSite);
       if (returnCode === OK) {
-        if (creep.consumedEnergy >= 0.33 || isRepair) {
+        if (creep.energy.usedAsPercent >= 0.33 || isRepair) {
           creep.properties.set(Property.Work, Work.UpgradingController);
           creep.properties.remove(Property.Target);
           creep.instance.say('Upgrade');
@@ -200,7 +200,7 @@ export class UpgradeController extends GameExecutor {
         creep.instance.room.controller
       );
       if (returnCode === OK) {
-        if (creep.consumedEnergy >= 0.66) {
+        if (creep.energy.usedAsPercent >= 0.66) {
           creep.properties.set(Property.Work, Work.TransferringEnergy);
           creep.properties.set(
             Property.Target,
