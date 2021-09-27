@@ -111,6 +111,8 @@ export abstract class GameBase
       'do',
       'loop',
       'help',
+      'propertyName',
+      'debugShowed',
       'debugEnabled',
       'debug',
       'memory',

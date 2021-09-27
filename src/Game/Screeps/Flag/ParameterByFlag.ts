@@ -1,5 +1,6 @@
 import { IScreepsOperation } from '../../../Infrastructure/Screeps/ScreepsOperation/IScreepsOperation';
 import { HelperNumeric } from '@sergiocabral/helper';
+import { ToText } from '../../../Infrastructure/Helper/ToText';
 
 /**
  * Leitura de parâmetros através das flags.
@@ -14,7 +15,7 @@ export class ParameterByFlag {
   /**
    * Retorna a lista de todos os parâmetros
    */
-  public getAllParameters(room: Room): [string, string][] {
+  public getAll(room: Room): [string, string][] {
     const result = Array<[string, string]>();
     const divider = ':';
     const flags = this.screepsOperation.query.flag.getByRoom.with(room);
@@ -31,7 +32,7 @@ export class ParameterByFlag {
    * Retorna a lista de valores de parâmetros obtido das flags
    */
   public getValues(room: Room, parameterName: string): string[] {
-    return this.getAllParameters(room)
+    return this.getAll(room)
       .filter(parameter => parameter[0] === parameterName)
       .map(parameter => parameter[1])
       .sort((a, b) => {
@@ -40,4 +41,11 @@ export class ParameterByFlag {
           : a.localeCompare(b);
       });
   }
+
+  /**
+   * Override para toString().
+   */
+  public readonly toString = (): string => {
+    return ToText.instance(this);
+  };
 }

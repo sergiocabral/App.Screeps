@@ -80,7 +80,7 @@ export class UpgradeController extends GameExecutor {
           'Source "{source}" was not found by creep "{creep}".',
           { creep: creep.instance.name, source: sourceId },
           LogLevel.Error,
-          this.loggerContext
+          this._loggerContext
         );
         continue;
       }
@@ -129,7 +129,7 @@ export class UpgradeController extends GameExecutor {
             returnCode: Constant.format(returnCode)
           },
           LogLevel.Error,
-          this.loggerContext
+          this._loggerContext
         );
       }
     }
@@ -154,7 +154,7 @@ export class UpgradeController extends GameExecutor {
           'Construction "{construction}" was not found by creep "{creep}".',
           { creep: creep.instance.name, construction: constructionId },
           LogLevel.Error,
-          this.loggerContext
+          this._loggerContext
         );
         continue;
       }
@@ -180,7 +180,7 @@ export class UpgradeController extends GameExecutor {
             returnCode: Constant.format(returnCode)
           },
           LogLevel.Error,
-          this.loggerContext
+          this._loggerContext
         );
       }
     }
@@ -223,7 +223,7 @@ export class UpgradeController extends GameExecutor {
             returnCode: Constant.format(returnCode)
           },
           LogLevel.Error,
-          this.loggerContext
+          this._loggerContext
         );
       }
     }
@@ -247,7 +247,7 @@ export class UpgradeController extends GameExecutor {
           'Spawn "{spawn}" was not found by creep "{creep}".',
           { creep: creep.instance.name, spawn: spawnName },
           LogLevel.Error,
-          this.loggerContext
+          this._loggerContext
         );
         continue;
       }
@@ -280,7 +280,7 @@ export class UpgradeController extends GameExecutor {
             returnCode: Constant.format(returnCode)
           },
           LogLevel.Error,
-          this.loggerContext
+          this._loggerContext
         );
       }
     }
@@ -304,7 +304,7 @@ export class UpgradeController extends GameExecutor {
           'Resource energy "{resource}" was not found by creep "{creep}".',
           { creep: creep.instance.name, resource: resourceId },
           LogLevel.Error,
-          this.loggerContext
+          this._loggerContext
         );
         continue;
       }
@@ -333,7 +333,7 @@ export class UpgradeController extends GameExecutor {
             returnCode: Constant.format(returnCode)
           },
           LogLevel.Error,
-          this.loggerContext
+          this._loggerContext
         );
       }
     }

@@ -23,12 +23,12 @@ export class ToText {
     only: string[] = []
   ): string {
     const regexExclude: RegExp[] = [
-      /^initialize/,
-      /^screepsEnvironment$/,
-      /^screepsOperation$/,
-      /^sendDebugToConsole$/,
-      /^scheduledMessageTypes$/,
-      /^LoggerSection$/,
+      /initialize/,
+      /screepsEnvironment/,
+      /screepsOperation/,
+      /sendDebugToConsole/,
+      /scheduledMessageTypes/,
+      /loggerSection/i,
       /^handle/,
       /^_/
     ];

@@ -15,7 +15,7 @@ export abstract class GameExecutor extends GameBase implements IGameExecutor {
    * Contexto do log.
    * @private
    */
-  protected loggerContext = 'GameExecutor';
+  protected _loggerContext = 'GameExecutor';
 
   /**
    * Inicializa a classe.
@@ -31,51 +31,51 @@ export abstract class GameExecutor extends GameBase implements IGameExecutor {
    * Construtor de creeps.
    * @private
    */
-  private factoryCreepValue: FactoryCreep | undefined = undefined;
+  private _factoryCreepValue: FactoryCreep | undefined = undefined;
 
   /**
    * Construtor de creeps.
    * @protected
    */
   public get factoryCreep(): FactoryCreep {
-    if (this.factoryCreepValue === undefined) {
-      this.factoryCreepValue = new FactoryCreep(this.screepsOperation);
+    if (this._factoryCreepValue === undefined) {
+      this._factoryCreepValue = new FactoryCreep(this.screepsOperation);
     }
-    return this.factoryCreepValue;
+    return this._factoryCreepValue;
   }
 
   /**
    * Leitura de parâmetros através das flags.
    * @private
    */
-  private parameterByFlagValue: ParameterByFlag | undefined = undefined;
+  private _parameterByFlagValue: ParameterByFlag | undefined = undefined;
 
   /**
    * Leitura de parâmetros através das flags.
    * @protected
    */
   public get parameterByFlag(): ParameterByFlag {
-    if (this.parameterByFlagValue === undefined) {
-      this.parameterByFlagValue = new ParameterByFlag(this.screepsOperation);
+    if (this._parameterByFlagValue === undefined) {
+      this._parameterByFlagValue = new ParameterByFlag(this.screepsOperation);
     }
-    return this.parameterByFlagValue;
+    return this._parameterByFlagValue;
   }
 
   /**
    * Ofertas de serviços.
    * @private
    */
-  private jobsValue: Jobs | undefined = undefined;
+  private _jobsValue: Jobs | undefined = undefined;
 
   /**
    * Ofertas de serviços.
    * @protected
    */
   public get jobs(): Jobs {
-    if (this.jobsValue === undefined) {
-      this.jobsValue = new Jobs(this.screepsOperation);
+    if (this._jobsValue === undefined) {
+      this._jobsValue = new Jobs(this.screepsOperation);
     }
-    return this.jobsValue;
+    return this._jobsValue;
   }
 
   /**
