@@ -32,6 +32,8 @@ export abstract class MemoryHandler<T> {
     this.memory = memory as unknown as KeyValue;
     if (this.source === undefined) {
       this.source = defaultValue();
+    } else if (typeof this.source === 'object' && this.source) {
+      this.source = Object.assign(defaultValue(), this.source);
     }
     Message.subscribe(
       RunGarbageCollector,
